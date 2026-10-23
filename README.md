@@ -8,15 +8,17 @@ technical report.
 
 ## Layout
 
-| Question | What we build | Issue |
-|---|---|---|
-| [`Question-1/`](Question-1/) | English to Hindi NMT: LSTM encoder-decoder with and without attention, attention heatmaps, error and sentence-length analysis. IIT Bombay English-Hindi corpus. | [#1](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/1) |
-| [`Question-2/`](Question-2/) | 5-class Amazon review rating prediction: fine-tuned RoBERTa (mean pooling) vs a BiGRU with additive attention pooling. Accuracy, macro-F1, MAE, one ablation. | [#2](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/2) |
-| [`Question-3/`](Question-3/) | Abstractive summarisation on CNN/DailyMail with a Transformer encoder-decoder written from scratch. ROUGE and cross-attention heatmap. | [#3](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/3) |
-| [`Question-4/`](Question-4/) | Plot-Twist Generator on TinyStories: Vanilla RNN vs LSTM language models, greedy / temperature / top-k decoding, diversity metrics and blinded human evaluation. | [#4](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/4) |
+| Folder | What we build | Owner | Issue |
+|---|---|---|---|
+| [`Question-1/`](Question-1/) | English to Hindi NMT: LSTM encoder-decoder with and without attention, attention heatmaps, error and sentence-length analysis. IIT Bombay English-Hindi corpus. | Rishi | [#1](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/1) |
+| [`Question-2/`](Question-2/) | 5-class Amazon review rating prediction: fine-tuned RoBERTa (mean pooling) vs a BiGRU with additive attention pooling. Accuracy, macro-F1, MAE, one ablation. | Keshav | [#2](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/2) |
+| [`Question-3/`](Question-3/) | Abstractive summarisation on CNN/DailyMail with a Transformer encoder-decoder written from scratch. ROUGE and cross-attention heatmap. | Shivam, Ayush | [#3](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/3) |
+| [`Question-4/`](Question-4/) | Plot-Twist Generator on TinyStories: Vanilla RNN vs LSTM language models, greedy / temperature / top-k decoding, diversity metrics and blinded human evaluation. | Akshat | [#4](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/4) |
+| [`common/`](common/) | Shared helpers every question imports: seeding, devices and mixed precision, vocab and padding, early stopping and checkpoints, decoding, report figures. | everyone | |
+| [`tests/`](tests/) | Tests for `common/`. | | |
 
-Each issue has the full breakdown, the work split, the deliverables checklist and the
-marking scheme. Tick things off there as they get done.
+Each issue has the full breakdown, the deliverables checklist and the marking scheme.
+Tick things off there as they get done.
 
 ## Team
 
@@ -30,41 +32,53 @@ marking scheme. Tick things off there as they get done.
 
 ## Work split
 
-Five people, four questions, so everyone has one main piece plus a smaller one.
-Slots M1 to M5 are placeholders until we decide who takes which.
+One question each, with two people on Question 3 because it is the biggest: the whole
+Transformer has to be written from scratch and evaluated on the full CNN/DM test set.
 
-| Slot | Main | Secondary | Owner |
-|---|---|---|---|
-| M1 | Q1 core: data prep, baseline LSTM, attention decoder, training | Q4: data prep, RNN/LSTM models, training | _TBD_ |
-| M2 | Q3 data and evaluation: tokenizer, ROUGE, qualitative cases, attention heatmap | Q1 analysis: heatmaps, error analysis, length analysis | _TBD_ |
-| M3 | Q2 baseline and evaluation: both preprocessing pipelines, BiGRU, metrics and confusion matrices | Q4: decoding strategies and Plot-Twist generation | _TBD_ |
-| M4 | Q2 RoBERTa: fine-tuning, multi-seed runs, ablation | Q4: diversity metrics and blinded human evaluation | _TBD_ |
-| M5 | Q3 model: attention, encoder/decoder, full model, training loop | none | _TBD_ |
+| Question | Owner | Notes |
+|---|---|---|
+| Q1: Attention NMT | Rishi Kharya | Hindi tick labels in the heatmaps need the font setup in [`common/README.md`](common/README.md#hindi-in-plots). |
+| Q2: RoBERTa vs BiGRU | Keshav Mishra | Heaviest GPU job (200k reviews, two seeds per model). Start the RoBERTa runs early. |
+| Q3: Transformer summariser | Shivam Singh, Ayush Khelwal | Natural split: one on the model, training and decoding, the other on tokenizer, data, ROUGE, qualitative cases and the attention heatmap. Agree on tensor shapes and the mask convention first. |
+| Q4: Plot-Twist Generator | Akshat Gupta | The blinded human evaluation needs at least three raters, so everyone rates Q4 stories. |
 
-Everyone also writes the report sections for the parts they built, and reviews one
-teammate's code.
+Every owner writes their question's section of the combined report. On top of that,
+everyone reviews at least one other question's PRs and helps with the Q4 ratings, so
+each member has touched implementation, experiments, evaluation and the report.
 
 ## Working on it
 
 - Branch per piece of work, named like `q1/attention-decoder` or `q3/rouge-eval`. Open a PR
   into `main` and get one teammate to look at it before merging. Don't push straight to `main`.
 - Commits: short and plain, say what changed. `add baseline lstm`, `fix pad mask in loss`.
-- Keep code for each question inside its own `Question-N/` folder. Shared helpers go in
-  that question's folder too, so the four submissions stay independent.
-- Fix random seeds and write them down. The brief asks for reproducible results in Q2 and Q4.
-- Don't commit datasets. Large checkpoints stay out of git too (see packaging below).
+- Keep code for each question inside its own `Question-N/` folder.
+- Before writing a helper, check [`common/`](common/README.md). Seeding, padding,
+  vocab, early stopping, checkpoints, decoding and plots are already there. If something
+  would help more than one question, add it to `common/` with a test instead of copying it.
+- `common/` is shared, so changes to existing functions go through a PR that the people
+  using them have seen, and `pytest -q` must pass.
+- Use `set_seed` from `common` and keep the seeds in `run_info.json` (`save_run_info`).
+  The brief asks for reproducible results in Q2 and Q4.
+- Results and figures go to `Question-N/outputs/` (see the layout in
+  [`common/README.md`](common/README.md#conventions-everyone-follows)). Don't commit
+  datasets. Checkpoints stay out of git, except Q4's, which the brief says to submit.
 
 ## Setup
 
-Python 3.10+ and a CUDA GPU for Q2 and Q3 (Colab or Kaggle is fine). Each question will get
+Python 3.11+ and a CUDA GPU for Q2 and Q3 (Colab or Kaggle is fine). Each question will get
 its own `requirements.txt` and run instructions in its folder README as the code lands.
 
 ```bash
 git clone https://github.com/Akshats-git/NLP-Group-Assignment-2.git
 cd NLP-Group-Assignment-2
 python -m venv .venv && source .venv/bin/activate
-pip install -r Question-N/requirements.txt   # once it exists
+pip install -e ".[dev]"                       # installs common/ so any notebook can import it
+pytest -q                                     # check common/ works on your machine
+pip install -r Question-N/requirements.txt    # once it exists
 ```
+
+On Colab or Kaggle, clone the repo, `%cd` into it and run `import sys; sys.path.insert(0, ".")`
+before `import common`. The [`common/README.md`](common/README.md) has the full snippet and examples.
 
 ## Submission
 
