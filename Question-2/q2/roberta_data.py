@@ -12,6 +12,8 @@ from transformers import DataCollatorWithPadding, RobertaTokenizerFast
 
 from common import dataloader_kwargs
 
+from .batching import LengthGroupedBatchSampler
+
 MODEL_NAME = "roberta-base"
 MAX_LEN = 256
 
@@ -45,8 +47,15 @@ def collator(tokenizer: RobertaTokenizerFast) -> DataCollatorWithPadding:
 
 def make_loader(split, tokenizer: RobertaTokenizerFast, batch_size: int, shuffle: bool = False,
                 seed: int = 0, num_workers: int = 2) -> DataLoader:
-    """Batches of {"input_ids", "attention_mask", "labels"}, padded per batch."""
+    """Batches of {"input_ids", "attention_mask", "labels"}, padded per batch.
+
+    shuffle=True draws seeded, length-grouped batches (see q2.batching); otherwise the
+    split's own order is kept so predictions line up with review ids.
+    """
+    lengths = [len(ids) for ids in split["input_ids"]]
     split = split.select_columns(["input_ids", "attention_mask", "label"]).rename_column("label", "labels")
-    extra = dataloader_kwargs(seed) if shuffle else {}
-    return DataLoader(split, batch_size=batch_size, shuffle=shuffle, collate_fn=collator(tokenizer),
-                      num_workers=num_workers, pin_memory=torch.cuda.is_available(), **extra)
+    kwargs = dict(collate_fn=collator(tokenizer), num_workers=num_workers, pin_memory=torch.cuda.is_available())
+    if shuffle:
+        sampler = LengthGroupedBatchSampler(lengths, batch_size, seed)
+        return DataLoader(split, batch_sampler=sampler, worker_init_fn=dataloader_kwargs(seed)["worker_init_fn"], **kwargs)
+    return DataLoader(split, batch_size=batch_size, **kwargs)
