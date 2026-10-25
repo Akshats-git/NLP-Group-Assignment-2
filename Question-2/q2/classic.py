@@ -19,8 +19,11 @@ import torch
 from datasets import DatasetDict
 from torch.utils.data import DataLoader
 
-from common import Vocab, data_dir, dataloader_kwargs, normalize, pad_collate, strip_html_and_urls
+from common import Vocab, data_dir, dataloader_kwargs, normalize, pad_sequences, strip_html_and_urls
 from common.vocab import SPECIALS
+
+from .batching import LengthGroupedBatchSampler
+from .data import load_reviews
 
 MAX_LEN = 200
 MIN_FREQ = 2
@@ -126,9 +129,50 @@ def embedding_matrix(vocab: Vocab, vectors: dict[str, np.ndarray], seed: int = 0
     return torch.from_numpy(matrix), coverage
 
 
+def prepare(limit: int | None = None, min_freq: int = MIN_FREQ, max_len: int = MAX_LEN, glove_path=None,
+            num_proc: int | None = None, seed: int = 0) -> tuple[DatasetDict, Vocab, torch.Tensor]:
+    """Train and validation splits encoded for the BiGRU, the vocabulary and the GloVe matrix.
+
+    On the full data the vocabulary and matrix are cached in Question-2/data/classic/
+    (01_preprocessing.ipynb writes the same files), so they are built once and every
+    run uses identical ids. A `limit` run builds its own and caches nothing.
+    """
+    tokenized = add_tokens(load_reviews(limit=limit), num_proc=num_proc)
+    cache = data_dir(2) / "classic"
+    vocab_file, matrix_file = cache / "vocab.json", cache / "embeddings.pt"
+    if limit is None and min_freq == MIN_FREQ and vocab_file.exists() and matrix_file.exists():
+        vocab, embeddings = Vocab.load(vocab_file), torch.load(matrix_file)
+    else:
+        vocab = build_vocab(tokenized["train"]["tokens"], min_freq=min_freq)
+        embeddings, _ = embedding_matrix(vocab, load_glove(find_glove(GLOVE_DIM, glove_path), vocab.itos), seed=seed)
+        if limit is None and min_freq == MIN_FREQ:
+            vocab.save(vocab_file)
+            torch.save(embeddings, matrix_file)
+    return encode(tokenized, vocab, max_len), vocab, embeddings
+
+
+class PadBatch:
+    """collate_fn: {"ids", "ids_lengths", "label"} with ids right-padded with <pad> = 0.
+
+    Does what common.pad_collate does for these two fields, but as a class, because
+    DataLoader workers on macOS and Windows are spawned and cannot pickle pad_collate's closure.
+    """
+
+    def __call__(self, examples: list[dict]) -> dict:
+        ids, lengths = pad_sequences([example["ids"] for example in examples], pad_id=0)
+        return {"ids": ids, "ids_lengths": lengths, "label": torch.tensor([example["label"] for example in examples])}
+
+
 def make_loader(split, batch_size: int, shuffle: bool = False, seed: int = 0, num_workers: int = 2) -> DataLoader:
-    """Batches of {"ids": [batch, time], "ids_lengths": [batch], "label": [batch]}, padded to the longest review."""
+    """Batches of {"ids": [batch, time], "ids_lengths": [batch], "label": [batch]}, padded to the longest review.
+
+    shuffle=True draws seeded, length-grouped batches (see q2.batching); otherwise the
+    split's own order is kept so predictions line up with review ids.
+    """
+    lengths = [len(ids) for ids in split["ids"]]
     split = split.select_columns(["ids", "label"])
-    extra = dataloader_kwargs(seed) if shuffle else {}
-    return DataLoader(split, batch_size=batch_size, shuffle=shuffle, collate_fn=pad_collate(0),  # <pad> is always id 0
-                      num_workers=num_workers, pin_memory=torch.cuda.is_available(), **extra)
+    kwargs = dict(collate_fn=PadBatch(), num_workers=num_workers, pin_memory=torch.cuda.is_available())
+    if shuffle:
+        sampler = LengthGroupedBatchSampler(lengths, batch_size, seed)
+        return DataLoader(split, batch_sampler=sampler, worker_init_fn=dataloader_kwargs(seed)["worker_init_fn"], **kwargs)
+    return DataLoader(split, batch_size=batch_size, **kwargs)

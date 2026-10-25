@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from q2.batching import LengthGroupedBatchSampler
 from q2.metrics import classification_metrics
-from q2.models import RobertaClassifier, masked_mean
+from q2.models import AdditiveAttentionPooling, BiGRUAttention, RobertaClassifier, masked_mean
 
 
 def test_length_grouped_batches():
@@ -57,6 +57,34 @@ def test_import_finished_runs(tmp_path, monkeypatch):
 def test_masked_mean_ignores_padding():
     hidden = torch.tensor([[[1.0], [3.0], [100.0]]])
     assert masked_mean(hidden, torch.tensor([[1, 1, 0]])).item() == 2.0
+
+
+def test_attention_pooling_skips_padding():
+    pool = AdditiveAttentionPooling(input_dim=4, attention_dim=3)
+    hidden = torch.randn(2, 5, 4)
+    mask = torch.tensor([[1, 1, 1, 0, 0], [1, 1, 1, 1, 1]], dtype=torch.bool)
+    pooled, alpha = pool(hidden, mask)
+    assert pooled.shape == (2, 4)
+    assert torch.allclose(alpha.sum(-1), torch.ones(2))
+    assert alpha[0, 3:].abs().max() == 0
+    assert torch.allclose(pooled[0], alpha[0, :3] @ hidden[0, :3])
+
+
+def test_bigru_padding_invariant_and_freezing():
+    torch.manual_seed(0)
+    embeddings = torch.randn(20, 6)
+    embeddings[0] = 0
+    model = BiGRUAttention(embeddings, hidden_size=8, num_layers=2, attention_dim=5).eval()
+    ids = torch.tensor([[4, 5, 6, 0, 0, 0], [7, 8, 9, 10, 11, 12]])
+    lengths = torch.tensor([3, 6])
+    logits, alpha = model(ids, lengths, return_attention=True)
+    assert logits.shape == (2, 5) and alpha.shape == (2, 6)
+    alone = model(ids[:1, :3], lengths[:1])            # same review without padding or batch mates
+    assert torch.allclose(logits[:1], alone, atol=1e-5)
+    assert not model.embedding.weight.requires_grad
+    model.set_embedding_trainable(True)
+    assert model.embedding.weight.requires_grad
+    assert torch.equal(model.embedding.weight, embeddings)
 
 
 @pytest.fixture(scope="module")

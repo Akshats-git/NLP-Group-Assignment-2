@@ -10,15 +10,19 @@ A BiGRU with additive attention pooling over GloVe embeddings is compared with f
 ```
 Question-2/
   01_preprocessing.ipynb   both input pipelines, dataset and length statistics
+  02_bigru.ipynb           BiGRU + attention baseline (2 seeds), curves
   03_roberta.ipynb         RoBERTa fine-tuning (4 runs), pooling ablation, curves
   q2/                      code the notebooks import
     data.py                loading, title + body merge, length statistics
     classic.py             BiGRU pipeline: cleaning, spaCy tokens, vocab, GloVe matrix, loaders
     roberta_data.py        RoBERTa pipeline: tokenisation, truncation, dynamic padding, loaders
     batching.py            length-grouped batch sampler
-    models.py              RobertaClassifier with mean or first-token pooling
+    models.py              BiGRUAttention, RobertaClassifier (mean or first-token pooling)
     metrics.py             accuracy, macro / per-class F1, MAE, adjacent vs distant errors
-    train_roberta.py       fine-tuning loop, also a command-line script
+    training.py            pieces both training loops share
+    train_bigru.py         BiGRU training loop, also a command-line script
+    train_roberta.py       RoBERTa fine-tuning loop, also a command-line script
+    kaggle.py              brings finished runs back from an earlier Kaggle version
   tests/                   offline tests for q2/
   outputs/results/         metrics and statistics (committed)
   outputs/figures/         report figures (committed)
@@ -50,6 +54,18 @@ Question-2/
 
 `01_preprocessing.ipynb` writes `outputs/results/preprocessing_stats.json`, `outputs/figures/length_distribution.png`,
 and the vocabulary and embedding matrix to `data/classic/`.
+
+### BiGRU training
+
+Import `02_bigru.ipynb` the same way and attach a GloVe dataset. One GPU is plenty, and **GPU T4 x2**
+or **P100** both work. The notebook trains seeds 42 and 43 for up to 15 epochs each, with early
+stopping on validation macro-F1. It prints one line per epoch. On a laptop CPU an epoch over the full
+data takes roughly 13 minutes, so a GPU is much faster but not required.
+
+```bash
+python -m q2.train_bigru --seed 42                                   # from Question-2/
+python -m q2.train_bigru --limit 2000 --epochs 3 --device cpu        # quick check, writes *_limit2000 folders
+```
 
 ### RoBERTa training
 

@@ -22,14 +22,15 @@ import torch
 from torch import nn
 from transformers import get_linear_schedule_with_warmup
 
-from common import (REPO_ROOT, AverageMeter, EarlyStopping, History, autocast, checkpoints_dir, count_parameters,
-                    get_device, grad_scaler, results_dir, save_json, save_jsonl, save_run_info, set_seed, to_device)
+from common import (REPO_ROOT, EarlyStopping, History, autocast, checkpoints_dir, count_parameters, get_device,
+                    grad_scaler, results_dir, save_json, save_jsonl, save_run_info, set_seed, to_device)
 from common.device import amp_dtype
 
 from .data import load_reviews
 from .metrics import classification_metrics
 from .models import RobertaClassifier
 from .roberta_data import MAX_LEN, MODEL_NAME, get_tokenizer, make_loader, tokenize
+from .training import Segment
 
 
 @dataclass
@@ -81,18 +82,6 @@ def predict(model: nn.Module, loader, device) -> tuple[float, list[int], list[in
         preds += logits.argmax(dim=-1).tolist()
         labels += batch["labels"].tolist()
     return total_loss / len(labels), preds, labels
-
-
-class Segment:
-    """Training loss and predictions since the last evaluation (dropout on, so a rough train signal)."""
-
-    def __init__(self):
-        self.loss, self.preds, self.labels = AverageMeter(), [], []
-
-    def update(self, loss: torch.Tensor, logits: torch.Tensor, labels: torch.Tensor) -> None:
-        self.loss.update(loss.item(), n=len(labels))
-        self.preds += logits.argmax(dim=-1).tolist()
-        self.labels += labels.tolist()
 
 
 def train(config: RobertaConfig) -> dict:
