@@ -1,0 +1,45 @@
+{
+  "config": {
+    "seed": 42,
+    "min_freq": 2,
+    "max_len": 200,
+    "hidden_size": 256,
+    "num_layers": 2,
+    "attention_dim": 256,
+    "dropout": 0.3,
+    "lr": 0.001,
+    "max_grad_norm": 1.0,
+    "freeze_epochs": 1,
+    "epochs": 15,
+    "patience": 3,
+    "batch_size": 128,
+    "eval_batch_size": 512,
+    "limit": null,
+    "num_workers": 2,
+    "device": ""
+  },
+  "seed": 42,
+  "environment": {
+    "timestamp_utc": "2026-10-25T08:18:58+00:00",
+    "git_commit": "499f8ed",
+    "python": "3.13.15",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "torch": "2.11.0+cu128",
+    "numpy": "2.1.3",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "gpu": "Tesla T4",
+    "transformers": "5.16.1",
+    "datasets": "4.8.5",
+    "tokenizers": "0.23.1"
+  },
+  "run_name": "bigru_seed42",
+  "amp_dtype": "torch.float16",
+  "parameters": {
+    "total": 12037357,
+    "embedding": 9863400
+  },
+  "vocab_size": 32878,
+  "train_reviews": 200000,
+  "val_reviews": 5000
+}

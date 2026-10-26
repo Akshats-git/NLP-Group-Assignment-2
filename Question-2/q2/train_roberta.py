@@ -53,11 +53,15 @@ class RobertaConfig:
     limit: int | None = None
     num_workers: int = 2
     device: str = ""   # empty picks cuda, then mps, then cpu
+    data_parallel: bool = True   # split batches over all visible GPUs
+    amp: bool = True             # fp16 / bf16 autocast on GPU; False trains in fp32
+    tag: str = ""                # appended to the run name, to keep diagnostic runs apart
 
     @property
     def run_name(self) -> str:
         name = f"roberta_{self.pooling}_seed{self.seed}"
-        return f"{name}_limit{self.limit}" if self.limit else name
+        name = f"{name}_limit{self.limit}" if self.limit else name
+        return f"{name}_{self.tag}" if self.tag else name
 
 
 def param_groups(model: nn.Module, weight_decay: float) -> list[dict]:
@@ -69,14 +73,14 @@ def param_groups(model: nn.Module, weight_decay: float) -> list[dict]:
 
 
 @torch.no_grad()
-def predict(model: nn.Module, loader, device) -> tuple[float, list[int], list[int]]:
+def predict(model: nn.Module, loader, device, amp: bool = True) -> tuple[float, list[int], list[int]]:
     """Mean cross-entropy, predicted labels and true labels over a loader, in the loader's order."""
     model.eval()
     loss_fn = nn.CrossEntropyLoss(reduction="sum")
     total_loss, preds, labels = 0.0, [], []
     for batch in loader:
         batch = to_device(batch, device)
-        with autocast(device):
+        with autocast(device, enabled=amp):
             logits = model(batch["input_ids"], batch["attention_mask"])
         total_loss += loss_fn(logits.float(), batch["labels"]).item()
         preds += logits.argmax(dim=-1).tolist()
@@ -97,20 +101,21 @@ def train(config: RobertaConfig) -> dict:
     val_loader = make_loader(data["validation"], tokenizer, config.eval_batch_size, num_workers=config.num_workers)
 
     model = RobertaClassifier(config.model_name, config.pooling, config.dropout).to(device)
-    gpus = torch.cuda.device_count()
+    gpus = torch.cuda.device_count() if config.data_parallel else min(torch.cuda.device_count(), 1)
     net = nn.DataParallel(model) if gpus > 1 else model  # Kaggle's T4 x2: each batch is split over both GPUs
+    dtype = amp_dtype(device) if config.amp else None
 
     optimizer = torch.optim.AdamW(param_groups(model, config.weight_decay), lr=config.lr)
     total_steps = math.ceil(len(train_loader) / config.grad_accum) * config.epochs
     scheduler = get_linear_schedule_with_warmup(optimizer, int(config.warmup_ratio * total_steps), total_steps)
-    scaler = grad_scaler(device)
+    scaler = grad_scaler(device) if config.amp else torch.amp.GradScaler(device.type, enabled=False)
     loss_fn = nn.CrossEntropyLoss()
 
     save_run_info(run_dir, asdict(config), seed=config.seed, run_name=config.run_name, gpus=gpus,
-                  amp_dtype=amp_dtype(device), parameters=count_parameters(model), total_steps=total_steps,
+                  amp_dtype=dtype, parameters=count_parameters(model), total_steps=total_steps,
                   train_reviews=len(data["train"]), val_reviews=len(data["validation"]))
     print(f"{config.run_name}: {len(data['train']):,} train reviews, {len(train_loader):,} batches/epoch, "
-          f"{total_steps:,} optimiser steps, {device} x{max(gpus, 1)}, amp {amp_dtype(device)}")
+          f"{total_steps:,} optimiser steps, {device} x{max(gpus, 1)}, amp {dtype}")
 
     history = History()
     stopper = EarlyStopping(mode="max", patience=config.patience, checkpoint_path=checkpoint)
@@ -122,7 +127,7 @@ def train(config: RobertaConfig) -> dict:
         segment = Segment()
         for i, batch in enumerate(train_loader, start=1):
             batch = to_device(batch, device)
-            with autocast(device):
+            with autocast(device, enabled=config.amp):
                 logits = net(batch["input_ids"], batch["attention_mask"])
             loss = loss_fn(logits.float(), batch["labels"])
             scaler.scale(loss / config.grad_accum).backward()
@@ -139,7 +144,7 @@ def train(config: RobertaConfig) -> dict:
 
             if i not in eval_at:
                 continue
-            val_loss, val_preds, val_labels = predict(net, val_loader, device)
+            val_loss, val_preds, val_labels = predict(net, val_loader, device, config.amp)
             val = classification_metrics(val_labels, val_preds)
             seen = classification_metrics(segment.labels, segment.preds)
             record = history.log(epoch=round(epoch - 1 + i / len(train_loader), 3), step=step,
@@ -174,10 +179,16 @@ def train(config: RobertaConfig) -> dict:
     return summary
 
 
+def flag(text: str) -> bool:
+    """--amp false / --data-parallel 0 (argparse's own bool("false") would be True)."""
+    return text.lower() in ("1", "true", "yes")
+
+
 def parse_args(argv=None) -> RobertaConfig:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     for field in fields(RobertaConfig):
         kind = int if field.name == "limit" else type(field.default)
+        kind = flag if kind is bool else kind
         parser.add_argument(f"--{field.name.replace('_', '-')}", type=kind, default=field.default)
     return RobertaConfig(**vars(parser.parse_args(argv)))
 
