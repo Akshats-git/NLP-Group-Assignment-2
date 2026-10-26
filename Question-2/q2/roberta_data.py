@@ -6,7 +6,9 @@ because most reviews are far shorter.
 """
 
 import torch
+import transformers
 from datasets import DatasetDict
+from packaging.version import Version
 from torch.utils.data import DataLoader
 from transformers import DataCollatorWithPadding, RobertaTokenizerFast
 
@@ -16,6 +18,14 @@ from .batching import LengthGroupedBatchSampler
 
 MODEL_NAME = "roberta-base"
 MAX_LEN = 256
+MIN_TRANSFORMERS = "5.20.2"
+
+# The same 20k-review, 1-epoch run reached 0.49 macro-F1 with transformers 5.16.1 (Kaggle's
+# preinstalled version) and 0.64 with 5.20.2; eager vs SDPA attention, fp16 vs fp32 and one vs
+# two GPUs made no difference. Refuse the old version rather than train on it for hours.
+if Version(transformers.__version__) < Version(MIN_TRANSFORMERS):
+    raise ImportError(f"transformers {transformers.__version__} is installed, Q2 needs >= {MIN_TRANSFORMERS}: "
+                      f'pip install -q "transformers>={MIN_TRANSFORMERS}" and restart the kernel')
 
 
 def get_tokenizer(name: str = MODEL_NAME) -> RobertaTokenizerFast:

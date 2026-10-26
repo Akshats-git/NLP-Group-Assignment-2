@@ -46,7 +46,10 @@ Question-2/
    `https://github.com/Akshats-git/NLP-Group-Assignment-2/blob/main/Question-2/03_roberta.ipynb`.
 2. In the first code cell set `BRANCH` to the branch with the code you want, e.g. `"q2/roberta"` until it
    is merged. When the notebook finds no repo around it, it clones that branch and moves into `Question-2/`.
-   The libraries it needs (transformers, datasets, spaCy, scikit-learn) are already installed on Kaggle.
+   datasets, spaCy and scikit-learn come preinstalled on Kaggle. transformers does too, but the preinstalled
+   5.16.1 fine-tunes RoBERTa badly: the same 20k-review run scored 0.49 macro-F1 on 5.16.1 and 0.64 on 5.20.2.
+   The setup cell therefore upgrades it to >= 5.20.2 when needed, and `q2.roberta_data` refuses to import on
+   anything older.
 3. Side panel: turn **Internet on** (it needs a phone-verified account). The preprocessing notebook
    runs on CPU. Training needs **GPU T4 x2**.
 4. For the BiGRU work, **Add Input** a GloVe dataset that contains `glove.6B.300d.txt` (search "glove 6B 300d").
