@@ -1,0 +1,60 @@
+{
+  "run_name": "roberta_first_seed42",
+  "best_epoch": 2.0,
+  "best_step": 12500,
+  "train_time_s": 3152.3303977719997,
+  "checkpoint": "Question-2/outputs/checkpoints/roberta_first_seed42/best.pt",
+  "val": {
+    "accuracy": 0.5942,
+    "macro_f1": 0.5894037542467384,
+    "mae": 0.5026,
+    "off_by_one": 0.3308,
+    "off_by_two_plus": 0.075,
+    "adjacent_share_of_errors": 0.815179891572203,
+    "extreme_confusions": 23,
+    "per_class_f1": [
+      0.682058682058682,
+      0.48179551122194514,
+      0.47382622773880195,
+      0.5662148070907195,
+      0.7431235431235431
+    ],
+    "confusion_matrix": [
+      [
+        709,
+        206,
+        60,
+        11,
+        14
+      ],
+      [
+        247,
+        483,
+        202,
+        48,
+        20
+      ],
+      [
+        95,
+        274,
+        439,
+        160,
+        32
+      ],
+      [
+        19,
+        29,
+        127,
+        543,
+        282
+      ],
+      [
+        9,
+        13,
+        25,
+        156,
+        797
+      ]
+    ]
+  }
+}
