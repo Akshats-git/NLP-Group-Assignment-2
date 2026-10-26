@@ -56,6 +56,7 @@ class RobertaConfig:
     data_parallel: bool = True   # split batches over all visible GPUs
     amp: bool = True             # fp16 / bf16 autocast on GPU; False trains in fp32
     tag: str = ""                # appended to the run name, to keep diagnostic runs apart
+    attn_implementation: str = ""   # "eager" forces the plain attention code; empty keeps the transformers default
 
     @property
     def run_name(self) -> str:
@@ -100,7 +101,8 @@ def train(config: RobertaConfig) -> dict:
                                num_workers=config.num_workers)
     val_loader = make_loader(data["validation"], tokenizer, config.eval_batch_size, num_workers=config.num_workers)
 
-    model = RobertaClassifier(config.model_name, config.pooling, config.dropout).to(device)
+    model = RobertaClassifier(config.model_name, config.pooling, config.dropout,
+                              attn_implementation=config.attn_implementation or None).to(device)
     gpus = torch.cuda.device_count() if config.data_parallel else min(torch.cuda.device_count(), 1)
     net = nn.DataParallel(model) if gpus > 1 else model  # Kaggle's T4 x2: each batch is split over both GPUs
     dtype = amp_dtype(device) if config.amp else None

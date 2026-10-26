@@ -74,12 +74,13 @@ class RobertaClassifier(nn.Module):
     """
 
     def __init__(self, model_name: str = "roberta-base", pooling: str = "mean", dropout: float = 0.1,
-                 num_classes: int = NUM_CLASSES):
+                 num_classes: int = NUM_CLASSES, attn_implementation: str | None = None):
         super().__init__()
         if pooling not in ("mean", "first"):
             raise ValueError("pooling must be 'mean' or 'first'")
         self.pooling = pooling
-        self.encoder = RobertaModel.from_pretrained(model_name, add_pooling_layer=False)
+        extra = {"attn_implementation": attn_implementation} if attn_implementation else {}   # "eager" or "sdpa"
+        self.encoder = RobertaModel.from_pretrained(model_name, add_pooling_layer=False, **extra)
         self.dropout = nn.Dropout(dropout)
         self.head = nn.Linear(self.encoder.config.hidden_size, num_classes)
 
