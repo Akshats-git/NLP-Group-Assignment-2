@@ -89,7 +89,10 @@ class RobertaClassifier(nn.Module):
             return hidden[:, 0]
         return masked_mean(hidden.float(), attention_mask)  # sum in fp32, fp16 can overflow on long reviews
 
-    def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
-        hidden = self.encoder(input_ids=input_ids, attention_mask=attention_mask).last_hidden_state
+    def forward(self, input_ids: torch.Tensor | None, attention_mask: torch.Tensor,
+                inputs_embeds: torch.Tensor | None = None) -> torch.Tensor:
+        """inputs_embeds replaces input_ids' word embeddings (integrated gradients needs the embedding path)."""
+        inputs = {"input_ids": input_ids} if inputs_embeds is None else {"inputs_embeds": inputs_embeds}
+        hidden = self.encoder(**inputs, attention_mask=attention_mask).last_hidden_state
         pooled = self.pool(hidden, attention_mask)
         return self.head(self.dropout(pooled.to(self.head.weight.dtype)))

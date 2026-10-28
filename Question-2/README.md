@@ -12,6 +12,7 @@ Question-2/
   01_preprocessing.ipynb   both input pipelines, dataset and length statistics
   02_bigru.ipynb           BiGRU + attention baseline (2 seeds), curves
   03_roberta.ipynb         RoBERTa fine-tuning (4 runs), pooling ablation, curves
+  04_evaluation.ipynb      test-set evaluation of all runs, confusion matrices, examples, token importance
   q2/                      code the notebooks import
     data.py                loading, title + body merge, length statistics
     classic.py             BiGRU pipeline: cleaning, spaCy tokens, vocab, GloVe matrix, loaders
@@ -22,6 +23,7 @@ Question-2/
     training.py            pieces both training loops share
     train_bigru.py         BiGRU training loop, also a command-line script
     train_roberta.py       RoBERTa fine-tuning loop, also a command-line script
+    evaluation.py          test predictions, example picking, integrated gradients, token-importance plot
     kaggle.py              brings finished runs back from an earlier Kaggle version
   tests/                   offline tests for q2/
   outputs/results/         metrics and statistics (committed)
@@ -79,8 +81,7 @@ be closed. The notebook trains four runs, mean and first-token pooling with seed
 
 When the version finishes, download `outputs/results/` and `outputs/figures/` from its Output tab
 and copy them into `Question-2/outputs/` in the repo. The checkpoints in `outputs/checkpoints/`
-(about 500 MB each) stay on Kaggle. Add this notebook's output as an input to the evaluation
-notebook later.
+(about 500 MB each) stay on Kaggle. Add this notebook's output as an input to `04_evaluation.ipynb`.
 
 Runs that already have a `summary.json` are skipped. A new Kaggle version starts from a fresh clone, so
 to continue from an earlier version, attach its output (**Add Input → Your Work → Notebooks**). The
@@ -93,6 +94,22 @@ python -m q2.train_roberta --limit 2000 --epochs 1 --device cpu     # quick chec
 ```
 
 On an Apple Silicon Mac, pass `--device cpu`: the MPS backend stalls on RoBERTa training.
+
+### Test-set evaluation
+
+`04_evaluation.ipynb` is the only notebook that loads the test split. Import it the same way, then
+**Add Input → Your Work → Notebooks** and attach the finished versions of `02_bigru.ipynb` and
+`03_roberta.ipynb`; the first cell copies their checkpoints in. One GPU is enough, and **Save & Run All**
+takes a few minutes. It evaluates all six runs at their best validation checkpoint and writes:
+
+- `outputs/results/<run>/test_predictions.jsonl`: per-review prediction and class probabilities. These are
+  written once; running the notebook again reloads them instead of predicting again.
+- `outputs/results/test_summary.json` (per-run metrics, mean ± std per model) and `test_examples.json`
+  (the qualitative examples).
+- `outputs/figures/test_confusion_matrices.png`, `test_per_class_f1.png`, `test_error_distance.png` and
+  `test_token_importance_<k>.png` (BiGRU attention next to RoBERTa integrated gradients).
+
+Download `outputs/results/` and `outputs/figures/` from the Output tab as for training.
 
 ## Running locally
 

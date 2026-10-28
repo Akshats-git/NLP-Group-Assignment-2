@@ -4,9 +4,12 @@
     classic       BiGRU pipeline: clean, lowercase, spaCy tokens, Vocab, GloVe matrix
     roberta_data  RoBERTa pipeline: byte-level BPE, truncation, dynamic padding
     batching      length-grouped batches for faster training
-    models        RobertaClassifier (mean or first-token pooling)
+    models        BiGRUAttention, RobertaClassifier (mean or first-token pooling)
     metrics       accuracy, macro / per-class F1, MAE, error distance
+    train_bigru   BiGRU training loop, also runnable as `python -m q2.train_bigru`
     train_roberta fine-tuning loop, also runnable as `python -m q2.train_roberta`
+    evaluation    test predictions, example picking, integrated gradients
+    kaggle        brings finished runs back from attached Kaggle notebook outputs
 """
 
 import sys

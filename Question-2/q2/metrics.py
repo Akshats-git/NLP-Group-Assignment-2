@@ -31,3 +31,14 @@ def classification_metrics(labels, preds) -> dict:
         "per_class_f1": f1_score(labels, preds, average=None, labels=classes, zero_division=0).tolist(),
         "confusion_matrix": confusion_matrix(labels, preds, labels=classes).tolist(),
     }
+
+
+def error_distances(labels, preds) -> list[float]:
+    """Share of reviews predicted 0, 1, 2, 3 and 4 stars away from the truth."""
+    distance = np.abs(np.asarray(labels) - np.asarray(preds))
+    return (np.bincount(distance, minlength=NUM_CLASSES) / len(distance)).tolist()
+
+
+def confusions_between(confusion: list[list[int]], a: int, b: int) -> int:
+    """Reviews of class a predicted as b plus reviews of b predicted as a."""
+    return int(confusion[a][b] + confusion[b][a])
