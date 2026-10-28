@@ -15,17 +15,21 @@ KAGGLE_INPUT = Path("/kaggle/input")
 
 
 def import_finished_runs(pattern: str = "*", inputs: Path = KAGGLE_INPUT) -> list[str]:
-    """Copy results and checkpoints of runs with a summary.json found under `inputs`. Returns the run names copied."""
+    """Copy results and checkpoints of runs with a summary.json found under `inputs`. Returns the run names copied.
+
+    Results and checkpoints are checked separately: a fresh clone already has the committed
+    results of finished runs but never their checkpoints, which the evaluation needs.
+    """
     copied = []
     if not inputs.exists():
         return copied
     outputs = output_dir(2)
     for summary in sorted(inputs.glob(f"**/Question-2/outputs/results/{pattern}/summary.json")):
         run, source = summary.parent.name, summary.parents[2]
-        if (outputs / "results" / run / "summary.json").exists():
-            continue
-        for kind in ("results", "checkpoints"):
-            if (source / kind / run).exists():
-                shutil.copytree(source / kind / run, outputs / kind / run, dirs_exist_ok=True)
-        copied.append(run)
+        missing = [kind for kind, marker in (("results", "summary.json"), ("checkpoints", "best.pt"))
+                   if (source / kind / run).exists() and not (outputs / kind / run / marker).exists()]
+        for kind in missing:
+            shutil.copytree(source / kind / run, outputs / kind / run, dirs_exist_ok=True)
+        if missing:
+            copied.append(run)
     return copied

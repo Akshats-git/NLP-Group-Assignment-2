@@ -52,6 +52,9 @@ def test_import_finished_runs(tmp_path, monkeypatch):
     assert (outputs / "checkpoints" / "roberta_mean_seed42" / "best.pt").exists()
     assert not (outputs / "results" / "roberta_mean_seed43").exists()
     assert kaggle.import_finished_runs("roberta_*", inputs=tmp_path / "input") == []   # already there
+    (outputs / "checkpoints" / "roberta_mean_seed42" / "best.pt").unlink()             # fresh clone: results
+    assert kaggle.import_finished_runs("roberta_*", inputs=tmp_path / "input") == ["roberta_mean_seed42"]  # committed,
+    assert (outputs / "checkpoints" / "roberta_mean_seed42" / "best.pt").exists()      # checkpoint still copied
 
 
 def test_masked_mean_ignores_padding():
