@@ -1,0 +1,60 @@
+{
+  "run_name": "roberta_mean_seed43",
+  "best_epoch": 2.0,
+  "best_step": 12500,
+  "train_time_s": 2560.710929256,
+  "checkpoint": "Question-2/outputs/checkpoints/roberta_mean_seed43/best.pt",
+  "val": {
+    "accuracy": 0.6658,
+    "macro_f1": 0.6636009424628571,
+    "mae": 0.3782,
+    "off_by_one": 0.298,
+    "off_by_two_plus": 0.0362,
+    "adjacent_share_of_errors": 0.8916816277678037,
+    "extreme_confusions": 6,
+    "per_class_f1": [
+      0.7397397397397397,
+      0.569377990430622,
+      0.5535714285714286,
+      0.6426680783483325,
+      0.8126474752241624
+    ],
+    "confusion_matrix": [
+      [
+        739,
+        209,
+        39,
+        8,
+        5
+      ],
+      [
+        193,
+        595,
+        193,
+        12,
+        7
+      ],
+      [
+        55,
+        267,
+        527,
+        140,
+        11
+      ],
+      [
+        10,
+        17,
+        131,
+        607,
+        235
+      ],
+      [
+        1,
+        2,
+        14,
+        122,
+        861
+      ]
+    ]
+  }
+}
