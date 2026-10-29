@@ -25,6 +25,7 @@ Question-2/
     train_roberta.py       RoBERTa fine-tuning loop, also a command-line script
     evaluation.py          test predictions, example picking, integrated gradients, token-importance plot
     kaggle.py              brings finished runs back from an earlier Kaggle version
+  report/                  the report: report.tex (source), report.pdf, report.md (same text for GitHub)
   tests/                   offline tests for q2/
   outputs/results/         metrics and statistics (committed)
   outputs/figures/         report figures (committed)
