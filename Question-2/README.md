@@ -10,8 +10,8 @@ A BiGRU with additive attention pooling over GloVe embeddings is compared with f
 ```
 Question-2/
   01_preprocessing.ipynb   both input pipelines, dataset and length statistics
-  02_bigru.ipynb           BiGRU + attention baseline (2 seeds), curves
-  03_roberta.ipynb         RoBERTa fine-tuning (4 runs), pooling ablation, curves
+  02_bigru.ipynb           BiGRU + attention baseline (2 seeds), curves, its test results
+  03_roberta.ipynb         RoBERTa fine-tuning (4 runs), pooling ablation, curves, their test results
   04_evaluation.ipynb      test-set evaluation of all runs, confusion matrices, examples, token importance
   q2/                      code the notebooks import
     data.py                loading, title + body merge, length statistics
