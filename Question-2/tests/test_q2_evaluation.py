@@ -9,7 +9,7 @@ from transformers import RobertaConfig, RobertaModel
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from q2.evaluation import integrated_gradients, merge_subwords, pick_examples, review_tags
+from q2.evaluation import integrated_gradients, merge_subwords, pick_examples, plot_token_highlights, review_tags
 from q2.metrics import confusions_between, error_distances
 from q2.models import RobertaClassifier
 
@@ -74,3 +74,10 @@ def test_merge_subwords_decodes_bytes():
     ids = tokenizer("I don’t mind")["input_ids"]
     words, _ = merge_subwords(tokenizer.convert_ids_to_tokens(ids), [0.0] * len(ids), tokenizer.convert_tokens_to_string)
     assert words == ["I", "don’t", "mind"]
+
+
+def test_token_highlights_wrap_long_text():
+    short = plot_token_highlights([("row", ["good"] * 5, [1.0] * 5)], width=4)
+    long = plot_token_highlights([("row", ["good"] * 200, [1.0] * 200)], width=4)
+    assert long.get_size_inches()[1] > 3 * short.get_size_inches()[1]      # wrapped onto more lines, not wider
+    assert long.get_size_inches()[0] == short.get_size_inches()[0] == 4

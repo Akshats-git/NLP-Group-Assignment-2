@@ -137,7 +137,7 @@ of mean pooling is therefore not more accurate here, but it is the more reproduc
 *Figure 3. Row-normalised test confusion matrices, counts pooled over both seeds: cell (i, j) is the share of true
 i-star reviews predicted as j stars.*
 
-| Model | Off by 1 (% of reviews) | Off by ≥2 (% of reviews) | Adjacent / all errors | 1★↔2★ | 2★↔3★ | 3★↔4★ | 4★↔5★ | 1★↔3★ | 1★↔5★ |
+| Model | Off by 1 (% of reviews) | Off by ≥2 (% of reviews) | Adjacent share of errors | 1★↔2★ | 2★↔3★ | 3★↔4★ | 4★↔5★ | 1★↔3★ | 1★↔5★ |
 |---|---|---|---|---|---|---|---|---|---|
 | BiGRU + attention | 30.89 | 5.81 | 84.2% | 439.0 | 404.0 | 313.5 | 388.0 | 155.5 | 11.5 |
 | RoBERTa, mean | 30.12 | 3.57 | 89.4% | 407.0 | 429.0 | 291.5 | 378.5 | 99.5 | 5.5 |
@@ -210,11 +210,12 @@ complaint about policy rather than the product. RoBERTa weighs these hedges, whi
 BiGRU keys on strongly negative words ("cheating", "useless", "won't eat") and lands on 1★. Its wins are thus mostly
 adjacent-rating decisions where a cruder reading happens to match how the reviewer mapped sentiment to stars.
 
-![Token importance, example A](../outputs/figures/test_token_importance_2.png)
+![Token importance, example A](../outputs/figures/test_token_highlights_2.png)
 
-*Figure 4. Example A. Top: BiGRU attention weights α_t (sum to 1). Bottom: RoBERTa token importance by integrated
-gradients for the predicted 5★ logit, sub-word pieces summed into words; the positive part is shown, normalised to sum
-to 1. Each row has its own colour scale.*
+*Figure 4. Example A, every word shaded by its weight (darkest = largest in that row). Top: BiGRU attention weights
+α_t over its lowercased spaCy tokens. Bottom: RoBERTa token importance by integrated gradients for the predicted 5★
+logit, sub-word pieces summed into words; only the positive part (evidence for 5★) is shaded. The weights are in
+[`test_token_importance.json`](../outputs/results/test_token_importance.json).*
 
 **What the models look at.** For RoBERTa we use integrated gradients (Sundararajan et al., 2017) on the input
 embeddings: 256 steps from a baseline in which every token except `<s>` and `</s>` is replaced by `<pad>`. The
@@ -223,7 +224,7 @@ strongest evidence *for* 5★ is "gone!!" at the very end (+1.09) and the first-
 and "horrible" (−0.41) are the strongest evidence *against*. RoBERTa therefore registers the negative words as
 negative, but the resolution at the end outweighs them. The BiGRU's attention, by contrast, piles onto "do" and "n't"
 in the first sentence and it predicts 1★: the negation cue is found, but the pooled vector carries "negative" rather
-than "negated negative". A second example ([`test_token_importance_1.png`](../outputs/figures/test_token_importance_1.png),
+than "negated negative". A second example ([`test_token_highlights_1.png`](../outputs/figures/test_token_highlights_1.png),
 example C) shows both models focusing on "Recommend" (IG +1.90), yet only RoBERTa reaches 5★; the BiGRU also has to
 read "Senseo" as `<unk>`. Two caveats apply: attention weights show what was pooled, not what changed the decision,
 and integrated gradients depend on the chosen baseline.

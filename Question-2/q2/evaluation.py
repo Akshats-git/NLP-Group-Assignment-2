@@ -11,9 +11,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from matplotlib.colors import LinearSegmentedColormap
 
 from common import Vocab, autocast, checkpoints_dir, data_dir, load_json, load_jsonl, results_dir, save_jsonl, to_device
-from common.plotting import attention_window, plot_attention, savefig
+from common.plotting import BLUE_RAMP, INK, attention_window, plot_attention, savefig, set_style
 
 from . import classic
 from .data import load_reviews
@@ -194,6 +195,60 @@ def plot_token_importance(rows: list[tuple[str, list[str], np.ndarray]], out_pat
     if title:
         fig.suptitle(title, fontweight="bold")
     fig.tight_layout()
+    if out_path is not None:
+        savefig(fig, out_path)
+    return fig
+
+
+def plot_token_highlights(rows: list[tuple[str, list[str], np.ndarray]], out_path=None, title: str | None = None,
+                          width: float = 7.0, fontsize: float = 9.0):
+    """Each (label, tokens, weights) row as wrapped text, every word's background shaded by its weight.
+
+    Stays readable at page width for a review of any length, which a one-row heatmap does not.
+    Like plot_token_importance, each row is scaled to its own maximum (darkest = largest weight).
+    """
+    set_style()
+    cmap = LinearSegmentedColormap.from_list("highlight", ["#ffffff", *BLUE_RAMP])
+    pad, gap, line, margin = 0.035, 0.05, fontsize * 1.75 / 72, 0.05      # inches
+    measure = plt.figure(figsize=(width, 1))
+    renderer = measure.canvas.get_renderer()
+
+    def text_width(text, **kwargs):
+        artist = measure.text(0, 0, text, fontsize=fontsize, **kwargs)
+        size = artist.get_window_extent(renderer).width / measure.dpi
+        artist.remove()
+        return size
+
+    layout, y = [], (fontsize * 2.2 / 72 if title else 0)                  # (kind, x, y, text, shade)
+    for label, tokens, weights in rows:
+        y += line
+        layout.append(("label", margin, y, label, 0.0))
+        weights = np.clip(np.asarray(weights, dtype=float), 0, None)
+        shades = weights / weights.max() if weights.max() > 0 else weights
+        x, y = margin, y + line
+        for token, shade in zip(tokens, shades):
+            w = text_width(token) + 2 * pad
+            if x + w > width - margin and x > margin:
+                x, y = margin, y + line
+            layout.append(("word", x, y, token, float(shade)))
+            x += w + gap
+        y += line * 0.4
+    plt.close(measure)
+
+    height = y + margin
+    fig = plt.figure(figsize=(width, height))
+    ax = fig.add_axes((0, 0, 1, 1))
+    ax.set_xlim(0, width)
+    ax.set_ylim(height, 0)
+    ax.axis("off")
+    if title:
+        ax.text(width / 2, fontsize * 1.2 / 72, title, ha="center", va="center", fontsize=fontsize + 1, fontweight="bold")
+    for kind, x, y, text, shade in layout:
+        if kind == "label":
+            ax.text(x, y, text, va="center", fontsize=fontsize, fontweight="bold", color=INK)
+            continue
+        ax.text(x + pad, y, text, va="center", fontsize=fontsize, color="white" if shade > 0.6 else INK,
+                bbox=dict(boxstyle=f"square,pad={pad * 72 / fontsize:.3f}", facecolor=cmap(shade), edgecolor="none"))
     if out_path is not None:
         savefig(fig, out_path)
     return fig
