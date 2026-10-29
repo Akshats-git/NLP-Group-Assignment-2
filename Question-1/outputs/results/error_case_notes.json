@@ -1,0 +1,42 @@
+{
+ "2171": {
+  "error_type": "long-distance dependency; wrong attention focus; OOV names; repetition",
+  "comment": "Attention starts sensibly (the quoted clause), then sits on one source column ('university') for about 12 consecutive steps while the decoder invents 'आचार्य श्री राम नाथ कोविन्द'. Later it loops 'एक अन्य लेखकों के साथ' while attending 'medical student'. The heatmap shows the stuck column, which explains the drift.",
+  "heatmap_useful": "yes, it shows where the model got stuck"
+ },
+ "799": {
+  "error_type": "OOV (bcci, mca); extra/repeated words",
+  "comment": "The first words align diagonally (afterwards -> इसके अतिरिक्त). Attention then lands on 'joint presentation' (correct focus) but the decoder emits 'एक ही एक ही एक ही' instead of 'संयुक्त प्रस्तुतिकरण'. The two acronyms are unknown source words, so 'और इस द्वारा द्वारा' is filler.",
+  "heatmap_useful": "partly: focus is right, output is wrong"
+ },
+ "1127": {
+  "error_type": "OOV (tassie); missing word ($325m); wrong word",
+  "comment": "'tassie health' correctly drives 'स्वास्थ्य के लिए'. 'rescue package' is attended with weight about 0.45 but translated as 'माइक्रोसॉफ़्ट अनुरोध' (a hallucination for 'बचाव पैकेज'). The number is dropped and the output ends early.",
+  "heatmap_useful": "partly: correct source words attended, wrong target words"
+ },
+ "2031": {
+  "error_type": "wrong word (विदेशों missing); repetition; word order",
+  "comment": "Best diagonal alignment of the eight. 'abroad' receives the highest weight (about 0.65) for three steps in a row, yet the model emits 'भी भी भी' instead of 'विदेशों में'. A very high weight does not mean a correct word. 'बल्कि' is also generated twice.",
+  "heatmap_useful": "yes for locating the failure, no as a guarantee of correctness"
+ },
+ "2278": {
+  "error_type": "OOV names missing; wrong word; extra words",
+  "comment": "Mostly monotone alignment. The OOV names (amarnath upadhyaya, ada) are replaced by generic words ('श्री एक समिति के अनुसार'). The ending is good: 'sent' -> 'भेजा गया है' with weight about 0.45 and 'government' -> 'सरकार', but 'बैठक में' (meeting) is hallucinated while attending 'sent'.",
+  "heatmap_useful": "yes"
+ },
+ "2388": {
+  "error_type": "OOV names missing; wrong word (semantic neighbour)",
+  "comment": "Near-perfect diagonal: 'both' -> 'दोनों' (weight about 0.85), 'classical' -> 'शास्त्रीय'. The names nita and isha are unknown and dropped. 'dancers' becomes 'संगीत' (music) and 'professional' becomes 'शैली' (style), so the alignment looks right while two words are wrong.",
+  "heatmap_useful": "misleading: the heatmap looks like a good translation"
+ },
+ "800": {
+  "error_type": "repetition; missing content words; long-distance dependency",
+  "comment": "The first half is a clean diagonal ('besides that, a special coin' -> 'इसके अलावा एक विशेष'). From 'would be used' on, attention spreads over several source words and the decoder repeats 'किया जाएगा / द्वारा' three times. 'coin toss' (टॉस) and 'mca' are never translated.",
+  "heatmap_useful": "yes: the diagonal breaks where the output goes wrong"
+ },
+ "1568": {
+  "error_type": "long-distance dependency; wrong attention focus (punctuation); repetition; word order",
+  "comment": "A 30-token sentence whose clause 'the bank said two weeks ago' belongs at the front of the Hindi. The model drifts: in the last ten steps attention is anchored on the closing quote mark and the output degenerates into punctuation ('‘ ‘ द ’ ’ ’ ’'). 'two weeks' becomes 'दो शब्दों' (two words).",
+  "heatmap_useful": "yes: attention on punctuation signals the collapse"
+ }
+}
