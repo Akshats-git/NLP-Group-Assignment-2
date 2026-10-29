@@ -1,0 +1,52 @@
+{
+  "config": {
+    "seed": 42,
+    "pooling": "mean",
+    "model_name": "roberta-base",
+    "max_len": 256,
+    "dropout": 0.1,
+    "lr": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06,
+    "epochs": 2,
+    "batch_size": 32,
+    "grad_accum": 1,
+    "max_grad_norm": 1.0,
+    "evals_per_epoch": 2,
+    "patience": 3,
+    "eval_batch_size": 128,
+    "limit": null,
+    "num_workers": 2,
+    "device": "",
+    "data_parallel": true,
+    "amp": true,
+    "tag": "",
+    "attn_implementation": ""
+  },
+  "seed": 42,
+  "environment": {
+    "timestamp_utc": "2026-10-28T13:19:06+00:00",
+    "git_commit": "90dde16",
+    "python": "3.13.15",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "torch": "2.11.0+cu128",
+    "numpy": "2.1.3",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "gpu": "Tesla T4",
+    "transformers": "5.21.0",
+    "datasets": "4.8.5",
+    "tokenizers": "0.23.1",
+    "sentencepiece": "0.2.2"
+  },
+  "run_name": "roberta_mean_seed42",
+  "gpus": 2,
+  "amp_dtype": "torch.float16",
+  "parameters": {
+    "total": 124058885,
+    "trainable": 124058885
+  },
+  "total_steps": 12500,
+  "train_reviews": 200000,
+  "val_reviews": 5000
+}
