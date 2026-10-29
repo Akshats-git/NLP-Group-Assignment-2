@@ -1,0 +1,162 @@
+{
+  "baseline": {
+    "1-5": {
+      "count": 13,
+      "hyp_ref_length_ratio": 0.8058252427184466,
+      "mean_sentence_chrf": 7.412306680054058,
+      "repetition_rate": 0.0,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.06896551724137931,
+        0.04,
+        0.1111111111111111,
+        0.5
+      ]
+    },
+    "6-10": {
+      "count": 282,
+      "hyp_ref_length_ratio": 0.968561872909699,
+      "mean_sentence_chrf": 8.958401720248563,
+      "repetition_rate": 0.0035460992907801418,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.09658421672555949,
+        0.08039492242595205,
+        0.06852791878172589,
+        0.3385093167701863
+      ]
+    },
+    "11-15": {
+      "count": 481,
+      "hyp_ref_length_ratio": 1.119417211328976,
+      "mean_sentence_chrf": 10.653484150002718,
+      "repetition_rate": 0.002079002079002079,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.11232063334982682,
+        0.11701526286037309,
+        0.08606124604012672,
+        0.33674698795180724
+      ]
+    },
+    "16+": {
+      "count": 1617,
+      "hyp_ref_length_ratio": 1.025478536394809,
+      "mean_sentence_chrf": 12.626530849687708,
+      "repetition_rate": 0.004947433518862091,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.16469038208168643,
+        0.1543362831858407,
+        0.13013055721477942,
+        0.22299587723316536
+      ]
+    },
+    "short (1-10)": {
+      "count": 295,
+      "hyp_ref_length_ratio": 0.9631425800193987,
+      "mean_sentence_chrf": 8.890268718477278,
+      "repetition_rate": 0.003389830508474576,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.09567198177676538,
+        0.07901907356948229,
+        0.06993865030674846,
+        0.34384384384384387
+      ]
+    },
+    "long (16+)": {
+      "count": 1617,
+      "hyp_ref_length_ratio": 1.025478536394809,
+      "mean_sentence_chrf": 12.626530849687708,
+      "repetition_rate": 0.004947433518862091,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.16469038208168643,
+        0.1543362831858407,
+        0.13013055721477942,
+        0.22299587723316536
+      ]
+    }
+  },
+  "attention": {
+    "1-5": {
+      "count": 13,
+      "hyp_ref_length_ratio": 0.7281553398058253,
+      "mean_sentence_chrf": 12.438478501387634,
+      "repetition_rate": 0.15384615384615385,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.06896551724137931,
+        0.08,
+        0.14814814814814814,
+        0.5454545454545454
+      ]
+    },
+    "6-10": {
+      "count": 282,
+      "hyp_ref_length_ratio": 0.9331103678929766,
+      "mean_sentence_chrf": 16.147583971528356,
+      "repetition_rate": 0.05673758865248227,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.2414605418138987,
+        0.22708039492242596,
+        0.1598984771573604,
+        0.43478260869565216
+      ]
+    },
+    "11-15": {
+      "count": 481,
+      "hyp_ref_length_ratio": 1.0325435729847494,
+      "mean_sentence_chrf": 17.084456561905327,
+      "repetition_rate": 0.08731808731808732,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.2533399307273627,
+        0.248728094968909,
+        0.18743400211193242,
+        0.39819277108433737
+      ]
+    },
+    "16+": {
+      "count": 1617,
+      "hyp_ref_length_ratio": 1.106753765354399,
+      "mean_sentence_chrf": 18.09156075670719,
+      "repetition_rate": 0.1756338899196042,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.2752799736495389,
+        0.2524778761061947,
+        0.22971243280143358,
+        0.28401282638570774
+      ]
+    },
+    "short (1-10)": {
+      "count": 295,
+      "hyp_ref_length_ratio": 0.9262851600387972,
+      "mean_sentence_chrf": 15.984131866064526,
+      "repetition_rate": 0.061016949152542375,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.2357630979498861,
+        0.2220708446866485,
+        0.15950920245398773,
+        0.43843843843843844
+      ]
+    },
+    "long (16+)": {
+      "count": 1617,
+      "hyp_ref_length_ratio": 1.106753765354399,
+      "mean_sentence_chrf": 18.09156075670719,
+      "repetition_rate": 0.1756338899196042,
+      "unk_rate": 0.0,
+      "position_recall_quartiles": [
+        0.2752799736495389,
+        0.2524778761061947,
+        0.22971243280143358,
+        0.28401282638570774
+      ]
+    }
+  }
+}
