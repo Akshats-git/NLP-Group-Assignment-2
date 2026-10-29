@@ -1,0 +1,175 @@
+{
+  "counts": {
+    "roberta_right_bigru_wrong": 242,
+    "bigru_right_roberta_wrong": 158
+  },
+  "roberta_right_bigru_wrong": [
+    {
+      "id": "en_0501949",
+      "text": "It’s big (2 in picture). Arrived at the end of July and on delivery time. The mat itself: The Good: -came with a free gym towel -came with straps and sleeve for storage -came with pvc pipe to roll it on -feels good -the price is good The Bad -the only issue i could see is the material probably would not be suitable for dropping weights on. But then again this is a yoga mat. Overall: 4.5/5",
+      "stars": 4,
+      "tags": [
+        "negation",
+        "mixed / contrast",
+        "rare words / typos"
+      ],
+      "bigru_stars": [
+        2,
+        5
+      ],
+      "roberta_stars": [
+        4,
+        4
+      ],
+      "confidence": 0.9925649999999999
+    },
+    {
+      "id": "en_0753534",
+      "text": "Works 100% on curling-ironed hair. I'm have thick curly hair that I have to apply a lot of heat to just to get it semi-straight. And because I use only coconut oil it tends to leave my hair with a cooked kind of smell. This spray works! I sprayed my hair all over one time and it immediately cancelled the coconut odor out of my hair. The scent smells so nice and it's lightweight. I could smell it for about an hour or two and then it faded, but It totally canceled all the odor out of my hair...no more cooked smell. And I can use a little bit every day every time I curl my hair and it doesn't dry it out or change the texture whatsoever.",
+      "stars": 5,
+      "tags": [
+        "negation",
+        "mixed / contrast",
+        "long"
+      ],
+      "bigru_stars": [
+        3,
+        2
+      ],
+      "roberta_stars": [
+        5,
+        5
+      ],
+      "confidence": 0.9512700000000001
+    },
+    {
+      "id": "en_0298106",
+      "text": "A Society Advances at the Speed of Light. I'm still trying to remember why I liked Age of Myth, the first novel in this series. Whatever that was, it wasn't really present in the sequel. Though some of the characters are engaging and the overall story line is interesting enough, this book takes a few leaps that seemed forced in order to level the playing field between two races. A society going from the stone age to the copper age to the iron age (and discovering many of the technological and cultural advancements that come with those transitions) in a matter of weeks thanks to recurring epiphanies by two or three characters... well, let's just say it's all a bit rushed and bordering on repeated examples of deus ex machina (a phrase I've never used before, but which seems entirely appropriate in this case). Sadly, this book--which the author admitted is his favorite in the series--has me questioning whether to continue to Book Three.",
+      "stars": 3,
+      "tags": [
+        "negation",
+        "mixed / contrast",
+        "long",
+        "rare words / typos"
+      ],
+      "bigru_stars": [
+        4,
+        4
+      ],
+      "roberta_stars": [
+        3,
+        3
+      ],
+      "confidence": 0.8160050000000001
+    },
+    {
+      "id": "en_0623344",
+      "text": "better than the original decaf Senseo pods. Unlike the original decaf from Senseo, this packaging from Europe contains decaf coffee pods that are almost indistinguishable from the regular caffeinated coffee. Recommend.",
+      "stars": 5,
+      "tags": [
+        "rare words / typos"
+      ],
+      "bigru_stars": [
+        4,
+        4
+      ],
+      "roberta_stars": [
+        5,
+        5
+      ],
+      "confidence": 0.89111
+    },
+    {
+      "id": "en_0600154",
+      "text": "I don’t have cravings after taking this at night! I’m horrible with eating late at night, I do it almost every night after dinner and I’m sure it’s part of the reason I’m overweight. But when I take this, the cravings are gone!!",
+      "stars": 5,
+      "tags": [
+        "negation",
+        "mixed / contrast"
+      ],
+      "bigru_stars": [
+        1,
+        2
+      ],
+      "roberta_stars": [
+        5,
+        5
+      ],
+      "confidence": 0.9070050000000001
+    },
+    {
+      "id": "en_0792507",
+      "text": "2018 Honda Accord. . Fit my 2018 Accord pretty good the back part of the seat isnt fully covered completely but most is, Came a bit wrinkled but not to bad, material is actually good quality",
+      "stars": 4,
+      "tags": [
+        "negation",
+        "mixed / contrast"
+      ],
+      "bigru_stars": [
+        3,
+        3
+      ],
+      "roberta_stars": [
+        4,
+        4
+      ],
+      "confidence": 0.8751450000000001
+    }
+  ],
+  "bigru_right_roberta_wrong": [
+    {
+      "id": "en_0133223",
+      "text": "Not fully described. Amazon did't disclose the return policy of restock fee which is called cheating.",
+      "stars": 1,
+      "tags": [
+        "negation"
+      ],
+      "bigru_stars": [
+        1,
+        1
+      ],
+      "roberta_stars": [
+        2,
+        2
+      ],
+      "confidence": 0.90767
+    },
+    {
+      "id": "en_0239182",
+      "text": "Probably very good, but my boy won't eat them. I hate to give this product one star when it probably deserves 5. My dog has chronic itchy skin and I had high hopes that this product would be the answer to his skin issues. I'll never know because he won't eat them. At first I gave them to him as a treat. He sniffed it and walked away. I crumbled just one up in his food but he was onto me and wouldn't touch it. So, sadly, the search continues.",
+      "stars": 1,
+      "tags": [
+        "negation",
+        "mixed / contrast"
+      ],
+      "bigru_stars": [
+        1,
+        1
+      ],
+      "roberta_stars": [
+        3,
+        2
+      ],
+      "confidence": 0.894055
+    },
+    {
+      "id": "en_0648962",
+      "text": "***Only works if you pay for subscription***. I’ve had my outdoor nest camera on my front porch for one year now. My subscription just ran out which is $100 per year. The camera is pretty useless without the subscription. When you have the subscription I can distinguish people from Pats or motion of trees blowing in the wind and sounds versus voices. Now that my subscription is over it can’t do any of those things is just notifies me anytime there’s motion and it can’t distinguish. It doesn’t even routine video for five minutes so you can go back and look and see who was on your porch because by time you receive the notification there already gone so the live feed is really ineffective unless someone hangs out in front of the camera for an extended period. So if you’re comfortable with being stuck with a subscription every year at $100 per camera then it is a decent camera but it’s useless without the subscription. I’m looking into other cameras where I don’t have to have a subscription.",
+      "stars": 1,
+      "tags": [
+        "negation",
+        "mixed / contrast",
+        "long"
+      ],
+      "bigru_stars": [
+        1,
+        1
+      ],
+      "roberta_stars": [
+        2,
+        2
+      ],
+      "confidence": 0.6465350000000001
+    }
+  ]
+}

@@ -161,19 +161,24 @@ def integrated_gradients(model: RobertaClassifier, input_ids: torch.Tensor, targ
     return attributions, float(attributions.sum() - gap)
 
 
-def merge_subwords(tokens: list[str], scores) -> tuple[list[str], np.ndarray]:
-    """Byte-level BPE pieces ("Ġgre", "at") -> words, summing their scores. <s> and </s> are dropped."""
-    words, merged = [], []
+def merge_subwords(tokens: list[str], scores, decode=None) -> tuple[list[str], np.ndarray]:
+    """Byte-level BPE pieces ("Ġgre", "at") -> words, summing their scores. <s> and </s> are dropped.
+
+    Pass decode=tokenizer.convert_tokens_to_string: pieces store bytes as characters, so
+    without it a curly apostrophe stays "âĢĻ" and "I’m" comes out as "IâĢĻm".
+    """
+    pieces, merged = [], []
     for token, score in zip(tokens, np.asarray(scores, dtype=float)):
         if token in ("<s>", "</s>"):
             continue
-        if token.startswith("Ġ") or not words:
-            words.append(token.lstrip("Ġ"))
+        if token.startswith("Ġ") or not pieces:
+            pieces.append([token])
             merged.append(score)
         else:
-            words[-1] += token
+            pieces[-1].append(token)
             merged[-1] += score
-    return words, np.asarray(merged)
+    decode = decode or (lambda word: "".join(word).lstrip("Ġ"))
+    return [decode(word).strip() for word in pieces], np.asarray(merged)
 
 
 def plot_token_importance(rows: list[tuple[str, list[str], np.ndarray]], out_path=None, title: str | None = None,

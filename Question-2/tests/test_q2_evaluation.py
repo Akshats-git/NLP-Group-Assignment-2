@@ -63,3 +63,14 @@ def test_integrated_gradients_completeness(tiny_classifier):
     attributions, gap = integrated_gradients(tiny_classifier, ids, target=3, pad_id=1, steps=128)
     assert attributions.shape == (6,)
     assert abs(gap) < 0.02 * max(attributions.abs().sum().item(), 1e-3)
+
+
+def test_merge_subwords_decodes_bytes():
+    from transformers import RobertaTokenizerFast
+    try:
+        tokenizer = RobertaTokenizerFast.from_pretrained("roberta-base", local_files_only=True)
+    except OSError:
+        pytest.skip("roberta-base tokenizer not cached")
+    ids = tokenizer("I don’t mind")["input_ids"]
+    words, _ = merge_subwords(tokenizer.convert_ids_to_tokens(ids), [0.0] * len(ids), tokenizer.convert_tokens_to_string)
+    assert words == ["I", "don’t", "mind"]
