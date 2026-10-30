@@ -1,0 +1,13 @@
+{
+  "mean_entropy_nats": 2.3248937071623508,
+  "mean_mass_on_sos_eos": 0.010323096379876197,
+  "mean_max_weight": 0.27683130446340976,
+  "share_steps_multi_word_attention": 0.20641223858735455,
+  "share_steps_monotone_forward": 0.8528000758963946,
+  "mean_deviation_from_diagonal": 0.2182949994420875,
+  "mean_max_weight_when_token_in_reference": 0.27687049010136006,
+  "mean_max_weight_when_token_not_in_reference": 0.2768060269939772,
+  "share_tokens_in_reference": 0.39212303686223454,
+  "share_wrong_tokens_with_max_weight_above_0.7": 0.015233862547187492,
+  "n_sentences": 2393
+}

@@ -1,0 +1,23 @@
+{
+  "train_pairs": 30000,
+  "dev_pairs": 514,
+  "test_pairs": 2393,
+  "total_raw_train": 1659083,
+  "raw_train_scanned": 32748,
+  "max_en_len_train": 50,
+  "max_hi_len_train": 50,
+  "avg_en_len_train": 12.269,
+  "avg_hi_len_train": 12.848066666666666,
+  "max_len_filter": 50,
+  "max_len_ratio_filter_train": 3.0,
+  "max_train_subsample": 30000,
+  "sampling_seed": 42,
+  "en_vocab_size": 14073,
+  "hi_vocab_size": 14953,
+  "en_min_freq": 2,
+  "hi_min_freq": 2,
+  "en_oov_rate_dev": 0.0788431061806656,
+  "hi_oov_rate_dev": 0.11347081153175335,
+  "en_oov_rate_test": 0.10922727091395061,
+  "hi_oov_rate_test": 0.10237989914182076
+}
