@@ -1,0 +1,11 @@
+{
+  "steps": 27000,
+  "examples_seen": 1728000,
+  "epochs": 6.018536255759927,
+  "hours": 3.251972345643573,
+  "stop_reason": "time budget of 3.25 h reached",
+  "best_step": 27000,
+  "best_val_loss": 2.2443104751804417,
+  "best_val_ppl": 9.433908399308226,
+  "peak_gpu_memory_gb": 7.147067392
+}

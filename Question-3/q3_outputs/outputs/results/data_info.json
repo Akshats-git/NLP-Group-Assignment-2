@@ -1,0 +1,69 @@
+{
+  "dataset": "abisee/cnn_dailymail 3.0.0",
+  "tokenizer": "bert-base-uncased",
+  "vocab_size": 30523,
+  "lowercase": true,
+  "special_tokens": {
+    "start": "[CLS]",
+    "end": "[SEP]",
+    "pad": "[PAD]",
+    "sentence_break": "[NL]"
+  },
+  "src_len": 400,
+  "tgt_len": 128,
+  "pairs": {
+    "train": 287113,
+    "validation": 13368,
+    "test": 11490
+  },
+  "lengths": {
+    "train": {
+      "article": {
+        "median": 800.0,
+        "p90": 1481.0,
+        "max": 6323,
+        "limit": 400,
+        "pct_truncated": 89.88447057430349
+      },
+      "summary": {
+        "median": 63.0,
+        "p90": 99.0,
+        "max": 2302,
+        "limit": 128,
+        "pct_truncated": 2.792976981188591
+      }
+    },
+    "validation": {
+      "article": {
+        "median": 765.0,
+        "p90": 1476.300000000001,
+        "max": 2417,
+        "limit": 400,
+        "pct_truncated": 87.13345302214243
+      },
+      "summary": {
+        "median": 69.0,
+        "p90": 111.0,
+        "max": 1897,
+        "limit": 128,
+        "pct_truncated": 4.510771992818671
+      }
+    },
+    "test": {
+      "article": {
+        "median": 780.0,
+        "p90": 1504.0,
+        "max": 2967,
+        "limit": 400,
+        "pct_truncated": 87.82419495213229
+      },
+      "summary": {
+        "median": 66.0,
+        "p90": 104.0,
+        "max": 859,
+        "limit": 128,
+        "pct_truncated": 3.5161009573542215
+      }
+    }
+  }
+}

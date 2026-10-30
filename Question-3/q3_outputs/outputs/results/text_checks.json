@@ -1,0 +1,34 @@
+{
+  "Reference": {
+    "avg_words": 52.9065274151436,
+    "avg_sentences": 3.8832027850304613,
+    "pct_repeated_trigram": 7.180156657963447,
+    "pct_unsupported_number": 9.765013054830288,
+    "pct_novel_bigrams": 50.02706908434625,
+    "pct_empty": 0.0
+  },
+  "Lead-3": {
+    "avg_words": 78.79460400348128,
+    "avg_sentences": 2.9999129677980854,
+    "pct_repeated_trigram": 21.784160139251522,
+    "pct_unsupported_number": 0.0,
+    "pct_novel_bigrams": 0.0,
+    "pct_empty": 0.0
+  },
+  "Greedy": {
+    "avg_words": 55.98929503916449,
+    "avg_sentences": 3.5427328111401217,
+    "pct_repeated_trigram": 57.26718885987816,
+    "pct_unsupported_number": 0.5657093124456049,
+    "pct_novel_bigrams": 9.805710546653518,
+    "pct_empty": 0.0
+  },
+  "Greedy + trigram blocking": {
+    "avg_words": 55.41488250652741,
+    "avg_sentences": 3.590165361183638,
+    "pct_repeated_trigram": 7.911227154046998,
+    "pct_unsupported_number": 1.166231505657093,
+    "pct_novel_bigrams": 13.263043580778508,
+    "pct_empty": 0.0
+  }
+}

@@ -1,0 +1,176 @@
+[
+  {
+    "reason": "highest ROUGE-Lsum",
+    "index": 1037,
+    "id": "23d1195f78742c6abe27bb5447ac993a78fcedd1",
+    "article_start": "April 3, 2015 . We're starting with some international headlines today, covering events in Switzerland, Kenya and the Pacific Ocean. California's historic drought is now hitting home for many residents and businesses, who've been ordered to cut their water usage. We discuss two religious holidays being celebrated worldwide this weekend, and we take a look at a pair of subjects related to U.S. National Parks. It's all featured this Friday on CNN Student News. On this page you will find today's show Transcript and a place for you to request to be on the CNN Student News Roll Call. TRANSCRIPT . Click here to access the transcript of today's CNN Student News program. Please note that there may be a ...",
+    "reference": "This page includes the show Transcript .\nUse the Transcript to help students with reading comprehension and vocabulary .\nAt the bottom of the page, comment for a chance to be mentioned on CNN Student News.  You must be a teacher or a student age 13 or older to request a mention on the CNN Student News Roll Call.\nThe Weekly Newsquiz tests students' knowledge of events in the news .",
+    "greedy": "this page includes the show transcript.\nuse the transcript to help students with reading comprehension and vocabulary.\nat the bottom of the page, comment for a chance to be mentioned on cnn student news. you must be a teacher or a student age 13 or older to request a mention on the cnn student news roll call.\nthe weekly newsquiz tests students'knowledge of events in the news.",
+    "blocked": "this page includes the show transcript.\nuse the transcript to help students with reading comprehension and vocabulary.\nat the bottom of the page, comment for a chance to be mentioned on cnn student news. you must be a teacher or a student age 13 or older to request a mention on the cnn student cnn student call.\nthe weekly newsquiz tests students'knowledge of events in the news.",
+    "scores": {
+      "Greedy": {
+        "rouge1": 100.0,
+        "rouge2": 100.0,
+        "rougeL": 100.0,
+        "rougeLsum": 100.0
+      },
+      "Greedy + trigram blocking": {
+        "rouge1": 97.05882352941177,
+        "rouge2": 95.52238805970148,
+        "rougeL": 97.05882352941177,
+        "rougeLsum": 97.05882352941177
+      }
+    },
+    "notes": [
+      "Greedy ROUGE-Lsum 100.0 (test median 34.1);",
+      "68 words vs 68 in the reference.",
+      "Greedy output repeats \"cnn student news\".",
+      "Trigram blocking removes the repetition."
+    ]
+  },
+  {
+    "reason": "median ROUGE-Lsum",
+    "index": 10913,
+    "id": "fce8dbac35879e535fea657ba95556b3dc576e9e",
+    "article_start": "Robert Downey Jr has been accused of making a racist remark about an Oscar-winning Mexican director during an interview. The actor, who is promoting his new film Avengers: Age of Ultron, was asked what he thought of Alejandro Gonzalez Inarritu's claim that superhero movies were 'cultural genocide'. The Hollywood star told The Guardian: 'Look I respect the heck out of him. I think for a man whose native tongue is Spanish to be able to put together a phrase like 'cultural genocide' just speaks to how bright he is.' The controversial comments sparked a furious backlash on Twitter, with some calling it 'racist' and 'ignorant'. It comes just three days after the 50-year-old, who plays Iron Man in the film, ...",
+    "reference": "Avengers star made remarks about Alejandro Gonzalez Inarritu .\nThe 51-year-old won best director for Birdman at this year's Oscars .\nSaid in an interview last year superhero films represent 'cultural genocide'\nDowney Jr said for a Spanish-speaking man to use a phrase like that 'speaks to how bright he is'\nComments come just days after he walked out of a TV interview in Britain .",
+    "greedy": "robert downey jr has been accused of making a racist remark.\nhe is promoting his new film avengers : age of ultron.\nthe hollywood star is promoting his new film avengers : age of ultron.\nhe said :'i think for a man whose native tongue is spanish to be able to put together a phrase like'cultural genocide '",
+    "blocked": "robert downey jr has been accused of making a racist remark.\nhe is promoting his new film avengers : age of ultron.\nthe hollywood star is promoting the film avengers and is promoting avengers.\nhe said :'i think for a man whose native tongue is spanish to be able to put together a phrase like'cultural genocide '",
+    "scores": {
+      "Greedy": {
+        "rouge1": 39.02439024390244,
+        "rouge2": 9.917355371900827,
+        "rougeL": 17.88617886178862,
+        "rougeLsum": 34.146341463414636
+      },
+      "Greedy + trigram blocking": {
+        "rouge1": 39.02439024390244,
+        "rouge2": 9.917355371900827,
+        "rougeL": 19.51219512195122,
+        "rougeLsum": 34.146341463414636
+      }
+    },
+    "notes": [
+      "Greedy ROUGE-Lsum 34.1 (test median 34.1);",
+      "56 words vs 67 in the reference.",
+      "Greedy output repeats \"is promoting his\" and more.",
+      "Trigram blocking removes the repetition."
+    ]
+  },
+  {
+    "reason": "repeated phrase",
+    "index": 10452,
+    "id": "d0ee59002d2772aea6d1fef63ef2153f11cff02f",
+    "article_start": "Many people might think that trust issues, long distances and cheating scandals are the biggest strains on a relationship. But they are wrong. It's IKEA. A psychology expert has confirmed that shopping at or assembling furniture from the Scandinavian store chain can be a serious source of friction between a couple, thanks to the high levels of stress caused by both activities. 'The store literally becomes a map of a relationship nightmare,' Ramani Durvasula, a clinical psychologist in Santa Monica, California, told The Wall Street Journal. Scroll down for video . Can your relationship handle it? Experts say that shopping at IKEA can cause serious friction between couples - and assembling the store's wares makes it even worse . 'Walking ...",
+    "reference": "A psychology expert has revealed that the stress of a visit to the store can cause serious friction between couples .\nShe warned that customers avoid one particular unit known as the Liatorp, which retails for $1,199 and is notoriously tricky to build .",
+    "greedy": "ikea's ikea, a psychology expert, has confirmed that shopping at or assembling furniture can be a serious source of friction between a couple.\nthe store becomes a map of a relationship nightmare, but experts say that shopping at ikea can cause serious friction between couples.\nthe store's wares makes it even worse.",
+    "blocked": "ikea's ikea, a psychology expert, has confirmed that shopping at or assembling furniture can be a serious source of friction between a couple.\nthe store becomes a map of a relationship nightmare, but experts say that shopping can cause serious friction between couples.\nwalking through the kitchens brings up touchy subjects, like who does most of the cooking.",
+    "scores": {
+      "Greedy": {
+        "rouge1": 35.05154639175258,
+        "rouge2": 21.052631578947366,
+        "rougeL": 32.98969072164948,
+        "rougeLsum": 32.98969072164948
+      },
+      "Greedy + trigram blocking": {
+        "rouge1": 35.29411764705882,
+        "rouge2": 20.0,
+        "rougeL": 31.372549019607842,
+        "rougeLsum": 33.333333333333336
+      }
+    },
+    "notes": [
+      "Greedy ROUGE-Lsum 33.0 (test median 34.1);",
+      "54 words vs 43 in the reference.",
+      "Greedy output repeats \"that shopping at\".",
+      "Trigram blocking removes the repetition."
+    ]
+  },
+  {
+    "reason": "number not in the article",
+    "index": 4003,
+    "id": "5871b2ec5d6d79e202b9e5750b27991004dfc37f",
+    "article_start": "It was one of Barcelona's easier nights in the Champions League as Luis Enrique's team brushed aside Paris Saint-Germain 2-0 at the Nou Camp to reach the semi-finals. The 5-1 aggregate victory never looked in doubt as the Spanish side showed signs of returning to their brilliant best, with a combination of experienced stars and blossoming talent in their ranks. Here Sportsmail looks at the five things we have learned from Barca's crushing victory over PSG. Neymar (left) celebrates opening the scoring for Barcelona along with Dani Alves (centre) and Gerard Pique . Neymar is a blend of Cristiano Ronaldo and Lionel Messi . He’s just a child, said Juliano Belletti in the week. Some child. Let’s not go overboard; ...",
+    "reference": "Barcelona cruised into UEFA Champions League semi-finals .\nNeymar and Andres Iniesta star men for Barca in 2-0 win over PSG .\nParis Saint-Germain lost 5-1 on aggregate and must make smart transfers .\nNeymar has blend of Cristiano Ronaldo and Lionel Messi .",
+    "greedy": "barcelona defeated paris saint - germain 2 - 0 in the champions league.\nneymar has scored twice in the last 16 of the champions league.\nluis enrique's side have now won just once in the last 16.",
+    "blocked": "barcelona defeated paris saint - germain 2 - 0 in the champions league.\nneymar has scored twice in the last 16 of the champions.\nluis enrique's side have now won four of their last four games.",
+    "scores": {
+      "Greedy": {
+        "rouge1": 30.0,
+        "rouge2": 12.82051282051282,
+        "rougeL": 17.5,
+        "rougeLsum": 30.0
+      },
+      "Greedy + trigram blocking": {
+        "rouge1": 30.379746835443033,
+        "rouge2": 12.987012987012985,
+        "rougeL": 17.72151898734177,
+        "rougeLsum": 30.379746835443033
+      }
+    },
+    "notes": [
+      "Greedy ROUGE-Lsum 30.0 (test median 34.1);",
+      "36 words vs 44 in the reference.",
+      "Greedy output repeats \"the champions league\" and more.",
+      "Trigram blocking removes the repetition.",
+      "Numbers not in the article: 16."
+    ]
+  },
+  {
+    "reason": "lowest ROUGE-Lsum",
+    "index": 158,
+    "id": "130663882dcf622a6069d2ab429acde689b9f428",
+    "article_start": "(CNN)\"Star Wars\" is once again back in our lives, the Burger-King couple helped us believe love can be found in fast food, and Mindy Kaling's brother had a shocking announcement. Those are just a few of the stories that trended this week. 1. 'Star Wars' streaming . The Force is with the streaming device of your choice, thanks to this week's surprise announcement that the entire \"Star Wars\" saga (so far, anyway) would be released on digital HD at the end of the week. Between this and the release of \"Daredevil,\" we imagine lots of nerds called in sick on Friday. 2. Mindy Kaling's brother: I faked being black to get into medical school . Actress Mindy Kaling's brother says ...",
+    "reference": "A couple named Burger and King?\nInternet has a meltdown over \"Vampire Diaries\" departure .",
+    "greedy": "\" star wars \" is once again back in our lives, says mindy kaling's brother.\nthe force is with the streaming device of your choice.\nthe experience opened his eyes to what he calls the hypocrisy of affirmative action.",
+    "blocked": "\" star wars \" is once again back in our lives, says mindy kaling's brother.\nthe force is with the streaming device of your choice.\nthe experience opened his eyes to what he calls the hypocrisy of affirmative action.",
+    "scores": {
+      "Greedy": {
+        "rouge1": 0.0,
+        "rouge2": 0.0,
+        "rougeL": 0.0,
+        "rougeLsum": 0.0
+      },
+      "Greedy + trigram blocking": {
+        "rouge1": 0.0,
+        "rouge2": 0.0,
+        "rougeL": 0.0,
+        "rougeLsum": 0.0
+      }
+    },
+    "notes": [
+      "Greedy ROUGE-Lsum 0.0 (test median 34.1);",
+      "38 words vs 14 in the reference.",
+      "No repeated phrase and no number missing from the article; names and facts still have to be checked against the article by reading it."
+    ]
+  },
+  {
+    "reason": "random example",
+    "index": 818,
+    "id": "12078b09d95c01cedb06da7fc63faab540432dee",
+    "article_start": "(CNN) I see signs of a revolution everywhere. I see it in the op-ed pages of the newspapers, and on the state ballots in nearly half the country. I see it in politicians who once preferred to play it safe with this explosive issue but are now willing to stake their political futures on it. I see the revolution in the eyes of sterling scientists, previously reluctant to dip a toe into this heavily stigmatized world, who are diving in head first. I see it in the new surgeon general who cites data showing just how helpful it can be. I see a revolution in the attitudes of everyday Americans. For the first time a majority, 53%, favor its legalization, ...",
+    "reference": "CNN's Dr. Sanjay Gupta says we should legalize medical marijuana now .\nHe says he knows how easy it is do nothing \"because I did nothing for too long\"",
+    "greedy": "lz granderson : i see signs of a revolution everywhere. i see it in the eyes of sterling scientists.\ngranderson : i see it in the faces of good parents, uprooting their lives to get medicine for their children.",
+    "blocked": "lz granderson : i see signs of a revolution everywhere. i see it in the eyes of sterling scientists.\ngranderson says the revolution in the attitudes of everyday americans is a revolution.",
+    "scores": {
+      "Greedy": {
+        "rouge1": 9.090909090909092,
+        "rouge2": 0.0,
+        "rougeL": 9.090909090909092,
+        "rougeLsum": 6.0606060606060606
+      },
+      "Greedy + trigram blocking": {
+        "rouge1": 13.333333333333334,
+        "rouge2": 0.0,
+        "rougeL": 6.666666666666667,
+        "rougeLsum": 10.0
+      }
+    },
+    "notes": [
+      "Greedy ROUGE-Lsum 6.1 (test median 34.1);",
+      "37 words vs 29 in the reference.",
+      "Greedy output repeats \"granderson i see\" and more.",
+      "Trigram blocking removes the repetition."
+    ]
+  }
+]
