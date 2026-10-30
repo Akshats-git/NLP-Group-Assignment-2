@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nlp-a2-common"
+version = "0.1.0"
+description = "Shared helpers for DSL 504 NLP Group Assignment 2"
+requires-python = ">=3.11"
+# torch is left unpinned so the CUDA build already on Colab / Kaggle is kept
+dependencies = ["torch", "numpy", "matplotlib>=3.11"]  # 3.11 is the first release that shapes Devanagari correctly
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools]
+packages = ["common"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
