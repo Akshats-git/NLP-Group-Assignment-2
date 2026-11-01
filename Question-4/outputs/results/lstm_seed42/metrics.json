@@ -1,0 +1,19 @@
+{
+  "run": "lstm_seed42",
+  "cell": "lstm",
+  "seed": 42,
+  "parameters": {
+    "total": 6601606,
+    "trainable": 6601606
+  },
+  "best_epoch": 25,
+  "epochs_run": 25,
+  "train_time_s": 2379.5802403900016,
+  "train_time_per_epoch_s": 95.18320961560006,
+  "val_nll": 2.494844136589202,
+  "val_ppl": 12.119844331089876,
+  "test_nll": 2.4727770404854317,
+  "test_ppl": 11.855323894500922,
+  "val_tokens": 186224,
+  "test_tokens": 186087
+}

@@ -1,0 +1,74 @@
+{
+  "dataset": "roneneldan/TinyStories",
+  "config": {
+    "n_train": 20000,
+    "n_val": 1000,
+    "n_test": 1000,
+    "max_tokens": 400,
+    "pool_factor": 3,
+    "subset_seed": 42,
+    "min_freq": 5
+  },
+  "filtering": {
+    "train_pool_stories_seen": 64032,
+    "train_pool_dropped_over_max_tokens": 4032,
+    "validation_split_stories_seen": 21990,
+    "validation_split_dropped_over_max_tokens": 1170,
+    "held_out_duplicates_of_train_removed": 23
+  },
+  "stories": {
+    "train": 20000,
+    "validation": 1000,
+    "test": 1000
+  },
+  "tokens": {
+    "train": 3728248,
+    "validation": 185224,
+    "test": 185087
+  },
+  "story_length_tokens": {
+    "train": {
+      "min": 53,
+      "median": 174,
+      "mean": 186.4,
+      "p90": 259,
+      "p95": 318,
+      "max": 400
+    },
+    "validation": {
+      "min": 61,
+      "median": 174,
+      "mean": 185.2,
+      "p90": 256,
+      "p95": 314,
+      "max": 394
+    },
+    "test": {
+      "min": 70,
+      "median": 174,
+      "mean": 185.1,
+      "p90": 252,
+      "p95": 310,
+      "max": 397
+    }
+  },
+  "vocab_size": 6534,
+  "vocab_regular_words": 6530,
+  "mojibake_stories_in_train_repaired": 1242,
+  "train_tokens_covered_by_vocab": 0.9975406678954833,
+  "oov_rate": {
+    "train": 0.002459332104516652,
+    "validation": 0.003919578456355548,
+    "test": 0.003382193238855241
+  },
+  "exact_duplicate_stories_across_splits": {
+    "train&validation": 0,
+    "train&test": 0,
+    "validation&test": 0
+  },
+  "split_sha256_16": {
+    "train": "25871659c6decc33",
+    "validation": "fd9564fab62d457a",
+    "test": "0cd7387347efd345"
+  }
+}

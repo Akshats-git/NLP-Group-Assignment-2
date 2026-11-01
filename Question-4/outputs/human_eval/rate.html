@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rate the stories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eef1f5;
+    --sheet: #ffffff;
+    --ink: #17212f;
+    --muted: #5a6677;
+    --rule: #d3d9e1;
+    --mark: #f2cc3a;
+    --mark-ink: #17212f;
+    --focus: #1f5fbf;
+    --danger: #a3261f;
+    --serif: "Literata", Georgia, "Times New Roman", serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10161f; --sheet: #182130; --ink: #e8edf4; --muted: #9aa6b6; --rule: #2c3849;
+      --mark: #e6bf33; --mark-ink: #10161f; --focus: #7db0ff; --danger: #ff8a80;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10161f; --sheet: #182130; --ink: #e8edf4; --muted: #9aa6b6; --rule: #2c3849;
+    --mark: #e6bf33; --mark-ink: #10161f; --focus: #7db0ff; --danger: #ff8a80;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--sans); }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  header.bar { background: var(--sheet); border-bottom: 1px solid var(--rule); position: sticky; top: 0; z-index: 5; }
+  header.bar .wrap { display: flex; align-items: center; gap: 16px; min-height: 56px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .bar h1 { font-size: 1rem; font-weight: 650; margin: 0; flex: 1 1 auto; }
+  .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .strip { display: flex; gap: 3px; flex: 1 1 100%; padding-bottom: 4px; }
+  .strip button { flex: 1; height: 8px; min-width: 4px; border: 0; padding: 0; border-radius: 1px; background: var(--rule); cursor: pointer; }
+  .strip button.done { background: var(--ink); opacity: .55; }
+  .strip button.current { background: var(--mark); box-shadow: 0 0 0 2px var(--ink); opacity: 1; }
+
+  main { padding: 24px 0 64px; }
+  .screen[hidden] { display: none; }
+
+  .intro { max-width: 640px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 28px 24px; margin: 24px auto; }
+  .intro h2 { font: 600 1.6rem/1.2 var(--serif); margin: 0 0 12px; }
+  .intro p, .intro li { color: var(--muted); max-width: 62ch; }
+  .intro ul { padding-left: 1.2em; }
+  .intro strong { color: var(--ink); }
+  label.field { display: block; font-weight: 600; margin: 20px 0 6px; }
+  input[type=text] { width: 100%; max-width: 360px; padding: 10px 12px; border: 1px solid var(--muted); border-radius: 4px; background: var(--paper); }
+
+  .btn { border: 2px solid var(--ink); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 4px; font-weight: 600; cursor: pointer; min-height: 44px; }
+  .btn.quiet { background: transparent; color: var(--ink); }
+  .btn[disabled] { opacity: .4; cursor: not-allowed; }
+  .btn:not([disabled]):hover { transform: translateY(-1px); }
+  .btn { transition: transform 120ms ease; }
+
+  .layout { display: grid; gap: 20px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 360px; gap: 32px; } .rate { position: sticky; top: 96px; } }
+
+  .story { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 24px 20px; font-family: var(--serif); font-size: 1.125rem; line-height: 1.7; }
+  @media (min-width: 600px) { .story { padding: 32px 36px; } }
+  .story .label { font: 600 .85rem/1.2 var(--sans); color: var(--muted); margin: 0 0 6px; }
+  .story .opening { margin: 0 0 28px; padding-left: 16px; border-left: 3px solid var(--rule); color: var(--muted); max-width: 62ch; }
+  .story .continuation { margin: 0; max-width: 62ch; white-space: pre-wrap; }
+  .story .gap { height: 0; }
+
+  .rate { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; }
+  .rate h2 { font-size: 1rem; margin: 0 0 4px; }
+  .rate .hint { color: var(--muted); font-size: .875rem; margin: 0 0 16px; }
+  fieldset { border: 0; margin: 0 0 18px; padding: 0; min-width: 0; }
+  legend { font-weight: 650; padding: 0; margin-bottom: 2px; }
+  .desc { color: var(--muted); font-size: .875rem; margin: 0 0 8px; }
+  .scale { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .scale input { position: absolute; opacity: 0; pointer-events: none; }
+  .scale label { display: grid; place-items: center; min-height: 48px; border: 2px solid var(--rule); border-radius: 4px; font-weight: 650; font-variant-numeric: tabular-nums; cursor: pointer; background: var(--paper); transition: background 120ms, border-color 120ms; }
+  .scale label:hover { border-color: var(--muted); }
+  .scale input:checked + label { background: var(--mark); color: var(--mark-ink); border-color: var(--ink); }
+  .scale input:focus-visible + label { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .anchors { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  .nav { display: flex; gap: 8px; margin-top: 4px; }
+  .nav .btn { flex: 1; }
+  .shortcut { color: var(--muted); font-size: .8rem; margin: 12px 0 0; }
+
+  .done-card { max-width: 640px; margin: 24px auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 28px 24px; }
+  .done-card h2 { font: 600 1.6rem/1.2 var(--serif); margin: 0 0 12px; }
+  .done-card p, .done-card li { color: var(--muted); }
+  .notice { color: var(--danger); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .btn, .scale label { transition: none; } .btn:not([disabled]):hover { transform: none; } }
+</style>
+</head>
+<body>
+<header class="bar" id="bar" hidden>
+  <div class="wrap">
+    <h1>Rate the stories</h1>
+    <span class="count" id="count" aria-live="polite"></span>
+    <div class="strip" id="strip" aria-label="Jump to a story"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="screen intro" id="intro">
+    <h2>Rate short stories written by language models</h2>
+    <p>You will read <strong id="n-total"></strong> story continuations. Each starts from a given opening and was written by a computer program.
+      You are not told which program wrote which story, and the order is different for every rater.</p>
+    <ul>
+      <li>Rate each story from <strong>1 (very poor)</strong> to <strong>5 (excellent)</strong> on four questions.</li>
+      <li>Judge only the text on the page. Small models make odd mistakes, so use the whole scale.</li>
+      <li>Rate on your own and don't compare notes until everyone has finished.</li>
+      <li>It takes about 20 to 30 minutes. Your answers are saved in this browser, so you can close the page and come back.</li>
+    </ul>
+    <label class="field" for="name">Your name</label>
+    <input type="text" id="name" autocomplete="name" placeholder="e.g. Keshav">
+    <p class="notice" id="name-error" role="alert" hidden>Enter your name so your ratings can be matched to you.</p>
+    <p><button class="btn" id="start" type="button">Start rating</button></p>
+  </section>
+
+  <section class="screen" id="rating" hidden>
+    <div class="layout">
+      <article class="story" id="story" aria-label="Story to rate">
+        <p class="label">Opening, given to the model</p>
+        <p class="opening" id="opening"></p>
+        <p class="label">Continuation, written by the model</p>
+        <p class="continuation" id="continuation"></p>
+      </article>
+      <form class="rate" id="form" aria-label="Your ratings">
+        <h2>Your ratings</h2>
+        <p class="hint">Rate the continuation, not the opening.</p>
+        <div id="criteria"></div>
+        <div class="nav">
+          <button class="btn quiet" id="prev" type="button">Previous</button>
+          <button class="btn" id="next" type="button" disabled>Next story</button>
+        </div>
+        <p class="shortcut">Keyboard: press 1 to 5 to answer the highlighted question and move to the next one.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="screen done-card" id="finish" hidden>
+    <h2>All stories rated</h2>
+    <p>Thank you. Download your ratings and send the file to Akshat, or add it to <code>Question-4/outputs/human_eval/ratings/</code> in a pull request.</p>
+    <p><button class="btn" id="download" type="button">Download my ratings (CSV)</button>
+       <button class="btn quiet" id="review" type="button">Review answers</button></p>
+    <p id="saved-note" hidden>Downloaded <code id="saved-name"></code>.</p>
+  </section>
+</main>
+
+<script>
+const SAMPLES = [{"id": "S01", "prompt": "The detective walked into the empty house. Every clock on the wall had stopped at midnight. Suddenly, the phone began to ring.", "text": "It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. It was a big, shiny thing. Sam was so excited. He wanted to touch it. He asked his mom, \"Can I help you?\" his mom said, \"Yes, you can help me.\" The boy was very excited."}, {"id": "S02", "prompt": "A girl named Sara found her test paper on the desk. When she opened it, she saw that it already had the answers to the questions for tomorrow.", "text": "She was very excited. She wanted to make a new dress for her mom. She put on her shoes and went outside. She saw a big, red ball. She wanted to play with it. She ran to the door and opened it. She saw a big, red ball. She wanted to play with it. She ran to the tree and started to climb the tree. She was so happy. She ran to the slide and ran to the slide. She ran to the slide and jumped on the swing. She ran to the slide and jumped on the swing. She was so happy. She ran to the slide and ran to the slide. She was so happy. She ran to the slide and ran to the slide. She was happy. She had a great time playing with her friends. She had a great time playing with her friends. She was happy to have a new friend."}, {"id": "S03", "prompt": "Jack found a letter in his mailbox with his name on it. The letter was written one hundred years in the future.", "text": "He was so excited and he wanted to try it. He asked his mom if he could have a big party. The boy was so excited and he ran to the kitchen. He saw a big, juicy apple. He was so happy and he ate it all up. He was so happy and he thanked the man for helping him."}, {"id": "S04", "prompt": "The detective walked into the empty house. Every clock on the wall had stopped at midnight. Suddenly, the phone began to ring.", "text": "It quickly fell off a few minutes, it looked like a special place. Two boys, who were walking by the little girl's dad's office, \"Let's search!\" the bear and her mommy came out of the house and saw the beautiful one. It was small and shiny and had never seen before. They all thought it was so amazing and started to play. The child smiled and asked the ghost if he could share his toys. The lawyer smiled and gave the man a big hug. The boy smiled, feeling the sweet man. He thanked the old man and said hello to her. She was so happy and thanked her for making her face."}, {"id": "S05", "prompt": "The detective walked into the empty house. Every clock on the wall had stopped at midnight. Suddenly, the phone began to ring.", "text": "The little boy was so happy and he ran away. He was so happy to have a new friend. He was so happy that he had been able to help his friend."}, {"id": "S06", "prompt": "An old robot sat alone in the garage. One day, a little light on his chest began to blink and he got a message from himself in the future.", "text": "He was so scared and he wanted to get the right place to play. He put the boat on the edge of the tree and jumped to the top of the shore. Sam climbed over the ladder and went to the field with his mom and dad. His friends were so excited! They all came to the stadium where he set out on the fridge. They found that it was a big surprise, and that it was broken. John had a bad idea. He decided to use his imagination to show off a hug. The next day, the cat was hungry and started to laugh. He saw his friend, Sam, and asked her mommy if he could have a little while. Timmy explained to his mom that he was very hungry and he asked the boy if he could help the bird. The mole smiled. The bird said, \"No, I should be there to be your friend.\" The owl thought about how much he could have found. So he went back to the barber and asked what to do. But then his neighbor saw a big dog called Benny. Timmy had so much fun! He started to cry and felt embarrassed. They saw a big and scary toy very cheap. They were sad and angry. Tim put on the ball and ran"}, {"id": "S07", "prompt": "Jack found a letter in his mailbox with his name on it. The letter was written one hundred years in the future.", "text": "Timmy had a big smile on his face and he didn't know what a do. From then a little bird tried to steal his head, he could not have free. He thought it was very attractive. All the animals were so excited to see the butterfly and he ran away with the huge blanket. They were happy and had so much fun and laughing together. The family. The clown was happy to have helped the boy and said it was okay and he learned that it's important to be careful with your friends because they take things to play."}, {"id": "S08", "prompt": "An old robot sat alone in the garage. One day, a little light on his chest began to blink and he got a message from himself in the future.", "text": "He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so excited! He ran to the edge of the pond and saw a big tree. He was so"}, {"id": "S09", "prompt": "Jack found a letter in his mailbox with his name on it. The letter was written one hundred years in the future.", "text": "Timmy had a big smile on his face and went to sleep in a small door from his grandma. He was so happy to find the perfect toy store for his birthday! He was so very excited and couldn't wait to show it to his wife and his own. Tommy smiled and ran back and continued playing with his puzzle. When he woke up, he smiled and smiled. He was very happy. \"That morning! Come back! ' he said proudly at all, he couldn't buy his book on his back."}, {"id": "S10", "prompt": "A girl named Sara found her test paper on the desk. When she opened it, she saw that it already had the answers to the questions for tomorrow.", "text": "She was curious and thought it looked so yummy. She asked her mother to help her get some new paper to buy. The librarian said, \"Yes, it looks fun, you can stay here in a few days later.\", Sara thought for a moment and said, \"Okay, I don't know, but we can't find it.\" So, Lily and her mother went to the house. When they pulled outside, they saw a big box of ash on the wall, so he had to wait. Then, it said \"Go inside,\" he said. Sara was surprised, because they was so clever and excited. As they drove, Mia's bed was amazed! She was very grateful. She waved her sword and went back downstairs with joy."}, {"id": "S11", "prompt": "An old robot sat alone in the garage. One day, a little light on his chest began to blink and he got a message from himself in the future.", "text": "The little boy was so happy and he thanked the old man for helping him. The little boy was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy. He was so happy that he had been able to help the little boy."}, {"id": "S12", "prompt": "One morning, everyone in the village woke up and nobody could remember what happened the day before.", "text": "The family was very excited to see the film. They were so excited to see the film and they were very happy. They had a lot of fun and had lots of fun. The family was so excited to see the film and they were very happy. They had a great time and they all had a great time. The end."}, {"id": "S13", "prompt": "One morning, everyone in the village woke up and nobody could remember what happened the day before.", "text": "They decided to go to the park and play. They saw a big tree with a big tree. It was a big, red ball. It was a big, red ball. It was a big, red ball. It was a big dog. The dog was black and brown. The cat was scared and wanted to help the bird. The bird said, \"I am sorry, I will help you.\" The little boy was so happy and thanked the man for helping him."}, {"id": "S14", "prompt": "The detective walked into the empty house. Every clock on the wall had stopped at midnight. Suddenly, the phone began to ring.", "text": "Bob quickly stepped forward. The dragon tried really hard, so he started to cry. He tried and tried to run away, but he couldn't manage to be careful. Suddenly, he remembered that he asked his friend for help. He said the old man was happy to see the prince was safe. Then they decided to join with his friends all day together. Timmy smiled and promised that he would be happy again."}, {"id": "S15", "prompt": "A girl named Sara found her test paper on the desk. When she opened it, she saw that it already had the answers to the questions for tomorrow.", "text": "She was so happy and she thanked her mom for helping her. She was so happy that she had helped her mom and dad."}, {"id": "S16", "prompt": "A girl named Sara found her test paper on the desk. When she opened it, she saw that it already had the answers to the questions for tomorrow.", "text": "She was so excited to go home, so so he went to the bathroom. They drove into the forest when they saw a beautiful view. She was amazed because she had made lots of wonderful things in the park. As the movie, her mother asked the baby to marry him and they both had lots of fun. After a while, Lily went to the kitchen and saw the broken vase near her knee. She pulled it all her friends and saw how many them was. They played with all the pretty things. Then they saw a new pond. She picked up the worm and decided to find another way. So Daisy hopped back to the ground and began to play in. She flew and jumped out. She waved her arms and went back to the door. It was so cool! She knew she had never eaten she before playing and have an obedient home. On, Lily loved spending time with her purple car in the park. The end."}, {"id": "S17", "prompt": "Jack found a letter in his mailbox with his name on it. The letter was written one hundred years in the future.", "text": "Jack was so happy and he wanted to show his mom the letter. He put it in his pocket and went to bed. He was so happy to have found the letter and he was so happy. He had a great day at the park and he was so happy to have found it."}, {"id": "S18", "prompt": "An old robot sat alone in the garage. One day, a little light on his chest began to blink and he got a message from himself in the future.", "text": "The guard was so grateful to have a nice sword for the child. He gave it a big hug and said, \"I'm glad you like this! I was here to protect you!\""}, {"id": "S19", "prompt": "One morning, everyone in the village woke up and nobody could remember what happened the day before.", "text": "One day, a little boy wanted to go fast. He started to complain. \"What is that?\" he asked. His mom hugged him and said, \"I don't want to get a little bit embarrassed. We would know where the operation could find something else.\" So, Tom decided to take a nap and he kept looking forward. He imagined his picture would relax with his crayons, and one day he went off outside. Next, he made a big picture of the special puzzle. He made sure it was clean and full again. Everyone admired the new robot!"}, {"id": "S20", "prompt": "One morning, everyone in the village woke up and nobody could remember what happened the day before.", "text": "They started so much fun, \"Mom, I want to eat this!\" Ben says. \"Sure to get something tasty on.\" The little girl and Ben ran to the bathroom and tried to pull it, but it said, \"No, no, we can find something else to find. They are friends and we can make necklaces and bracelets. They are very happy. Let's find our friends!\" from then on, they enjoyed the special things that had been able to play together."}];
+const CRITERIA = [{"key": "coherence", "text": "Does the story hang together? Events follow from each other, characters and details stay consistent."}, {"key": "grammar", "text": "Are the sentences grammatical and readable? Ignore the story's content; judge only the language."}, {"key": "relevance", "text": "Does the continuation stay connected to the opening it was given?"}, {"key": "creativity", "text": "Is there something interesting, unexpected or surprising, beyond repeating the opening or generic filler?"}];
+const LABELS = {coherence: "Coherence", grammar: "Grammar", relevance: "Relevance to the opening", creativity: "Creativity and surprise"};
+const ANCHORS = {coherence: ["Incoherent", "Fully coherent"], grammar: ["Ungrammatical", "Fluent"], relevance: ["Unrelated", "Fully on topic"], creativity: ["Dull or repeated", "Surprising"]};
+const STORE = "q4-human-eval-v1";
+
+const $ = (id) => document.getElementById(id);
+let state = {rater: "", order: [], ratings: {}, idx: 0};
+
+function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem(STORE) || "null"); if (s && s.order && s.order.length === SAMPLES.length) return s; } catch (e) {} return null; }
+
+function hashString(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffled(ids, seed) { const a = ids.slice(), r = mulberry32(seed); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+const sampleById = Object.fromEntries(SAMPLES.map((s) => [s.id, s]));
+const isDone = (id) => CRITERIA.every((c) => state.ratings[id] && state.ratings[id][c.key]);
+const doneCount = () => state.order.filter(isDone).length;
+
+function show(screen) {
+  for (const id of ["intro", "rating", "finish"]) $(id).hidden = id !== screen;
+  $("bar").hidden = screen === "intro";
+  window.scrollTo(0, 0);
+}
+
+function buildCriteria() {
+  $("criteria").innerHTML = CRITERIA.map((c, ci) => `
+    <fieldset data-key="${c.key}" data-index="${ci}">
+      <legend>${LABELS[c.key]}</legend>
+      <p class="desc">${c.text}</p>
+      <div class="scale" role="radiogroup" aria-label="${LABELS[c.key]}">
+        ${[1, 2, 3, 4, 5].map((v) => `<input type="radio" name="${c.key}" id="${c.key}-${v}" value="${v}"><label for="${c.key}-${v}">${v}</label>`).join("")}
+      </div>
+      <div class="anchors"><span>1 ${ANCHORS[c.key][0]}</span><span>5 ${ANCHORS[c.key][1]}</span></div>
+    </fieldset>`).join("");
+}
+
+function renderStrip() {
+  $("strip").innerHTML = state.order.map((id, i) =>
+    `<button type="button" data-i="${i}" class="${isDone(id) ? "done" : ""} ${i === state.idx ? "current" : ""}" aria-label="Story ${i + 1}${isDone(id) ? ", rated" : ""}"></button>`).join("");
+}
+
+function render() {
+  const id = state.order[state.idx], s = sampleById[id], r = state.ratings[id] || {};
+  $("opening").textContent = s.prompt;
+  $("continuation").textContent = s.text;
+  for (const c of CRITERIA) {
+    for (let v = 1; v <= 5; v++) $(`${c.key}-${v}`).checked = r[c.key] === v;
+  }
+  $("count").textContent = `Story ${state.idx + 1} of ${state.order.length}, ${doneCount()} rated`;
+  $("prev").disabled = state.idx === 0;
+  $("next").textContent = state.idx === state.order.length - 1 ? "Finish" : "Next story";
+  $("next").disabled = !isDone(id);
+  renderStrip();
+}
+
+function setRating(key, value) {
+  const id = state.order[state.idx];
+  (state.ratings[id] = state.ratings[id] || {})[key] = value;
+  save();
+  $("next").disabled = !isDone(id);
+  $("count").textContent = `Story ${state.idx + 1} of ${state.order.length}, ${doneCount()} rated`;
+  renderStrip();
+}
+
+function go(i) {
+  state.idx = Math.max(0, Math.min(state.order.length - 1, i));
+  save();
+  render();
+  window.scrollTo(0, 0);
+}
+
+function finishOrNext() {
+  if (state.idx === state.order.length - 1) {
+    if (state.order.every(isDone)) { show("finish"); } else { const j = state.order.findIndex((id) => !isDone(id)); go(j); }
+  } else go(state.idx + 1);
+}
+
+function csv() {
+  const q = (v) => `"${String(v).replace(/"/g, '""')}"`;
+  const rows = [["rater", "sample_id", ...CRITERIA.map((c) => c.key)].join(",")];
+  for (const id of [...state.order].sort()) if (isDone(id)) rows.push([q(state.rater), id, ...CRITERIA.map((c) => state.ratings[id][c.key])].join(","));
+  return rows.join("\n") + "\n";
+}
+
+function startSession(name) {
+  state = {rater: name, order: shuffled(SAMPLES.map((s) => s.id), hashString(name.toLowerCase())), ratings: {}, idx: 0};
+  save();
+  show("rating");
+  render();
+}
+
+$("n-total").textContent = SAMPLES.length;
+buildCriteria();
+
+$("start").addEventListener("click", () => {
+  const name = $("name").value.trim();
+  $("name-error").hidden = !!name;
+  if (!name) { $("name").focus(); return; }
+  const prior = load();
+  if (prior && prior.rater.toLowerCase() === name.toLowerCase()) { state = prior; show("rating"); const j = state.order.findIndex((id) => !isDone(id)); state.idx = j < 0 ? 0 : j; render(); }
+  else startSession(name);
+});
+$("name").addEventListener("keydown", (e) => { if (e.key === "Enter") $("start").click(); });
+
+$("criteria").addEventListener("change", (e) => { if (e.target.type === "radio") setRating(e.target.name, Number(e.target.value)); });
+$("form").addEventListener("keydown", (e) => {
+  if (!/^[1-5]$/.test(e.key) || e.ctrlKey || e.metaKey || e.altKey) return;
+  const field = e.target.closest("fieldset");
+  const sets = [...document.querySelectorAll("#criteria fieldset")];
+  const cur = field || sets.find((f) => !f.querySelector("input:checked")) || sets[0];
+  const input = cur.querySelector(`input[value="${e.key}"]`);
+  input.checked = true; setRating(cur.dataset.key, Number(e.key));
+  const nextSet = sets[sets.indexOf(cur) + 1];
+  (nextSet ? nextSet.querySelector("input:checked, input") : $("next")).focus();
+  e.preventDefault();
+});
+document.addEventListener("keydown", (e) => {
+  if ($("rating").hidden || e.target.tagName === "INPUT" && e.target.type === "text") return;
+  if (/^[1-5]$/.test(e.key) && !e.target.closest("#form")) {
+    const sets = [...document.querySelectorAll("#criteria fieldset")];
+    const cur = sets.find((f) => !f.querySelector("input:checked")) || sets[0];
+    cur.querySelector(`input[value="${e.key}"]`).checked = true; setRating(cur.dataset.key, Number(e.key));
+  }
+});
+
+$("next").addEventListener("click", finishOrNext);
+$("prev").addEventListener("click", () => go(state.idx - 1));
+$("strip").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { show("rating"); go(Number(b.dataset.i)); } });
+$("review").addEventListener("click", () => { show("rating"); go(0); });
+$("download").addEventListener("click", () => {
+  const name = `ratings_${state.rater.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "") || "rater"}.csv`;
+  const url = URL.createObjectURL(new Blob([csv()], {type: "text/csv"}));
+  const a = Object.assign(document.createElement("a"), {href: url, download: name});
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  $("saved-name").textContent = name; $("saved-note").hidden = false;
+});
+
+const prior = load();
+if (prior) $("name").value = prior.rater;
+</script>
+</body>
+</html>

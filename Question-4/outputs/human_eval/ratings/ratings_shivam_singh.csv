@@ -1,0 +1,21 @@
+rater,sample_id,coherence,grammar,relevance,creativity
+"Shivam Singh",S01,1,1,1,1
+"Shivam Singh",S02,3,5,3,4
+"Shivam Singh",S03,4,3,2,4
+"Shivam Singh",S04,3,2,4,3
+"Shivam Singh",S05,3,3,3,4
+"Shivam Singh",S06,3,4,2,4
+"Shivam Singh",S07,2,4,3,3
+"Shivam Singh",S08,1,1,1,1
+"Shivam Singh",S09,3,2,4,4
+"Shivam Singh",S10,4,3,2,4
+"Shivam Singh",S11,2,2,3,2
+"Shivam Singh",S12,4,2,4,4
+"Shivam Singh",S13,3,2,2,3
+"Shivam Singh",S14,3,4,3,2
+"Shivam Singh",S15,1,3,4,3
+"Shivam Singh",S16,2,4,2,4
+"Shivam Singh",S17,4,3,3,4
+"Shivam Singh",S18,3,2,3,4
+"Shivam Singh",S19,4,3,3,3
+"Shivam Singh",S20,1,3,1,2
