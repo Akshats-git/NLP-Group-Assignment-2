@@ -102,16 +102,16 @@ archive.
 
 ## Where each report is
 
-The reports are written in LaTeX with one shared layout (XeLaTeX or tectonic; `report/build_reports.sh` builds every
-PDF). The combined report for all four questions is [`report/combined_report.tex`](report/combined_report.tex). The full
-per-question reports:
+The reports are written in LaTeX with one shared layout and built to PDF with XeLaTeX or tectonic
+(`report/build_reports.sh` rebuilds all of them). The combined report for all four questions is
+[`report/combined_report.pdf`](report/combined_report.pdf) ([source](report/combined_report.tex)). The full per-question reports:
 
-| Question | Report | Run instructions |
-|---|---|---|
-| Q1 | [`Question-1/report/report.tex`](Question-1/report/report.tex) | [`Question-1/README.md`](Question-1/README.md) |
-| Q2 | [`Question-2/report/report.tex`](Question-2/report/report.tex) | [`Question-2/README.md`](Question-2/README.md) |
-| Q3 | [`Question-3/report/report.tex`](Question-3/report/report.tex) | [`Question-3/README.md`](Question-3/README.md) |
-| Q4 | [`Question-4/report/report.tex`](Question-4/report/report.tex) | [`Question-4/README.md`](Question-4/README.md) |
+| Question | Report (PDF) | LaTeX source | Run instructions |
+|---|---|---|---|
+| Q1 | [`report.pdf`](Question-1/report/report.pdf) | [`report.tex`](Question-1/report/report.tex) | [`Question-1/README.md`](Question-1/README.md) |
+| Q2 | [`report.pdf`](Question-2/report/report.pdf) | [`report.tex`](Question-2/report/report.tex) | [`Question-2/README.md`](Question-2/README.md) |
+| Q3 | [`report.pdf`](Question-3/report/report.pdf) | [`report.tex`](Question-3/report/report.tex) | [`Question-3/README.md`](Question-3/README.md) |
+| Q4 | [`report.pdf`](Question-4/report/report.pdf) | [`report.tex`](Question-4/report/report.tex) | [`Question-4/README.md`](Question-4/README.md) |
 
 ## Status
 
@@ -119,5 +119,5 @@ per-question reports:
 - [x] Q2: RoBERTa vs BiGRU (notebooks, results and 6-page report in `Question-2/`)
 - [x] Q3: Transformer summariser (code, results, figures and report in `Question-3/`)
 - [x] Q4: Plot-Twist Generator (code, checkpoints, results and report in `Question-4/`)
-- [x] Combined report (`report/combined_report.tex`)
+- [x] Combined report (`report/combined_report.pdf`)
 - [x] Final ZIP: run `./package_submission.sh` after the last merge (it zips tracked files only)

@@ -413,7 +413,7 @@ a story I would call coherent, and the difference between them is smaller than t
 I evaluated \texttt{HuggingFaceTB/SmolLM2-360M-Instruct}, \textbf{zero-shot, no fine-tuning}, on the same ten openings, as the
 brief allows. Exact settings are in \texttt{outputs/results/llm\_settings.json}: system prompt ``You are a children's story writer.'', the user prompt
 ``Here is the beginning of a short story for young children. Continue the story in simple language and give it an ending.
-Write only the continuation, in plain text.\n\nBeginning: \{opening\}'', fp16, GTX 1650, 250 new (sub-word) tokens, greedy, temperature 0.8 and
+Write only the continuation, in plain text.\textbackslash{}n\textbackslash{}nBeginning: \{opening\}'', fp16, GTX 1650, 250 new (sub-word) tokens, greedy, temperature 0.8 and
 top-k 40. Its outputs are in \texttt{outputs/results/llm\_generations.jsonl}.
 
 \begin{longtable}[]{@{}

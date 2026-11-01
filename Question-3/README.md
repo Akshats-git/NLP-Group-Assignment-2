@@ -17,6 +17,7 @@ with qualitative examples and encoder-decoder attention heatmaps.
 | `q3_eval.py` | ROUGE with bootstrap intervals, Lead-3, checks for repetition / unsupported numbers / novelty, example picking |
 | `q3_report.py` | Writes `REPORT.md`, a plain-text summary of the run's numbers (regenerated on every run, not committed) |
 | `report/report.tex` | The submitted technical report (LaTeX) |
+| `../tests/test_q3.py` | Offline tests (CPU, seconds): masks, padding, loss, attention formula, positional encoding, decoding, no banned layers |
 | `requirements.txt` | Libraries |
 
 After a run: `REPORT.md` (summary of the run's numbers; the technical report is `report/report.tex`) and `outputs/results/` + `outputs/figures/` (see the end of this file).

@@ -73,6 +73,7 @@ Tokenizer & \texttt{bert-base-uncased} WordPiece (uncased; only the tokenizer is
 Truncation & article 400 tokens, summary 128 tokens (both incl.~start/end) \\
 Model & encoder-decoder, d\_model 512, 8 heads, 4 encoder + 4 decoder layers, d\_ff 2048, dropout 0.1, copy mechanism on \\
 Parameters & 45,054,465 (all trained from random initialisation) \\
+Random seed & 42 (one training run; recorded in \texttt{outputs/results/run\_info.json}) \\
 Decoding & greedy, up to 128 tokens; also greedy + trigram blocking (main result: \textbf{Greedy + trigram blocking}, chosen on validation) \\
 Test ROUGE F1, Greedy + trigram blocking & ROUGE-1 38.42 / ROUGE-2 16.38 / ROUGE-L 26.32 / ROUGE-Lsum 35.93 \\
 \end{longtable}
