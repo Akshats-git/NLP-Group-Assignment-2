@@ -279,7 +279,7 @@ top-k 40), the first sample of each, shuffled with seed 2024 and given neutral i
 and decoding and is not shown to raters. Each sample is rated 1 to 5 for **coherence, grammatical quality, relevance
 to the opening, and creativity/surprise** in `outputs/human_eval/rate.html`, a self-contained form that downloads a CSV. Samples are
 shown as generated, with no editing. Four raters returned complete ratings (80 ratings in total, 20 stories each). Raters are my group members, who knew the
-assignment but were not told which model wrote which story; the instructions in the README ask raters not to look at the generations or this report first, and I cannot verify that they did not.
+assignment but were not told which model wrote which story; they were instructed not to look at the generations or this report before rating, and the author confirms that the rating was done blind (this is the author's confirmation, not something the analysis can check).
 
 ### 6.3 Human results
 
