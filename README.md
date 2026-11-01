@@ -82,7 +82,8 @@ before `import common`. The [`common/README.md`](common/README.md) has the full 
 
 ## Submission
 
-One member submits one ZIP for the whole group. It contains the source code, notebooks,
+One member submits one ZIP for the whole group (`./package_submission.sh` builds it from the tracked files, so no
+dataset, virtualenv or untracked checkpoint can slip in). It contains the source code, notebooks,
 results, visualisations, a README with reproduction steps, and one combined technical
 report covering all four questions.
 
@@ -101,6 +102,9 @@ archive.
 
 ## Where each report is
 
+The combined report for all four questions is [`report/COMBINED_REPORT.pdf`](report/COMBINED_REPORT.pdf)
+([md](report/COMBINED_REPORT.md)). The full per-question reports:
+
 | Question | Report | Run instructions |
 |---|---|---|
 | Q1 | [`Question-1/REPORT.md`](Question-1/REPORT.md) | [`Question-1/README.md`](Question-1/README.md) |
@@ -114,5 +118,5 @@ archive.
 - [x] Q2: RoBERTa vs BiGRU (notebooks, results and 6-page report in `Question-2/`)
 - [x] Q3: Transformer summariser (code, results, figures and report in `Question-3/`)
 - [x] Q4: Plot-Twist Generator (code, checkpoints, results and report in `Question-4/`)
-- [ ] Combined report
-- [ ] Final ZIP
+- [x] Combined report (`report/COMBINED_REPORT.pdf`)
+- [x] Final ZIP: run `./package_submission.sh` after the last merge (it zips tracked files only)
