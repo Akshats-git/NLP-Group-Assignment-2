@@ -1,0 +1,346 @@
+% !TEX program = xelatex
+% Question 1: Attention-Based English-to-Hindi Neural Machine Translation -- build from this folder with: tectonic report.tex   (or: latexmk -xelatex report.tex)
+% Same layout as Question-2/report/report.tex. Figures are read from ../outputs/figures/.
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=1.9cm]{geometry}
+\usepackage{fontspec}            % XeLaTeX / tectonic: Latin Modern, plus a Devanagari font for the Hindi examples
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{etoolbox}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[font=small,labelfont=bf,skip=4pt]{caption}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!50!black]{hyperref}
+
+% Hindi: first Devanagari font that is installed (Noto is on Overleaf and in the fonts-noto-core package)
+\IfFontExistsTF{Noto Serif Devanagari}{\newfontfamily\hindifont[Script=Devanagari]{Noto Serif Devanagari}}{%
+\IfFontExistsTF{Noto Sans Devanagari}{\newfontfamily\hindifont[Script=Devanagari]{Noto Sans Devanagari}}{%
+\IfFontExistsTF{FreeSerif}{\newfontfamily\hindifont[Script=Devanagari]{FreeSerif}}{%
+\newfontfamily\hindifont[Script=Devanagari]{Latin Modern Roman}}}}
+\DeclareRobustCommand{\hi}[1]{{\hindifont #1}}
+
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>0.34\textheight 0.34\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlist{itemsep=1pt,topsep=2pt,parsep=0pt}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.12}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{secnumdepth}{-\maxdimen}   % section numbers are typed into the headings
+\AtBeginEnvironment{longtable}{\footnotesize}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{\vspace{-1.2cm}\textbf{Question 1: Attention-Based English-to-Hindi Neural Machine Translation}\\[2pt]
+\large DSL 504 Natural Language Processing, Group Assignment 2}
+\author{Rishi Kharya}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+\vspace{-0.6cm}
+
+Owner: Rishi Kharya. Code in this folder, all numbers below come from \texttt{outputs/results/}, all figures from \texttt{outputs/figures/}. One seed (42) for each model; no confidence intervals.
+
+\hypertarget{data-preparation}{%
+\section{1. Data preparation}\label{data-preparation}}
+
+IIT Bombay English-Hindi corpus (HuggingFace \texttt{cfilt/iitb-english-hindi}): official train / dev / test splits.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Training pairs used & \textbf{50,000} (random draw from 1,659,083 raw pairs, seed 42) \\
+Dev / test pairs & 514 / 2,393 (official splits, cleaned) \\
+English vocabulary & \textbf{21,433} (training only, \texttt{min\_freq=2}, incl.~4 special tokens) \\
+Hindi vocabulary & \textbf{24,274} \\
+Max English length / max Hindi length & \textbf{50 / 50} tokens (hard filter, \texttt{\textless{}sos\textgreater{}}/\texttt{\textless{}eos\textgreater{}} add 2 when padded) \\
+Mean length, train (en / hi) & 17.7 / 18.4 tokens \\
+Mean length, test (en / hi) & 21.0 / 23.6 tokens \\
+OOV rate on test (en / hi) & 8.4\% / 8.0\% \\
+\end{longtable}
+
+Steps: NFC normalisation, English lower-cased, punctuation (including the Hindi danda) split into its own token, whitespace tokenisation, \texttt{\textless{}sos\textgreater{}}/\texttt{\textless{}eos\textgreater{}} added, vocabulary to IDs (\texttt{\textless{}pad\textgreater{}=0,\ \textless{}unk\textgreater{}=1,\ \textless{}sos\textgreater{}=2,\ \textless{}eos\textgreater{}=3}), right-padding per batch.
+
+Dropped as malformed: empty sides; either side outside 1 to 50 tokens; no Latin letter on the English side or no Devanagari on the Hindi side; and, for training only, a length ratio above 3. Training pairs also need at least 5 English tokens, because the corpus contains many one-word UI strings while the dev/test news sentences are long. Dev and test are not length-filtered beyond the 50-token cap.
+
+\textbf{Test set is long.} 1,617 of 2,393 test sentences (68\%) have 16 or more English tokens, 481 have 11 to 15, 282 have 6 to 10 and only 13 have 1 to 5. The 1-5 bucket is far too small to draw conclusions from.
+
+\hypertarget{models}{%
+\section{2. Models}\label{models}}
+
+Both share the same encoder: 2-layer bidirectional LSTM (embedding 256, hidden 512, dropout 0.3), run on packed sequences so padding never enters the recurrence. Teacher forcing in training, greedy decoding at test time.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Model A (baseline).} The encoder's final states (both directions merged and projected) initialise a 2-layer LSTM decoder. That vector is the only information the decoder gets about the source. Dense + softmax output. 38.3M parameters.
+\item
+  \textbf{Model B (attention).} All encoder states h1..hn are kept. At each step, \texttt{e\_t,i\ =\ v\ensuremath{^{\top}}\ tanh(W\_s\ s\_\{t-1\}\ +\ W\_h\ h\_i)}, \texttt{\ensuremath{\alpha}\ =\ softmax(e)} (padding masked), \texttt{c\_t\ =\ \ensuremath{\Sigma}\ \ensuremath{\alpha}\_i\ h\_i}. The context is concatenated to the decoder input and to the pre-softmax features. Our own implementation (\texttt{models.py}, \texttt{BahdanauAttention}); \ensuremath{\alpha} is returned at every step for the heatmaps. 71.9M parameters.
+\end{itemize}
+
+Comparable conditions: same data, vocabularies, seed, optimiser (Adam, 1e-3, gradient clip 1.0), batch size 64, early stopping on validation loss (patience 4, best epoch restored). The models do \textbf{not} have equal parameter counts, because attention adds the score network and a wider output layer.
+
+\textbf{Metrics.} BLEU (sacreBLEU, corpus level, default \texttt{13a}) and chrF as translation metrics; masked token accuracy (teacher-forced next-token accuracy) for training curves. The brief names no translation metric, so this is our choice.
+
+\textbf{Decoding detail.} \texttt{\textless{}unk\textgreater{}} is the most probable single target token (about 1 in 12 target words is out of vocabulary), so unconstrained greedy decoding collapsed into \texttt{\textless{}unk\textgreater{}\ \textless{}unk\textgreater{}\ \ldots{}} and the first evaluation gave empty outputs. Both models now decode with \texttt{\textless{}pad\textgreater{}}, \texttt{\textless{}unk\textgreater{}} and \texttt{\textless{}sos\textgreater{}} banned. This applies equally to A and B.
+
+\hypertarget{training-and-comparison}{%
+\section{3. Training and comparison}\label{training-and-comparison}}
+
+\begin{figure}
+\centering
+\includegraphics{../outputs/figures/training_curves.png}
+\caption{Training and validation loss and token accuracy, baseline (A) and attention (B), seed 42.}
+\end{figure}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 16\tabcolsep) * \real{0.1111}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Best epoch
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Val loss
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Val acc
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Test loss
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Test token acc
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Test BLEU}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Test chrF}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+s/epoch
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A: baseline & 4 & 5.180 & 0.249 & 5.078 & 0.243 & \textbf{0.55} & 12.3 & 48 \\
+B: attention & 4 & 4.754 & 0.298 & 4.665 & 0.290 & \textbf{2.34} & 17.9 & 222 \\
+\end{longtable}
+
+BLEU n-gram precisions (1 to 4): A 15.9 / 2.2 / 0.2 / 0.0, B 24.0 / 5.3 / 1.1 / 0.2. Brevity penalty 1.0 for both (outputs slightly longer than references).
+
+Attention is better on every measure and for every epoch of validation loss. Both models overfit quickly: training accuracy keeps rising (A 0.31, B 0.46 at epoch 8) while validation loss turns upward after epoch 4. With 50k pairs and about 70M parameters this is expected. The absolute BLEU is low for both: this is a word-level LSTM trained on a small slice of a mixed-domain corpus and tested on long news sentences. The size of the gap matters more than the absolute value, and BLEU of 0.55 means the baseline is barely translating at all.
+
+Run history: a first run with 30,000 pairs (no minimum length) gave BLEU 0.02 / 1.21 for A / B with the same ordering; its numbers are kept in \texttt{outputs/results/archive\_run1\_30k/}.
+
+\hypertarget{baseline-limitation}{%
+\section{4. Baseline limitation}\label{baseline-limitation}}
+
+A single fixed-size vector has to carry the content, the word order and the length of the whole input. The longer the input, the more information has to be squeezed into the same 512 numbers.
+
+\begin{figure}
+\centering
+\includegraphics{../outputs/figures/length_analysis.png}
+\caption{Test BLEU and chrF by English sentence length, baseline vs attention.}
+\end{figure}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+English length & n & A: BLEU / chrF & B: BLEU / chrF \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1-5 & 13 & 3.07 / 7.6 & 2.13 / 12.8 \\
+6-10 & 282 & 0.41 / 9.0 & 2.73 / 16.0 \\
+11-15 & 481 & 0.48 / 10.7 & 2.74 / 17.1 \\
+16+ & 1617 & 0.57 / 12.7 & 2.26 / 18.2 \\
+\end{longtable}
+
+What the data does and does not show:
+
+\begin{itemize}
+\item
+  \textbf{Short vs long.} We cannot show a clean decline with length for the baseline: its BLEU is near zero in every bucket (0.4 to 0.6 for 6 or more tokens), so there is nothing left to lose. Its chrF actually rises with length (7.6 to 12.7), because long sentences contain many frequent function words that even a content-blind model gets right. The 1-5 BLEU of 3.07 for A beats B, but it rests on 13 sentences and should not be read as a result.
+\item
+  \textbf{Does the baseline use the source at all?} Its outputs for different inputs are very similar generic sentences (``\hi{एक दूसरे के साथ एक दूसरे से अधिक है}'', error cases 1, 4, 7). Its unigram precision is 15.9\% against 24.0\% for attention. We did not run a no-source ablation, so we cannot say how much of the baseline's output is truly input-independent, but for these long sentences the fixed vector clearly carries little usable content.
+\item
+  \textbf{Do early words get lost?} Unigram recall of reference words by position in the reference, for sentences with 16 or more English tokens (\texttt{position\_recall.png}):
+
+  \begin{longtable}[]{@{}lllll@{}}
+  \toprule\noalign{}
+  Reference quarter & Q1 & Q2 & Q3 & Q4 \\
+  \midrule\noalign{}
+  \endhead
+  \bottomrule\noalign{}
+  \endlastfoot
+  Baseline & 0.16 & 0.15 & 0.13 & 0.22 \\
+  Attention & 0.28 & 0.25 & 0.23 & 0.28 \\
+  \end{longtable}
+
+  The baseline is poor in all positions and worst in the middle. We do \textbf{not} see the ``early words are forgotten'' pattern as a distinct effect. The last quarter is best for both models, probably because it holds the frequent closing words (``\hi{है}'', ``\hi{।}''). Attention improves recall in every quarter, most in the first.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/position_recall.png}
+\caption{Unigram recall of reference words by position in the reference, sentences with 16 or more English tokens.}
+\end{figure}
+
+\hypertarget{attention-behaviour}{%
+\section{5. Attention behaviour}\label{attention-behaviour}}
+
+Heatmaps: x = English tokens (with \texttt{\textless{}sos\textgreater{}}/\texttt{\textless{}eos\textgreater{}}), y = generated Hindi tokens. Eleven examples spread over the length buckets are in \texttt{outputs/figures/attention\_heatmap\_*.png} (list with the translations in \texttt{heatmap\_examples.json}). Statistics over all 2,393 test sentences (\texttt{attention\_behaviour.json}):
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/attention_heatmap_01.png}\hfill
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/attention_heatmap_02.png}
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/attention_heatmap_03.png}\hfill
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/attention_heatmap_04.png}
+\caption{Attention heatmaps of the attention model (x: English tokens, y: generated Hindi tokens) for four short test sentences (test ids 1804, 2231, 1127 and 845); the other examples are in \texttt{outputs/figures/attention\_heatmap\_05..11.png}.}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Mostly sequential.} In 85\% of steps the attention peak stays or moves forward in the source. Hindi is SOV, English SVO, so verbs and objects swap places; this shows as off-diagonal blocks (e.g.~error case 5, where ``sent'' is attended at the end for ``\hi{भेजा गया है}'').
+\item
+  \textbf{Sharp for content words, diffuse otherwise.} One-to-one cases are sharp: ``congress'' gets weight about 0.9 for ``\hi{कांग्रेस}'' (\texttt{attention\_heatmap\_01.png}), ``both'' about 0.85 for ``\hi{दोनों}'' (error case 6). On average the peak is only 0.28 and the entropy 2.3 nats, close to spreading over about 10 words.
+\item
+  \textbf{Multi-word attention.} In 21\% of steps no word gets 0.5 but two or more get above 0.2: function words and phrases such as ``would be used'', ``of the'', ``not only'' are spread over several source tokens.
+\item
+  \textbf{\texttt{\textless{}sos\textgreater{}}/\texttt{\textless{}eos\textgreater{}} get only 1\%} of the mass, so the model does not use them as ``no-op'' sinks.
+\item
+  \textbf{Does a high weight mean a correct word? No.} The mean peak weight for generated tokens that occur in the reference is 0.2769, for tokens that do not 0.2768, identical. In error case 4 ``abroad'' receives the highest weight of the sentence (about 0.65) for three consecutive steps and the model writes ``\hi{भी भी भी}''. In case 6 the alignment looks like a good translation while ``dancers'' becomes ``\hi{संगीत}''.
+\end{itemize}
+
+\hypertarget{error-analysis}{%
+\section{6. Error analysis}\label{error-analysis}}
+
+Eight test sentences where the attention model is wrong or partly wrong (sentence chrF between 22 and 55), chosen to cover different error types; figures \texttt{error\_case\_01.png} to \texttt{error\_case\_08.png}, full table with all columns in \texttt{outputs/results/error\_cases.md}. Types: missing / extra / wrong word, word order, long-distance dependency, OOV, wrong attention focus.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\#
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+English
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Reference
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Baseline
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Attention
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Manual error type
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+4 (\#2031) & his name became known not only in the country , but also abroad . & \hi{उनका नाम देश ही नहीं बल्कि विदेशों में भी प्रसिद्ध हुआ ।} & \hi{वह अपने पिता के साथ एक दूसरे से बाहर नहीं थे ।} & \hi{उनका नाम केवल देश में ही नहीं बल्कि बल्कि भी भी भी थीं ।} & wrong / missing word (\hi{विदेशों}), repetition; \textbf{high weight, wrong output} \\
+3 (\#1127) & \$325m rescue package for tassie health & \hi{टैजी के स्वास्थ्य के लिए} 325 \hi{मिलियन डॉलर का बचाव पैकेज} & \hi{एक नया स्रोत जिसमें एक नया} & \hi{स्वास्थ्य के लिए माइक्रोसॉफ़्ट अनुरोध} & OOV (tassie), missing number, wrong word \\
+6 (\#2388) & it is noteworthy that both nita and isha are professional , classical dancers . & \hi{गौरतलब है कि नीता और ईशा दोनों ही प्रोफेशनल क्लासिकल डांसर है ।} & \hi{यह एक बड़ी बात है कि यह एक बड़ी बात है कि एक दूसरे के लिए एक बड़ी समस्या है ।} & \hi{यह जानकर प्रसन्नता है कि दोनों और दोनों ही शैली में हैं , और शास्त्रीय संगीत हैं ।} & OOV names dropped, wrong words with correct-looking alignment \\
+2 (\#799) & afterwards , there would be a joint presentation by the bcci and the mca . & \hi{इसके बाद बीसीसीआइ और एमसीए द्वारा संयुक्त प्रस्तुतिकरण होगा ।} & \hi{एक बार फिर से एक दूसरे के लिए एक दूसरे से एक दूसरे के साथ एक दूसरे से बाहर हो गया है ।} & \hi{इसके अतिरिक़्त , और और इस द्वारा द्वारा एक ही एक ही एक ही होगा ।} & OOV (bcci, mca), extra / repeated words; correct focus on ``joint presentation'' \\
+5 (\#2278) & according to amarnath upadhyaya , secretary of ada , a proposal concerning this matter has been sent to the government . & \hi{एडीए के सचिव अमरनाथ उपाध्याय के मुताबिक इस बाबत शासन को प्रस्ताव भेजा जा चुका है ।} & \hi{इस प्रकार के दौरान , इस क्षेत्र में एक बड़ी संख्या में एक बड़ी भूमिका है ।} & \hi{इस बात के अनुसार , श्री एक समिति के अनुसार , इस अध्याय को इस सरकार को इस बैठक में भेजा गया है ।} & OOV names \ensuremath{\rightarrow} generic words, wrong words (``\hi{बैठक}''), extra words; good alignment at the end \\
+7 (\#800) & besides that , a special coin would be used for the coin toss that would be kept by the mca . & \hi{इसके अलावा टॉस के लिए एक विशेष सिक्के का इस्तेमाल किया जाएगा जिसे एमसीए संभालकर रखेगा ।} & \hi{यह एक बड़ी बात है कि यह एक बड़ी बात है जो एक दूसरे के साथ एक दूसरे से अधिक है ।} & \hi{इसके अलावा , एक विशेष रूप से एक विशेष रूप से प्रयोग किया जाएगा , जो कि वह इस प्रकार के द्वारा किया जाएगा कि वह द्वारा स्वंय के द्वारा किया जाएगा} . & repetition, missing content (\hi{टॉस, सिक्के, एमसीए}), long-distance dependency \\
+1 (\#2171) & '' i'm not sure when he sleeps , '' said katie o'malley , a second-year medical student from drexel university \ldots{} & \ldots{} \hi{कैटी ओ'मैली ने कहा , '' मुझे नहीं पता कि वे सोते कब हैं ।} '' & ( \hi{ऐ रसूल ) तुम कह दो कि} \ldots{} & '' \hi{जब उन्होंने कहा कि जब उन्होंने कहा कि '' आचार्य , '' आचार्य , श्री राम नाथ कोविन्द से पूर्व मुख्यमंत्री} \ldots{} & long-distance dependency, \textbf{wrong attention focus} (stuck on one word for 12 steps), hallucination, OOV names \\
+8 (\#1568) & '' our ongoing inquiry into this matter continues and we are co-operating fully with the fca \ldots{} , '' the bank said two weeks ago . & \hi{दो सप्ताह पहले बैंक ने कहा था कि , '' इस मामले में} \ldots{} \hi{सहयोग कर रहे हैं ।} '' & \hi{मैं इस अवसर पर आपके लिए बधाई देता हूं कि} \ldots{} & \hi{हमारे इस क्षेत्र में हम इस तरह के साथ} \ldots{} ` ` \hi{द ' ' ' ' के साथ ही हम दोनों को भी कहा जाता है ।} & long-distance dependency, word order, \textbf{wrong attention focus} (anchored on punctuation) \\
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_01.png}\hfill
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_02.png}
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_03.png}\hfill
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_04.png}
+\caption{Error cases 1 to 4 (case numbers as in the table above): attention heatmaps with the reference, baseline and attention outputs.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_05.png}\hfill
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_06.png}
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_07.png}\hfill
+\includegraphics[width=0.49\linewidth,height=0.30\textheight,keepaspectratio]{../outputs/figures/error_case_08.png}
+\caption{Error cases 5 to 8.}
+\end{figure}
+
+Patterns across the eight cases and the aggregate statistics:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{OOV words} (names, acronyms: 8\% of test tokens) are the single biggest cause. They are dropped or replaced by generic words in 7 of 8 cases. Attention cannot translate a word that is not in the output vocabulary.
+\item
+  \textbf{Repetition} appears in 5 of 8 cases and in 17.6\% of the long sentences (baseline: 0.5\%). Attention gives the decoder more content to say but nothing stops it from saying the same thing again; there is no coverage mechanism.
+\item
+  \textbf{Long inputs still hurt.} In cases 1, 7 and 8 the first half is translated sensibly and the diagonal breaks in the second half; attention gets stuck on one source word or on punctuation.
+\item
+  \textbf{Right focus, wrong word} is common (cases 2, 3, 4, 6): attention sits on the correct source words but the decoder's lexical choice fails, which is a vocabulary/data-size problem, not an alignment problem.
+\item
+  \textbf{Is the heatmap a useful explanation?} It is useful for \emph{locating} a failure (stuck column in case 1, broken diagonal in case 7, punctuation anchoring in case 8) and for confirming alignment of content words. It is not a guarantee of correctness: weights do not separate right words from wrong ones (section 5), and in cases 4 and 6 the heatmap looks like a good translation of a wrong output.
+\end{enumerate}
+
+\hypertarget{final-comparison}{%
+\section{7. Final comparison}\label{final-comparison}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Does attention improve NMT?} Yes, clearly, with one seed and low absolute scores: BLEU 0.55 \ensuremath{\rightarrow} 2.34 (4.3\ensuremath{\times}), chrF 12.3 \ensuremath{\rightarrow} 17.9, token accuracy 0.243 \ensuremath{\rightarrow} 0.290, validation loss 5.18 \ensuremath{\rightarrow} 4.75. The same ordering held in the earlier 30k-pair run.
+\item
+  \textbf{Short vs long.} For 6 or more tokens attention is 4 to 7 times better in BLEU, and its BLEU stays flat (2.3 to 2.7) from 6-10 to 16+, while the baseline stays at the floor. The 1-5 bucket (13 sentences) gives no usable comparison.
+\item
+  \textbf{Which errors went away.} The fully generic, source-independent outputs of the baseline are mostly gone: attention outputs mention the right topic words (e.g.~``\hi{बाजार}'', ``\hi{केंद्रीय}'', ``\hi{सरकार}'', ``\hi{भेजा गया}''), keep sentence openings (``\hi{इसके अलावा}'') and many content words aligned.
+\item
+  \textbf{Which errors remain or got worse.} OOV words, long-distance structure, and repetition (17.6\% of long outputs against 0.5\%).
+\item
+  \textbf{What the heatmaps show.} Mostly forward-moving alignment, sharp on single content words, diffuse on function words and long phrases; breakdown points are visible as a stuck column or attention on punctuation.
+\item
+  \textbf{Do high weights mean correct output?} No: the mean peak weight is the same (0.277) for tokens that are in the reference and tokens that are not.
+\item
+  \textbf{Limitations.} One seed per model; low absolute BLEU and few training pairs; the models differ in parameter count (38M vs 72M), so part of the gain could come from capacity; the test set is long-sentence heavy and the shortest bucket has 13 sentences; word-level vocabulary without subwords (hence the OOV problem); greedy decoding only; sentence-level error types were assigned by hand for 8 sentences, not measured for the whole test set; the ``does the baseline use the source'' argument rests on output inspection and unigram precision, not on a controlled ablation.
+\end{itemize}
+
+\hypertarget{reproduction}{%
+\section{8. Reproduction}\label{reproduction}}
+
+\begin{verbatim}
+pip install -e ".[dev]" && pip install -r Question-1/requirements.txt   # CUDA build of torch recommended
+cd Question-1
+python train.py --model both --epochs 20 --patience 4   # 50k pairs, min 5 English tokens (defaults)
+python evaluate.py                                      # BLEU, chrF, buckets, predictions, attention weights
+python analysis.py                                      # baseline limitation, attention stats, error cases
+python visualize.py                                     # curves, heatmaps, length plot, tables
+\end{verbatim}
+
+Runtime on an RTX 4050 laptop GPU: baseline 48 s per epoch, attention 222 s per epoch. Results and figures are written to \texttt{outputs/}; the dataset and checkpoints are not committed.
+
+\end{document}
