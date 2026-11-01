@@ -1,0 +1,59 @@
+{
+  "run_name": "bigru_seed43",
+  "best_epoch": 3,
+  "train_time_s": 204.40386115499996,
+  "checkpoint": "Question-2/outputs/checkpoints/bigru_seed43/best.pt",
+  "val": {
+    "accuracy": 0.6374,
+    "macro_f1": 0.6338993086362423,
+    "mae": 0.432,
+    "off_by_one": 0.3054,
+    "off_by_two_plus": 0.0572,
+    "adjacent_share_of_errors": 0.8422504136789851,
+    "extreme_confusions": 12,
+    "per_class_f1": [
+      0.7168560606060606,
+      0.5240868184224458,
+      0.5304437564499485,
+      0.6185977125808055,
+      0.7795121951219512
+    ],
+    "confusion_matrix": [
+      [
+        757,
+        166,
+        60,
+        11,
+        6
+      ],
+      [
+        244,
+        495,
+        220,
+        33,
+        8
+      ],
+      [
+        90,
+        207,
+        514,
+        173,
+        16
+      ],
+      [
+        15,
+        18,
+        124,
+        622,
+        221
+      ],
+      [
+        6,
+        3,
+        20,
+        172,
+        799
+      ]
+    ]
+  }
+}

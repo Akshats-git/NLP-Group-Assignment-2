@@ -1,0 +1,21 @@
+rater,sample_id,coherence,grammar,relevance,creativity
+"Rishi Kharya",S01,1,5,2,5
+"Rishi Kharya",S02,2,5,2,4
+"Rishi Kharya",S03,1,4,1,2
+"Rishi Kharya",S04,2,4,2,4
+"Rishi Kharya",S05,2,4,2,4
+"Rishi Kharya",S06,2,5,2,4
+"Rishi Kharya",S07,2,4,1,4
+"Rishi Kharya",S08,2,5,2,3
+"Rishi Kharya",S09,3,5,1,3
+"Rishi Kharya",S10,2,5,3,3
+"Rishi Kharya",S11,1,4,1,1
+"Rishi Kharya",S12,2,4,2,4
+"Rishi Kharya",S13,3,5,2,4
+"Rishi Kharya",S14,1,5,1,5
+"Rishi Kharya",S15,5,5,5,5
+"Rishi Kharya",S16,1,5,1,3
+"Rishi Kharya",S17,4,5,5,5
+"Rishi Kharya",S18,2,5,1,4
+"Rishi Kharya",S19,3,5,3,4
+"Rishi Kharya",S20,2,4,3,3

@@ -50,7 +50,6 @@ Decoding is greedy with `<pad>`, `<unk>` and `<sos>` banned for both models.
 
 ```bash
 # from repo root
-git checkout q1/attention-nmt
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 pip install -r Question-1/requirements.txt

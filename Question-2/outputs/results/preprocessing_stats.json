@@ -1,0 +1,87 @@
+{
+  "limit": null,
+  "splits": {
+    "train": {
+      "reviews": 200000,
+      "per_star": [
+        40000,
+        40000,
+        40000,
+        40000,
+        40000
+      ],
+      "title_attached": 1.0
+    },
+    "validation": {
+      "reviews": 5000,
+      "per_star": [
+        1000,
+        1000,
+        1000,
+        1000,
+        1000
+      ],
+      "title_attached": 1.0
+    }
+  },
+  "classic": {
+    "min_freq": 2,
+    "max_len": 200,
+    "vocab_size": 32878,
+    "validation_oov_rate": 0.003766052298888815,
+    "glove": {
+      "file": "glove.6B.300d.txt",
+      "dim": 300,
+      "vocab_size": 32878,
+      "types_with_vector": 28949,
+      "type_coverage": 0.8806047332238243,
+      "token_coverage": 0.9970924784012201
+    },
+    "lengths": {
+      "train": {
+        "mean": 44.636595,
+        "p50": 34.0,
+        "p90": 89.0,
+        "p95": 117.0,
+        "p99": 196.0,
+        "max": 914,
+        "share_over_200": 0.00932
+      },
+      "validation": {
+        "mean": 45.087,
+        "p50": 34.0,
+        "p90": 90.0,
+        "p95": 117.0,
+        "p99": 191.02000000000044,
+        "max": 724,
+        "share_over_200": 0.0094
+      }
+    }
+  },
+  "roberta": {
+    "model": "roberta-base",
+    "max_len": 256,
+    "lengths": {
+      "train": {
+        "mean": 48.87597,
+        "p50": 38.0,
+        "p90": 95.0,
+        "p95": 124.0,
+        "p99": 206.0,
+        "max": 954,
+        "share_over_128": 0.04501,
+        "share_over_256": 0.00443
+      },
+      "validation": {
+        "mean": 49.424,
+        "p50": 37.0,
+        "p90": 96.0,
+        "p95": 125.0,
+        "p99": 199.01000000000022,
+        "max": 779,
+        "share_over_128": 0.0454,
+        "share_over_256": 0.0044
+      }
+    }
+  }
+}
