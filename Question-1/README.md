@@ -18,7 +18,7 @@ loaded through HuggingFace `cfilt/iitb-english-hindi`)
 - Tokenisation: lowercased English, NFC-normalised Hindi, punctuation split off, whitespace split
 - Vocabulary: built from training data only, `min_freq=2` (21,433 English, 24,274 Hindi)
 
-Full statistics and the reasoning for the filters are in [REPORT.md](REPORT.md).
+Full statistics and the reasoning for the filters are in [report/report.tex](report/report.tex).
 
 ## Models
 
@@ -89,7 +89,7 @@ Question-1/
 ├── evaluate.py          # Test BLEU / chrF, length buckets, predictions
 ├── analysis.py          # Baseline limitation, attention statistics, error cases
 ├── visualize.py         # Curves, heatmaps, length plot, tables
-├── REPORT.md            # Q1 section of the combined report
+├── report/report.tex    # Q1 technical report (LaTeX)
 ├── requirements.txt
 ├── README.md
 ├── data/                # (gitignored) cached splits, vocabularies, attention weights
@@ -110,4 +110,4 @@ Question-1/
 - [x] Sentence-length analysis
 - [x] Error analysis
 - [x] Baseline vs attention comparison
-- [x] Short technical report ([REPORT.md](REPORT.md))
+- [x] Short technical report ([report/report.tex](report/report.tex))

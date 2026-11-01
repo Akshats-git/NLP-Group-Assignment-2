@@ -2,7 +2,7 @@
 
 Vanilla RNN vs LSTM story language models on TinyStories, three decoding strategies, diversity
 metrics, and a blinded human evaluation. Owner: Akshat. Issue: [#4](https://github.com/Akshats-git/NLP-Group-Assignment-2/issues/4).
-The technical report is [`report.md`](report.md).
+The technical report is [`report/report.tex`](report/report.tex).
 
 ## What is here
 

@@ -15,10 +15,11 @@ with qualitative examples and encoder-decoder attention heatmaps.
 | `q3_data.py` | Loading CNN/DM, lowercasing, tokenisation (`bert-base-uncased` + `[NL]`), truncation, batching, ids back to text |
 | `q3_train.py` | Loss that ignores padding (with label smoothing and copying), the paper's learning-rate schedule, validation loss, right-vs-wrong-article check, batched generation, saving and resuming the training state |
 | `q3_eval.py` | ROUGE with bootstrap intervals, Lead-3, checks for repetition / unsupported numbers / novelty, example picking |
-| `q3_report.py` | Writes `REPORT.md` from the numbers of the run |
+| `q3_report.py` | Writes `REPORT.md`, a plain-text summary of the run's numbers (regenerated on every run, not committed) |
+| `report/report.tex` | The submitted technical report (LaTeX) |
 | `requirements.txt` | Libraries |
 
-After a run: `REPORT.md` (the Q3 report) and `outputs/results/` + `outputs/figures/` (see the end of this file).
+After a run: `REPORT.md` (summary of the run's numbers; the technical report is `report/report.tex`) and `outputs/results/` + `outputs/figures/` (see the end of this file).
 
 ## Setup used
 
@@ -109,7 +110,7 @@ checks that every cell works. Real results need a GPU and `SMOKE = False`.
 | Deliverable | Where |
 |---|---|
 | Source code, README, libraries | this folder, `requirements.txt` |
-| Report with tokenizer, truncation lengths, model configuration, training-set size, decoding method, ROUGE-1/2/L/Lsum | `REPORT.md` |
+| Report with tokenizer, truncation lengths, model configuration, training-set size, decoding method, ROUGE-1/2/L/Lsum | `report/report.tex` |
 | Data statistics and settings | `outputs/results/data_info.json` |
 | Model configuration, parameter count, seed, environment | `outputs/results/run_info.json` |
 | Checks for the pitfalls | `outputs/results/sanity_checks.json` |
@@ -117,7 +118,7 @@ checks that every cell works. Real results need a GPU and `SMOKE = False`.
 | Test ROUGE (with Lead-3) | `outputs/results/rouge.json`, `outputs/figures/rouge_comparison.png` |
 | Generated test summaries | `outputs/results/test_predictions.jsonl` (ids, summaries and scores; no dataset text) |
 | Decoding choice on validation | `outputs/results/decoding_choice_validation.json` |
-| At least five qualitative examples incl. failures | `outputs/results/qualitative_examples.json`, `REPORT.md` section 6 |
+| At least five qualitative examples incl. failures | `outputs/results/qualitative_examples.json`, `report/report.tex` section 6 |
 | Cross-attention heatmaps (last decoder layer, generation time, head mean and per head) | `outputs/figures/cross_attention_*.png`, `attention_by_position.png` |
 | Checklist | `outputs/results/deliverables.json` |
 

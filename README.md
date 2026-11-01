@@ -102,15 +102,16 @@ archive.
 
 ## Where each report is
 
-The combined report for all four questions is [`report/COMBINED_REPORT.pdf`](report/COMBINED_REPORT.pdf)
-([md](report/COMBINED_REPORT.md)). The full per-question reports:
+The reports are written in LaTeX with one shared layout (XeLaTeX or tectonic; `report/build_reports.sh` builds every
+PDF). The combined report for all four questions is [`report/combined_report.tex`](report/combined_report.tex). The full
+per-question reports:
 
 | Question | Report | Run instructions |
 |---|---|---|
-| Q1 | [`Question-1/REPORT.md`](Question-1/REPORT.md) | [`Question-1/README.md`](Question-1/README.md) |
-| Q2 | [`Question-2/report/report.pdf`](Question-2/report/report.pdf) ([md](Question-2/report/report.md)) | [`Question-2/README.md`](Question-2/README.md) |
-| Q3 | [`Question-3/REPORT.pdf`](Question-3/REPORT.pdf) ([md](Question-3/REPORT.md)) | [`Question-3/README.md`](Question-3/README.md) |
-| Q4 | [`Question-4/report.md`](Question-4/report.md) | [`Question-4/README.md`](Question-4/README.md) |
+| Q1 | [`Question-1/report/report.tex`](Question-1/report/report.tex) | [`Question-1/README.md`](Question-1/README.md) |
+| Q2 | [`Question-2/report/report.tex`](Question-2/report/report.tex) | [`Question-2/README.md`](Question-2/README.md) |
+| Q3 | [`Question-3/report/report.tex`](Question-3/report/report.tex) | [`Question-3/README.md`](Question-3/README.md) |
+| Q4 | [`Question-4/report/report.tex`](Question-4/report/report.tex) | [`Question-4/README.md`](Question-4/README.md) |
 
 ## Status
 
@@ -118,5 +119,5 @@ The combined report for all four questions is [`report/COMBINED_REPORT.pdf`](rep
 - [x] Q2: RoBERTa vs BiGRU (notebooks, results and 6-page report in `Question-2/`)
 - [x] Q3: Transformer summariser (code, results, figures and report in `Question-3/`)
 - [x] Q4: Plot-Twist Generator (code, checkpoints, results and report in `Question-4/`)
-- [x] Combined report (`report/COMBINED_REPORT.pdf`)
+- [x] Combined report (`report/combined_report.tex`)
 - [x] Final ZIP: run `./package_submission.sh` after the last merge (it zips tracked files only)
