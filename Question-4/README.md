@@ -82,4 +82,4 @@ The brief asks for at least three raters who do not know which model wrote what.
 self-contained form: open it in any browser, enter a name, rate the stories 1 to 5 on four questions, and download a CSV.
 Put each rater's CSV in `outputs/human_eval/ratings/` and run `analyze_human_eval.py`. Raters should not open
 `outputs/results/generations*.jsonl`, `generated_stories*.md` or the report before they have finished.
-The private answer key (`key.json`) is git-ignored until rating is finished.
+Rating is finished (4 raters, in `ratings/`), so the answer key `key.json` is now committed and `analyze_human_eval.py` can be rerun.

@@ -20,6 +20,3 @@ runs/
 
 # Q4 has to ship its trained checkpoints, so those stay tracked
 !Question-4/outputs/checkpoints/*.pt
-
-# Q4 blinded human evaluation: the answer key stays private until all raters have finished
-Question-4/outputs/human_eval/key.json

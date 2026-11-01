@@ -4,10 +4,10 @@ Vanilla RNN vs LSTM story language models on TinyStories, three decoding strateg
 human evaluation. Author: Akshat Gupta. All numbers below come from the files in `outputs/results/`; commands to
 reproduce them are in [`README.md`](README.md).
 
-**Status of the human evaluation.** The blinded rating sheet is built (20 samples), but the ratings from the three
-or more raters have not been collected yet. Section 6 therefore contains no human scores, and every claim about
-"better storyteller" in Section 7 rests on the quantitative metrics and on my own reading of the stories. Section 6.3
-says how the numbers are produced once the ratings are in, and the claims that depend on them are marked **[pending ratings]**.
+**Human evaluation.** Four teammates (Ayush, Keshav, Rishi Kharya, Shivam Singh) rated the same 20 blinded stories; I did not
+rate, so no author ratings are included. Their raw CSVs are in `outputs/human_eval/ratings/`. The main result is that
+the raters agree with each other very little (Section 6.3), and that no rating difference between the two models is
+statistically distinguishable from zero with 10 matched pairs.
 
 ## 1. Summary
 
@@ -22,9 +22,11 @@ says how the numbers are produced once the ratings are in, and the claims that d
 | Stories that never end within 250 tokens, temp 0.8 | 17.5% | **8.4%** |
 
 The LSTM has a clearly lower perplexity (about 27% lower), more stories that finish properly, and keeps a character's
-name more often. It does not tell better stories in any way I could measure: both models are 
+name more often. It does not clearly tell better stories: both models are 
 word-salad-prone, both loop under greedy decoding, and the RNN is the *less* repetitive one at the same temperature.
-Neither model produced a twist in any of the five Plot-Twist openings.
+Neither model produced a twist in any of the five Plot-Twist openings. In the blinded human ratings (4 raters, 20 stories) the LSTM
+scored higher on coherence (+0.30) and relevance (+0.28), the RNN higher on grammar (+0.25) and creativity (+0.12), and the overall difference was +0.05
+for the LSTM with a 95% interval of [-0.22, +0.36], i.e. a tie. The lower perplexity did not buy a measurably better storyteller.
 
 ## 2. Data and preprocessing (Part 1)
 
@@ -212,7 +214,7 @@ greedy / temperature 0.8 / top-k 40 settings, 30 stories; also the full set by t
 
 **Comparing the two models.** The LSTM's stories are a bit longer, end more reliably (at temperature 0.8 and top-k 40, 30 of 30 sampled twist stories ended
 for the LSTM against 28 of 30 for the RNN; at temperature 1.2 only 67% of the RNN's did, against 100%), keep names more often, and are more fluent sentence by sentence.
-The RNN's sentences have more grammatical errors ("what that were", "promised himself", "so so he went"). Neither produced
+In my own reading the RNN's sentences had more grammatical errors ("what that were", "promised himself", "so so he went"), but the blinded raters scored the RNN's grammar *higher* (4.08 against 3.83; Section 6.3, difference not significant), so I do not rely on my impression here. Neither produced
 a story I would call coherent, and the difference between them is smaller than the difference between greedy and sampled output.
 
 ### 5.3 Optional extension: a small open-source LLM
@@ -276,22 +278,82 @@ Premature termination is rare (below 2% everywhere). The metrics were stable bet
 top-k 40), the first sample of each, shuffled with seed 2024 and given neutral ids S01 to S20. The private answer key (`key.json`) maps ids back to model
 and decoding and is not shown to raters. Each sample is rated 1 to 5 for **coherence, grammatical quality, relevance
 to the opening, and creativity/surprise** in `outputs/human_eval/rate.html`, a self-contained form that downloads a CSV. Samples are
-shown as generated, with no editing.
+shown as generated, with no editing. Four raters returned complete ratings (80 ratings in total, 20 stories each). Raters are my group members, who knew the
+assignment but were not told which model wrote which story; the instructions in the README ask raters not to look at the generations or this report first, and I cannot verify that they did not.
 
 ### 6.3 Human results
 
-**Not available yet.** The ratings have not been collected, so there are no human scores, agreement figures, or
-perplexity-vs-rating comparison in this report. After the three or more raters have returned their CSVs into
-`outputs/human_eval/ratings/`, running
+All tables are produced by `analyze_human_eval.py` (`outputs/results/human_eval_tables.md`, `human_eval.json`) and the figure is
+`outputs/figures/human_ratings.png`. Each story's score is the mean over raters; the table gives the mean ± standard deviation across the 10 stories per model.
 
-```bash
-python Question-4/analyze_human_eval.py --exclude akshat   # the author is not blind
-python Question-4/make_figures.py
-```
+**Mean rating by model (1 to 5).**
 
-writes `outputs/results/human_eval_tables.md` (mean scores per model and decoding and per criterion, rater agreement, paired
-RNN-vs-LSTM differences) and `outputs/figures/human_ratings.png`. The tables and a discussion of rater disagreements
-should be pasted here. I will not guess what they will say.
+| model | coherence | grammar | relevance | creativity | overall | val ppl |
+|---|---|---|---|---|---|---|
+| LSTM | 3.00 ± 0.57 | 3.83 ± 0.43 | 2.73 ± 0.52 | 3.42 ± 0.59 | 3.24 | 12.12 |
+| Vanilla RNN | 2.70 ± 0.51 | 4.08 ± 0.39 | 2.45 ± 0.52 | 3.55 ± 0.52 | 3.19 | 16.44 |
+
+**By decoding configuration (5 stories each).**
+
+| model | decoding | coherence | grammar | relevance | creativity | overall |
+|---|---|---|---|---|---|---|
+| LSTM | greedy | 3.10 | 3.95 | 2.70 | 3.10 | 3.21 |
+| LSTM | top-k 40 | 2.90 | 3.70 | 2.75 | 3.75 | 3.27 |
+| RNN | greedy | 2.95 | 4.05 | 2.45 | 3.25 | 3.17 |
+| RNN | top-k 40 | 2.45 | 4.10 | 2.45 | 3.85 | 3.21 |
+
+**Paired comparison, LSTM minus RNN** (10 matched pairs: same opening, same decoding; bootstrap CI over the pairs).
+
+| criterion | mean diff | 95% CI | LSTM wins / ties / RNN wins |
+|---|---|---|---|
+| coherence | +0.30 | [-0.23, +0.78] | 6 / 1 / 3 |
+| grammar | -0.25 | [-0.57, +0.03] | 1 / 4 / 5 |
+| relevance | +0.28 | [-0.15, +0.80] | 5 / 4 / 1 |
+| creativity | -0.12 | [-0.38, +0.15] | 3 / 1 / 6 |
+| overall | +0.05 | [-0.22, +0.36] | 4 / 1 / 5 |
+
+Every interval contains zero. With only 10 pairs the study cannot separate the models; the signs are suggestive, not established.
+
+**Inter-rater agreement.**
+
+| criterion | Krippendorff alpha (ordinal) | mean pairwise weighted kappa | exact agreement | within 1 point |
+|---|---|---|---|---|
+| coherence | -0.14 | 0.01 | 25% | 48% |
+| grammar | -0.14 | -0.06 | 21% | 62% |
+| relevance | -0.17 | 0.05 | 15% | 46% |
+| creativity | -0.14 | 0.02 | 26% | 58% |
+
+| rater | coherence | grammar | relevance | creativity |
+|---|---|---|---|---|
+| Ayush | 4.40 | 4.70 | 4.35 | 4.60 |
+| Keshav | 2.15 | 3.65 | 1.25 | 2.50 |
+| Rishi Kharya | 2.15 | 4.65 | 2.10 | 3.70 |
+| Shivam Singh | 2.70 | 2.80 | 2.65 | 3.15 |
+
+**Disagreement between evaluators.** Agreement is essentially nil (alpha between -0.17 and -0.14, kappa about 0), so the individual story
+means rest on four mostly unrelated opinions, and I treat the averages as weak evidence. Two things drive it:
+- *Different use of the scale.* Ayush rated almost everything 4 or 5 on all criteria (mean 4.4 to 4.7), while Keshav gave relevance 1 to 17 of 20
+  stories (mean 1.25), and Shivam used the full range. Ayush gave the maximum score on all four criteria to the pure loop S01 (one sentence, "It was a big, shiny
+  thing.", repeated about 25 times) and to the unfinished RNN loop S08, both of which Shivam scored all 1s; that is a 4-point spread on the same text, and suggests that Ayush's
+  ratings do not discriminate between good and bad outputs. I kept his ratings in the main tables (I have no ground to exclude a rater after seeing results), but report
+  the sensitivity below.
+- *Different criteria.* Raters disagree about what "relevance" and "creativity" reward. Keshav, who judged relevance harshly, still gave 5 on coherence to S11, S12 and S15, which are
+  fluent but unrelated to the opening, so he appears to separate coherence from relevance more than the others, while Rishi Kharya's grammar scores (4 to 5 almost throughout) seem to grade
+  sentence-level fluency only.
+
+**Sensitivity: without Ayush** (three raters). The conclusions do not change. Overall LSTM 2.84 against RNN 2.73 (paired difference +0.11, CI [-0.30, +0.56]); coherence
++0.53 (CI [-0.17, +1.17], LSTM better in 7 pairs, RNN in 2); grammar -0.33 (CI [-0.80, +0.13]); relevance +0.33 (CI [-0.23, +0.97]); creativity -0.10. All intervals still include zero.
+Agreement among the remaining three is still near zero (alpha 0.09 coherence, -0.19 grammar, -0.11 relevance, -0.03 creativity), so Ayush alone does not explain the disagreement.
+
+**What the raters preferred.** The highest-rated stories (mean 3.94) were two short, fluent, generic greedy outputs that ended after a few sentences: S15 (RNN, exam opening, "She was so happy and she thanked her mom for
+helping her...") and S17 (LSTM, letter opening, which keeps the name Jack). The lowest-rated (2.81 to 2.88) included the looping S01 and the unfinished RNN loop S08, together with S03, S11 and S18. Greedy
+decoding scored better on coherence than top-k 40 for both models (RNN 2.95 against 2.45, LSTM 3.10 against 2.90), and top-k 40 scored higher on creativity
+(RNN 3.85 against 3.25, LSTM 3.75 against 3.10), with the overall score nearly equal (3.17 to 3.27). The raters therefore reward the creativity of sampled text and the coherence of greedy
+text about equally, and the loop-prone greedy output was not punished as much as the automatic repetition metric would suggest (one or two of the five stories in each greedy group is a loop, so this rests on very few stories).
+
+**Perplexity against human judgement.** The LSTM has the lower perplexity (12.1 against 16.4). It scores higher on coherence and relevance, the two criteria that depend most on the model
+using context, and lower on grammar and creativity, and its overall rating is the same within noise (+0.05, CI [-0.22, +0.36]; 4 pairs LSTM, 1 tie, 5 pairs RNN). So in this experiment a 27% lower perplexity did **not**
+produce a measurably better storyteller.
 
 ## 7. Final analysis (Part 6)
 
@@ -303,7 +365,7 @@ caveats are that the LSTM has more parameters, that neither model finished conve
 two openings. Both models still fail to keep track of a character across a paragraph.
 
 **2. Which model generates more coherent and less repetitive continuations?** The LSTM is somewhat more coherent in my reading (fluent sentences,
-more consistent names, finishing), **[pending ratings]** to confirm this. It is *not* less repetitive: at temperature 0.5, 0.8 and in top-k it repeats trigrams 20% to 60%
+more consistent names, finishing), and the human raters give the LSTM higher coherence (3.00 against 2.70) and relevance (2.73 against 2.45), though not significantly (CIs include zero) and with near-zero rater agreement; they rate the RNN's grammar higher (4.08 against 3.83). It is *not* less repetitive: at temperature 0.5, 0.8 and in top-k it repeats trigrams 20% to 60%
 more than the RNN (0.115 against 0.072, 0.037 against 0.024), and in greedy mode the two are within noise (0.42 and 0.44). The likely reason is that a
 sharper, better-fitted distribution gives its top choice more of the mass, which makes loops more likely when the choice is made by the argmax or at low temperature. I did not test that explanation directly.
 
@@ -311,8 +373,7 @@ sharper, better-fitted distribution gives its top choice more of the mass, which
 repetition falls from 0.07/0.12 to 0.003/0.005 and Distinct-2 rises from 0.07 to 0.35, which exceeds that of real text (0.237), meaning that the diversity at 1.2
 is partly noise. In my reading, grammar and coherence degrade over the same range: agreement errors and abrupt subject changes
 are visible at 0.8 and frequent at 1.2, and stories that never end rise from 6% to 20% (RNN). I did not find that any temperature produces *creative*
-stories rather than only different ones. Human ratings for creativity and grammar by temperature are **[pending ratings]** and were collected only for greedy and top-k 40, so
-the human data will not separate the temperatures anyway.
+stories rather than only different ones. The human ratings cover only greedy and top-k 40, not individual temperatures, so they do not test this directly; they do show that top-k 40 samples were rated more creative than greedy ones (3.85 against 3.25 RNN, 3.75 against 3.10 LSTM) at the cost of coherence (RNN 2.45 against 2.95).
 
 **4. Can higher diversity scores guarantee better stories?** No. Temperature 1.2 has the highest Distinct-2 of all configurations (0.34 to 0.36), higher than
 real stories, and it also has the worst grammar and the highest share of never-ending stories. Greedy decoding has the lowest. Diversity metrics measure
@@ -321,7 +382,7 @@ the amount of generated text (the Distinct-1 values here are very small, 0.002 t
 
 **5. Does a lower perplexity correspond to a better storytelling ability?** From the automatic metrics alone: partly. The lower-perplexity LSTM ends
 stories more reliably and keeps names more, but it has the *higher* repetition rate under sampling, and neither model produces
-a plot twist. In the Plot-Twist stories the difference between the models was much smaller than the difference between decoding settings. A clear answer needs the human ratings **[pending ratings]**.
+a plot twist. In the Plot-Twist stories the difference between the models was much smaller than the difference between decoding settings. The human ratings point the same way: the overall score differs by +0.05 in favour of the LSTM (95% CI [-0.22, +0.36]), so a 27% lower perplexity did not give a measurably better storyteller, although the LSTM was rated higher on coherence and relevance and lower on grammar and creativity (none significant, 10 pairs).
 Possible reasons for a disagreement between perplexity and storytelling quality are that perplexity measures the average next-word probability under the *true*
 text (teacher forcing), whereas generation feeds the model its own output, where small errors compound; that it is dominated by very predictable tokens (function words, punctuation), so a gain there says little about
 plot; and that decoding policy has a large effect that perplexity cannot see.
@@ -339,12 +400,12 @@ plot; and that decoding policy has a large effect that perplexity cannot see.
 register of about 6,500 words: the models cannot represent "stopped clocks" or "a message from the future" as concepts, which is why the premises were ignored.
 (b) The recurrent state of one layer is a small memory, so long-range consistency is not achieved. (c) 20,000 stories and a single run of 25 epochs per model; I trained two seeds, which shows the perplexity is stable but says nothing about
 variation in data subset. (d) Both models are under-trained against the 25-epoch cap. (e) Word-level tokenisation turns every rare word into `<unk>` and cannot create new words. (f) The metrics here are proxies, and the
-human evaluation is small (20 samples, 3 or more raters) and incomplete at the time of writing. (g) Only one sampling seed per configuration was used for the 10 openings and 3 samples per configuration, so
+human evaluation is small (20 samples, 4 raters, 10 matched pairs) and the raters barely agree (alpha about -0.15). (g) Only one sampling seed per configuration was used for the 10 openings and 3 samples per configuration, so
 conclusions about individual stories are anecdotal.
 
 ## 8. Limitations of this study
 
-- **Human ratings are missing** (Section 6.3). This is the main gap.
+- **The human evaluation is weak**: 20 stories, 4 raters, near-zero inter-rater agreement, so no difference between the models is statistically established (Section 6.3). One rater (Ayush) scored almost everything 4 to 5, including clear loops.
 - Neither model reached early stopping; both stopped at the 25-epoch cap.
 - The LSTM has 22% more parameters than the RNN, which is a confound for the comparison.
 - The Plot-Twist assessment (Section 5.2) is my own reading, from a single (non-blind) rater who knows which model wrote which story.

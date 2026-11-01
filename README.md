@@ -104,6 +104,6 @@ archive.
 - [ ] Q1: attention NMT
 - [ ] Q2: RoBERTa vs BiGRU
 - [ ] Q3: Transformer summariser
-- [ ] Q4: Plot-Twist Generator
+- [x] Q4: Plot-Twist Generator
 - [ ] Combined report
 - [ ] Final ZIP
