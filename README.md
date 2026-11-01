@@ -65,8 +65,8 @@ each member has touched implementation, experiments, evaluation and the report.
 
 ## Setup
 
-Python 3.11+ and a CUDA GPU for Q2 and Q3 (Colab or Kaggle is fine). Each question will get
-its own `requirements.txt` and run instructions in its folder README as the code lands.
+Python 3.11+ and a CUDA GPU for Q2 and Q3 (Colab or Kaggle is fine). Each question has its own
+`requirements.txt` and run instructions in its folder README.
 
 ```bash
 git clone https://github.com/Akshats-git/NLP-Group-Assignment-2.git
@@ -74,7 +74,7 @@ cd NLP-Group-Assignment-2
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"                       # installs common/ so any notebook can import it
 pytest -q                                     # check common/ works on your machine
-pip install -r Question-N/requirements.txt    # once it exists
+pip install -r Question-N/requirements.txt    # per-question libraries
 ```
 
 On Colab or Kaggle, clone the repo, `%cd` into it and run `import sys; sys.path.insert(0, ".")`
@@ -99,11 +99,20 @@ Before submitting: every member has contributed to code, experiments, evaluation
 report; the README reproduces the results from a clean environment; no dataset is in the
 archive.
 
+## Where each report is
+
+| Question | Report | Run instructions |
+|---|---|---|
+| Q1 | [`Question-1/REPORT.md`](Question-1/REPORT.md) | [`Question-1/README.md`](Question-1/README.md) |
+| Q2 | [`Question-2/report/report.pdf`](Question-2/report/report.pdf) ([md](Question-2/report/report.md)) | [`Question-2/README.md`](Question-2/README.md) |
+| Q3 | [`Question-3/REPORT.pdf`](Question-3/REPORT.pdf) ([md](Question-3/REPORT.md)) | [`Question-3/README.md`](Question-3/README.md) |
+| Q4 | [`Question-4/report.md`](Question-4/report.md) | [`Question-4/README.md`](Question-4/README.md) |
+
 ## Status
 
-- [ ] Q1: attention NMT
-- [ ] Q2: RoBERTa vs BiGRU
-- [ ] Q3: Transformer summariser
-- [x] Q4: Plot-Twist Generator
+- [x] Q1: attention NMT (code, results, figures and report in `Question-1/`)
+- [x] Q2: RoBERTa vs BiGRU (notebooks, results and 6-page report in `Question-2/`)
+- [x] Q3: Transformer summariser (code, results, figures and report in `Question-3/`)
+- [x] Q4: Plot-Twist Generator (code, checkpoints, results and report in `Question-4/`)
 - [ ] Combined report
 - [ ] Final ZIP

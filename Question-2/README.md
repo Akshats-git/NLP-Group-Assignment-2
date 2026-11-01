@@ -47,8 +47,7 @@ Question-2/
 
 1. **File → Import Notebook → GitHub**, and paste the notebook's GitHub link, e.g.
    `https://github.com/Akshats-git/NLP-Group-Assignment-2/blob/main/Question-2/03_roberta.ipynb`.
-2. In the first code cell set `BRANCH` to the branch with the code you want, e.g. `"q2/roberta"` until it
-   is merged. When the notebook finds no repo around it, it clones that branch and moves into `Question-2/`.
+2. In the first code cell `BRANCH` is `"main"`; change it only to run another branch. When the notebook finds no repo around it, it clones that branch and moves into `Question-2/`.
    datasets, spaCy and scikit-learn come preinstalled on Kaggle. transformers does too, but the preinstalled
    5.16.1 fine-tunes RoBERTa badly: the same 20k-review run scored 0.49 macro-F1 on 5.16.1 and 0.64 on 5.20.2.
    The setup cell therefore upgrades it to >= 5.20.2 when needed, and `q2.roberta_data` refuses to import on
