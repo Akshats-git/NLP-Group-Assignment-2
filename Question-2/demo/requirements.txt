@@ -1,0 +1,2 @@
+# on top of the repo's common/ deps and Question-2/requirements.txt
+streamlit>=1.67
