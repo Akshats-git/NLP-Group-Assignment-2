@@ -1,0 +1,54 @@
+{
+  "files": {
+    "source code (data, model, training, evaluation)": [
+      "Question_3.ipynb",
+      "q3_data.py",
+      "q3_model.py",
+      "q3_train.py",
+      "q3_eval.py",
+      "q3_report.py"
+    ],
+    "README with run instructions and libraries": [
+      "README.md",
+      "requirements.txt"
+    ],
+    "report": [
+      "REPORT.md"
+    ],
+    "tokenizer, truncation, data sizes": [
+      "outputs/results/data_info.json"
+    ],
+    "model configuration and parameter count": [
+      "outputs/results/run_info.json"
+    ],
+    "checks for the pitfalls": [
+      "outputs/results/sanity_checks.json"
+    ],
+    "training and validation loss curves": [
+      "outputs/figures/loss_curves.png",
+      "outputs/results/history.json"
+    ],
+    "ROUGE-1/2/L/Lsum on the test set": [
+      "outputs/results/rouge.json",
+      "outputs/results/test_predictions.jsonl"
+    ],
+    ">= 5 qualitative examples incl. failures": [
+      "outputs/results/qualitative_examples.json"
+    ],
+    "cross-attention heatmap": [
+      "outputs/figures/cross_attention_example1.png"
+    ]
+  },
+  "present": {
+    "source code (data, model, training, evaluation)": true,
+    "README with run instructions and libraries": true,
+    "report": true,
+    "tokenizer, truncation, data sizes": true,
+    "model configuration and parameter count": true,
+    "checks for the pitfalls": true,
+    "training and validation loss curves": true,
+    "ROUGE-1/2/L/Lsum on the test set": true,
+    ">= 5 qualitative examples incl. failures": true,
+    "cross-attention heatmap": true
+  }
+}

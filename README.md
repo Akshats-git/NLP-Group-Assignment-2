@@ -65,8 +65,8 @@ each member has touched implementation, experiments, evaluation and the report.
 
 ## Setup
 
-Python 3.11+ and a CUDA GPU for Q2 and Q3 (Colab or Kaggle is fine). Each question will get
-its own `requirements.txt` and run instructions in its folder README as the code lands.
+Python 3.11+ and a CUDA GPU for Q2 and Q3 (Colab or Kaggle is fine). Each question has its own
+`requirements.txt` and run instructions in its folder README.
 
 ```bash
 git clone https://github.com/Akshats-git/NLP-Group-Assignment-2.git
@@ -74,7 +74,7 @@ cd NLP-Group-Assignment-2
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"                       # installs common/ so any notebook can import it
 pytest -q                                     # check common/ works on your machine
-pip install -r Question-N/requirements.txt    # once it exists
+pip install -r Question-N/requirements.txt    # per-question libraries
 ```
 
 On Colab or Kaggle, clone the repo, `%cd` into it and run `import sys; sys.path.insert(0, ".")`
@@ -82,7 +82,8 @@ before `import common`. The [`common/README.md`](common/README.md) has the full 
 
 ## Submission
 
-One member submits one ZIP for the whole group. It contains the source code, notebooks,
+One member submits one ZIP for the whole group (`./package_submission.sh` builds it from the tracked files, so no
+dataset, virtualenv or untracked checkpoint can slip in). It contains the source code, notebooks,
 results, visualisations, a README with reproduction steps, and one combined technical
 report covering all four questions.
 
@@ -99,11 +100,24 @@ Before submitting: every member has contributed to code, experiments, evaluation
 report; the README reproduces the results from a clean environment; no dataset is in the
 archive.
 
+## Where each report is
+
+The reports are written in LaTeX with one shared layout and built to PDF with XeLaTeX or tectonic
+(`report/build_reports.sh` rebuilds all of them). The combined report for all four questions is
+[`report/combined_report.pdf`](report/combined_report.pdf) ([source](report/combined_report.tex)). The full per-question reports:
+
+| Question | Report (PDF) | LaTeX source | Run instructions |
+|---|---|---|---|
+| Q1 | [`report.pdf`](Question-1/report/report.pdf) | [`report.tex`](Question-1/report/report.tex) | [`Question-1/README.md`](Question-1/README.md) |
+| Q2 | [`report.pdf`](Question-2/report/report.pdf) | [`report.tex`](Question-2/report/report.tex) | [`Question-2/README.md`](Question-2/README.md) |
+| Q3 | [`report.pdf`](Question-3/report/report.pdf) | [`report.tex`](Question-3/report/report.tex) | [`Question-3/README.md`](Question-3/README.md) |
+| Q4 | [`report.pdf`](Question-4/report/report.pdf) | [`report.tex`](Question-4/report/report.tex) | [`Question-4/README.md`](Question-4/README.md) |
+
 ## Status
 
-- [ ] Q1: attention NMT
-- [ ] Q2: RoBERTa vs BiGRU
-- [ ] Q3: Transformer summariser
-- [ ] Q4: Plot-Twist Generator
-- [ ] Combined report
-- [ ] Final ZIP
+- [x] Q1: attention NMT (code, results, figures and report in `Question-1/`)
+- [x] Q2: RoBERTa vs BiGRU (notebooks, results and 6-page report in `Question-2/`)
+- [x] Q3: Transformer summariser (code, results, figures and report in `Question-3/`)
+- [x] Q4: Plot-Twist Generator (code, checkpoints, results and report in `Question-4/`)
+- [x] Combined report (`report/combined_report.pdf`)
+- [x] Final ZIP: run `./package_submission.sh` after the last merge (it zips tracked files only)

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rate the stories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eef1f5;
+    --sheet: #ffffff;
+    --ink: #17212f;
+    --muted: #5a6677;
+    --rule: #d3d9e1;
+    --mark: #f2cc3a;
+    --mark-ink: #17212f;
+    --focus: #1f5fbf;
+    --danger: #a3261f;
+    --serif: "Literata", Georgia, "Times New Roman", serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10161f; --sheet: #182130; --ink: #e8edf4; --muted: #9aa6b6; --rule: #2c3849;
+      --mark: #e6bf33; --mark-ink: #10161f; --focus: #7db0ff; --danger: #ff8a80;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10161f; --sheet: #182130; --ink: #e8edf4; --muted: #9aa6b6; --rule: #2c3849;
+    --mark: #e6bf33; --mark-ink: #10161f; --focus: #7db0ff; --danger: #ff8a80;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--sans); }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  header.bar { background: var(--sheet); border-bottom: 1px solid var(--rule); position: sticky; top: 0; z-index: 5; }
+  header.bar .wrap { display: flex; align-items: center; gap: 16px; min-height: 56px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .bar h1 { font-size: 1rem; font-weight: 650; margin: 0; flex: 1 1 auto; }
+  .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .strip { display: flex; gap: 3px; flex: 1 1 100%; padding-bottom: 4px; }
+  .strip button { flex: 1; height: 8px; min-width: 4px; border: 0; padding: 0; border-radius: 1px; background: var(--rule); cursor: pointer; }
+  .strip button.done { background: var(--ink); opacity: .55; }
+  .strip button.current { background: var(--mark); box-shadow: 0 0 0 2px var(--ink); opacity: 1; }
+
+  main { padding: 24px 0 64px; }
+  .screen[hidden] { display: none; }
+
+  .intro { max-width: 640px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 28px 24px; margin: 24px auto; }
+  .intro h2 { font: 600 1.6rem/1.2 var(--serif); margin: 0 0 12px; }
+  .intro p, .intro li { color: var(--muted); max-width: 62ch; }
+  .intro ul { padding-left: 1.2em; }
+  .intro strong { color: var(--ink); }
+  label.field { display: block; font-weight: 600; margin: 20px 0 6px; }
+  input[type=text] { width: 100%; max-width: 360px; padding: 10px 12px; border: 1px solid var(--muted); border-radius: 4px; background: var(--paper); }
+
+  .btn { border: 2px solid var(--ink); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 4px; font-weight: 600; cursor: pointer; min-height: 44px; }
+  .btn.quiet { background: transparent; color: var(--ink); }
+  .btn[disabled] { opacity: .4; cursor: not-allowed; }
+  .btn:not([disabled]):hover { transform: translateY(-1px); }
+  .btn { transition: transform 120ms ease; }
+
+  .layout { display: grid; gap: 20px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 360px; gap: 32px; } .rate { position: sticky; top: 96px; } }
+
+  .story { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 24px 20px; font-family: var(--serif); font-size: 1.125rem; line-height: 1.7; }
+  @media (min-width: 600px) { .story { padding: 32px 36px; } }
+  .story .label { font: 600 .85rem/1.2 var(--sans); color: var(--muted); margin: 0 0 6px; }
+  .story .opening { margin: 0 0 28px; padding-left: 16px; border-left: 3px solid var(--rule); color: var(--muted); max-width: 62ch; }
+  .story .continuation { margin: 0; max-width: 62ch; white-space: pre-wrap; }
+  .story .gap { height: 0; }
+
+  .rate { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; }
+  .rate h2 { font-size: 1rem; margin: 0 0 4px; }
+  .rate .hint { color: var(--muted); font-size: .875rem; margin: 0 0 16px; }
+  fieldset { border: 0; margin: 0 0 18px; padding: 0; min-width: 0; }
+  legend { font-weight: 650; padding: 0; margin-bottom: 2px; }
+  .desc { color: var(--muted); font-size: .875rem; margin: 0 0 8px; }
+  .scale { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .scale input { position: absolute; opacity: 0; pointer-events: none; }
+  .scale label { display: grid; place-items: center; min-height: 48px; border: 2px solid var(--rule); border-radius: 4px; font-weight: 650; font-variant-numeric: tabular-nums; cursor: pointer; background: var(--paper); transition: background 120ms, border-color 120ms; }
+  .scale label:hover { border-color: var(--muted); }
+  .scale input:checked + label { background: var(--mark); color: var(--mark-ink); border-color: var(--ink); }
+  .scale input:focus-visible + label { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .anchors { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  .nav { display: flex; gap: 8px; margin-top: 4px; }
+  .nav .btn { flex: 1; }
+  .shortcut { color: var(--muted); font-size: .8rem; margin: 12px 0 0; }
+
+  .done-card { max-width: 640px; margin: 24px auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 28px 24px; }
+  .done-card h2 { font: 600 1.6rem/1.2 var(--serif); margin: 0 0 12px; }
+  .done-card p, .done-card li { color: var(--muted); }
+  .notice { color: var(--danger); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .btn, .scale label { transition: none; } .btn:not([disabled]):hover { transform: none; } }
+</style>
+</head>
+<body>
+<header class="bar" id="bar" hidden>
+  <div class="wrap">
+    <h1>Rate the stories</h1>
+    <span class="count" id="count" aria-live="polite"></span>
+    <div class="strip" id="strip" aria-label="Jump to a story"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="screen intro" id="intro">
+    <h2>Rate short stories written by language models</h2>
+    <p>You will read <strong id="n-total"></strong> story continuations. Each starts from a given opening and was written by a computer program.
+      You are not told which program wrote which story, and the order is different for every rater.</p>
+    <ul>
+      <li>Rate each story from <strong>1 (very poor)</strong> to <strong>5 (excellent)</strong> on four questions.</li>
+      <li>Judge only the text on the page. Small models make odd mistakes, so use the whole scale.</li>
+      <li>Rate on your own and don't compare notes until everyone has finished.</li>
+      <li>It takes about 20 to 30 minutes. Your answers are saved in this browser, so you can close the page and come back.</li>
+    </ul>
+    <label class="field" for="name">Your name</label>
+    <input type="text" id="name" autocomplete="name" placeholder="e.g. Keshav">
+    <p class="notice" id="name-error" role="alert" hidden>Enter your name so your ratings can be matched to you.</p>
+    <p><button class="btn" id="start" type="button">Start rating</button></p>
+  </section>
+
+  <section class="screen" id="rating" hidden>
+    <div class="layout">
+      <article class="story" id="story" aria-label="Story to rate">
+        <p class="label">Opening, given to the model</p>
+        <p class="opening" id="opening"></p>
+        <p class="label">Continuation, written by the model</p>
+        <p class="continuation" id="continuation"></p>
+      </article>
+      <form class="rate" id="form" aria-label="Your ratings">
+        <h2>Your ratings</h2>
+        <p class="hint">Rate the continuation, not the opening.</p>
+        <div id="criteria"></div>
+        <div class="nav">
+          <button class="btn quiet" id="prev" type="button">Previous</button>
+          <button class="btn" id="next" type="button" disabled>Next story</button>
+        </div>
+        <p class="shortcut">Keyboard: press 1 to 5 to answer the highlighted question and move to the next one.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="screen done-card" id="finish" hidden>
+    <h2>All stories rated</h2>
+    <p>Thank you. Download your ratings and send the file to Akshat, or add it to <code>Question-4/outputs/human_eval/ratings/</code> in a pull request.</p>
+    <p><button class="btn" id="download" type="button">Download my ratings (CSV)</button>
+       <button class="btn quiet" id="review" type="button">Review answers</button></p>
+    <p id="saved-note" hidden>Downloaded <code id="saved-name"></code>.</p>
+  </section>
+</main>
+
+<script>
+const SAMPLES = /*SAMPLES*/[];
+const CRITERIA = /*CRITERIA*/[];
+const LABELS = {coherence: "Coherence", grammar: "Grammar", relevance: "Relevance to the opening", creativity: "Creativity and surprise"};
+const ANCHORS = {coherence: ["Incoherent", "Fully coherent"], grammar: ["Ungrammatical", "Fluent"], relevance: ["Unrelated", "Fully on topic"], creativity: ["Dull or repeated", "Surprising"]};
+const STORE = "q4-human-eval-v1";
+
+const $ = (id) => document.getElementById(id);
+let state = {rater: "", order: [], ratings: {}, idx: 0};
+
+function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem(STORE) || "null"); if (s && s.order && s.order.length === SAMPLES.length) return s; } catch (e) {} return null; }
+
+function hashString(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffled(ids, seed) { const a = ids.slice(), r = mulberry32(seed); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+const sampleById = Object.fromEntries(SAMPLES.map((s) => [s.id, s]));
+const isDone = (id) => CRITERIA.every((c) => state.ratings[id] && state.ratings[id][c.key]);
+const doneCount = () => state.order.filter(isDone).length;
+
+function show(screen) {
+  for (const id of ["intro", "rating", "finish"]) $(id).hidden = id !== screen;
+  $("bar").hidden = screen === "intro";
+  window.scrollTo(0, 0);
+}
+
+function buildCriteria() {
+  $("criteria").innerHTML = CRITERIA.map((c, ci) => `
+    <fieldset data-key="${c.key}" data-index="${ci}">
+      <legend>${LABELS[c.key]}</legend>
+      <p class="desc">${c.text}</p>
+      <div class="scale" role="radiogroup" aria-label="${LABELS[c.key]}">
+        ${[1, 2, 3, 4, 5].map((v) => `<input type="radio" name="${c.key}" id="${c.key}-${v}" value="${v}"><label for="${c.key}-${v}">${v}</label>`).join("")}
+      </div>
+      <div class="anchors"><span>1 ${ANCHORS[c.key][0]}</span><span>5 ${ANCHORS[c.key][1]}</span></div>
+    </fieldset>`).join("");
+}
+
+function renderStrip() {
+  $("strip").innerHTML = state.order.map((id, i) =>
+    `<button type="button" data-i="${i}" class="${isDone(id) ? "done" : ""} ${i === state.idx ? "current" : ""}" aria-label="Story ${i + 1}${isDone(id) ? ", rated" : ""}"></button>`).join("");
+}
+
+function render() {
+  const id = state.order[state.idx], s = sampleById[id], r = state.ratings[id] || {};
+  $("opening").textContent = s.prompt;
+  $("continuation").textContent = s.text;
+  for (const c of CRITERIA) {
+    for (let v = 1; v <= 5; v++) $(`${c.key}-${v}`).checked = r[c.key] === v;
+  }
+  $("count").textContent = `Story ${state.idx + 1} of ${state.order.length}, ${doneCount()} rated`;
+  $("prev").disabled = state.idx === 0;
+  $("next").textContent = state.idx === state.order.length - 1 ? "Finish" : "Next story";
+  $("next").disabled = !isDone(id);
+  renderStrip();
+}
+
+function setRating(key, value) {
+  const id = state.order[state.idx];
+  (state.ratings[id] = state.ratings[id] || {})[key] = value;
+  save();
+  $("next").disabled = !isDone(id);
+  $("count").textContent = `Story ${state.idx + 1} of ${state.order.length}, ${doneCount()} rated`;
+  renderStrip();
+}
+
+function go(i) {
+  state.idx = Math.max(0, Math.min(state.order.length - 1, i));
+  save();
+  render();
+  window.scrollTo(0, 0);
+}
+
+function finishOrNext() {
+  if (state.idx === state.order.length - 1) {
+    if (state.order.every(isDone)) { show("finish"); } else { const j = state.order.findIndex((id) => !isDone(id)); go(j); }
+  } else go(state.idx + 1);
+}
+
+function csv() {
+  const q = (v) => `"${String(v).replace(/"/g, '""')}"`;
+  const rows = [["rater", "sample_id", ...CRITERIA.map((c) => c.key)].join(",")];
+  for (const id of [...state.order].sort()) if (isDone(id)) rows.push([q(state.rater), id, ...CRITERIA.map((c) => state.ratings[id][c.key])].join(","));
+  return rows.join("\n") + "\n";
+}
+
+function startSession(name) {
+  state = {rater: name, order: shuffled(SAMPLES.map((s) => s.id), hashString(name.toLowerCase())), ratings: {}, idx: 0};
+  save();
+  show("rating");
+  render();
+}
+
+$("n-total").textContent = SAMPLES.length;
+buildCriteria();
+
+$("start").addEventListener("click", () => {
+  const name = $("name").value.trim();
+  $("name-error").hidden = !!name;
+  if (!name) { $("name").focus(); return; }
+  const prior = load();
+  if (prior && prior.rater.toLowerCase() === name.toLowerCase()) { state = prior; show("rating"); const j = state.order.findIndex((id) => !isDone(id)); state.idx = j < 0 ? 0 : j; render(); }
+  else startSession(name);
+});
+$("name").addEventListener("keydown", (e) => { if (e.key === "Enter") $("start").click(); });
+
+$("criteria").addEventListener("change", (e) => { if (e.target.type === "radio") setRating(e.target.name, Number(e.target.value)); });
+$("form").addEventListener("keydown", (e) => {
+  if (!/^[1-5]$/.test(e.key) || e.ctrlKey || e.metaKey || e.altKey) return;
+  const field = e.target.closest("fieldset");
+  const sets = [...document.querySelectorAll("#criteria fieldset")];
+  const cur = field || sets.find((f) => !f.querySelector("input:checked")) || sets[0];
+  const input = cur.querySelector(`input[value="${e.key}"]`);
+  input.checked = true; setRating(cur.dataset.key, Number(e.key));
+  const nextSet = sets[sets.indexOf(cur) + 1];
+  (nextSet ? nextSet.querySelector("input:checked, input") : $("next")).focus();
+  e.preventDefault();
+});
+document.addEventListener("keydown", (e) => {
+  if ($("rating").hidden || e.target.tagName === "INPUT" && e.target.type === "text") return;
+  if (/^[1-5]$/.test(e.key) && !e.target.closest("#form")) {
+    const sets = [...document.querySelectorAll("#criteria fieldset")];
+    const cur = sets.find((f) => !f.querySelector("input:checked")) || sets[0];
+    cur.querySelector(`input[value="${e.key}"]`).checked = true; setRating(cur.dataset.key, Number(e.key));
+  }
+});
+
+$("next").addEventListener("click", finishOrNext);
+$("prev").addEventListener("click", () => go(state.idx - 1));
+$("strip").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { show("rating"); go(Number(b.dataset.i)); } });
+$("review").addEventListener("click", () => { show("rating"); go(0); });
+$("download").addEventListener("click", () => {
+  const name = `ratings_${state.rater.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "") || "rater"}.csv`;
+  const url = URL.createObjectURL(new Blob([csv()], {type: "text/csv"}));
+  const a = Object.assign(document.createElement("a"), {href: url, download: name});
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  $("saved-name").textContent = name; $("saved-note").hidden = false;
+});
+
+const prior = load();
+if (prior) $("name").value = prior.rater;
+</script>
+</body>
+</html>

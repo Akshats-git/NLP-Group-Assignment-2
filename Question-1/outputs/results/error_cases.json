@@ -1,0 +1,164 @@
+[
+  {
+    "case": 1,
+    "test_idx": 2171,
+    "source": "\" i'm not sure when he sleeps , \" said katie o'malley , a second-year medical student from drexel university in philadelphia and volunteer with bwelle's group .",
+    "reference": "फिलाडेल्फिया में ड्रेक्सेल विश्वविद्यालय की द्वितीय वर्ष की चिकित्सा विद्यार्थी और वेल के समूह में स्वयंसेवी , कैटी ओ'मैली ने कहा , \" मुझे नहीं पता कि वे सोते कब हैं । \"",
+    "baseline": "( ऐ रसूल ) तुम कह दो कि ख़ुदा ने अपने परवरदिगार की तरफ से इन्कार किया और ( ऐ रसूल ) तुम कह दो कि तुम लोग तो बस अपने परवरदिगार की राह से इन्कार करो",
+    "attention": "\" जब उन्होंने कहा कि जब उन्होंने कहा कि \" आचार्य , \" आचार्य , श्री राम नाथ कोविन्द से पूर्व मुख्यमंत्री विश्वविद्यालय के साथ , एक और अन्य लेखकों के साथ एक अन्य लेखकों और अन्य महानुभावों के साथ ‘ ‘ द रिट्रीट ’ ’ नामक हैं ।",
+    "att_sentence_chrf": 23.174912725729982,
+    "base_sentence_chrf": 10.656753715781047,
+    "auto_flags": [
+      "oov_source",
+      "oov_target",
+      "missing_or_wrong_words",
+      "extra_words",
+      "long_input"
+    ],
+    "figure": "error_case_01.png",
+    "error_type": "long-distance dependency; wrong attention focus; OOV names; repetition",
+    "comment": "Attention starts sensibly (the quoted clause), then sits on one source column ('university') for about 12 consecutive steps while the decoder invents 'आचार्य श्री राम नाथ कोविन्द'. Later it loops 'एक अन्य लेखकों के साथ' while attending 'medical student'. The heatmap shows the stuck column, which explains the drift.",
+    "heatmap_useful": "yes, it shows where the model got stuck"
+  },
+  {
+    "case": 2,
+    "test_idx": 799,
+    "source": "afterwards , there would be a joint presentation by the bcci and the mca .",
+    "reference": "इसके बाद बीसीसीआइ और एमसीए द्वारा संयुक्त प्रस्तुतिकरण होगा ।",
+    "baseline": "एक बार फिर से एक दूसरे के लिए एक दूसरे से एक दूसरे के साथ एक दूसरे से बाहर हो गया है ।",
+    "attention": "इसके अतिरिक़्त , और और इस द्वारा द्वारा एक ही एक ही एक ही होगा ।",
+    "att_sentence_chrf": 23.81788854884612,
+    "base_sentence_chrf": 12.012087071410365,
+    "auto_flags": [
+      "oov_source",
+      "oov_target",
+      "extra_words",
+      "repetition"
+    ],
+    "figure": "error_case_02.png",
+    "error_type": "OOV (bcci, mca); extra/repeated words",
+    "comment": "The first words align diagonally (afterwards -> इसके अतिरिक्त). Attention then lands on 'joint presentation' (correct focus) but the decoder emits 'एक ही एक ही एक ही' instead of 'संयुक्त प्रस्तुतिकरण'. The two acronyms are unknown source words, so 'और इस द्वारा द्वारा' is filler.",
+    "heatmap_useful": "partly: focus is right, output is wrong"
+  },
+  {
+    "case": 3,
+    "test_idx": 1127,
+    "source": "$325m rescue package for tassie health",
+    "reference": "टैजी के स्वास्थ्य के लिए 325 मिलियन डॉलर का बचाव पैकेज",
+    "baseline": "एक नया स्रोत जिसमें एक नया",
+    "attention": "स्वास्थ्य के लिए माइक्रोसॉफ़्ट अनुरोध",
+    "att_sentence_chrf": 31.92009155222687,
+    "base_sentence_chrf": 8.082028766430085,
+    "auto_flags": [
+      "oov_source",
+      "oov_target",
+      "missing_or_wrong_words",
+      "truncated"
+    ],
+    "figure": "error_case_03.png",
+    "error_type": "OOV (tassie); missing word ($325m); wrong word",
+    "comment": "'tassie health' correctly drives 'स्वास्थ्य के लिए'. 'rescue package' is attended with weight about 0.45 but translated as 'माइक्रोसॉफ़्ट अनुरोध' (a hallucination for 'बचाव पैकेज'). The number is dropped and the output ends early.",
+    "heatmap_useful": "partly: correct source words attended, wrong target words"
+  },
+  {
+    "case": 4,
+    "test_idx": 2031,
+    "source": "his name became known not only in the country , but also abroad .",
+    "reference": "उनका नाम देश ही नहीं बल्कि विदेशों में भी प्रसिद्ध हुआ ।",
+    "baseline": "वह अपने पिता के साथ एक दूसरे से बाहर नहीं थे ।",
+    "attention": "उनका नाम केवल देश में ही नहीं बल्कि बल्कि भी भी भी थीं ।",
+    "att_sentence_chrf": 38.525258028605904,
+    "base_sentence_chrf": 10.94732433496019,
+    "auto_flags": [
+      "word_order",
+      "repetition"
+    ],
+    "figure": "error_case_04.png",
+    "error_type": "wrong word (विदेशों missing); repetition; word order",
+    "comment": "Best diagonal alignment of the eight. 'abroad' receives the highest weight (about 0.65) for three steps in a row, yet the model emits 'भी भी भी' instead of 'विदेशों में'. A very high weight does not mean a correct word. 'बल्कि' is also generated twice.",
+    "heatmap_useful": "yes for locating the failure, no as a guarantee of correctness"
+  },
+  {
+    "case": 5,
+    "test_idx": 2278,
+    "source": "according to amarnath upadhyaya , secretary of ada , a proposal concerning this matter has been sent to the government .",
+    "reference": "एडीए के सचिव अमरनाथ उपाध्याय के मुताबिक इस बाबत शासन को प्रस्ताव भेजा जा चुका है ।",
+    "baseline": "इस प्रकार के दौरान , इस क्षेत्र में एक बड़ी संख्या में एक बड़ी भूमिका है ।",
+    "attention": "इस बात के अनुसार , श्री एक समिति के अनुसार , इस अध्याय को इस सरकार को इस बैठक में भेजा गया है ।",
+    "att_sentence_chrf": 22.856430324236847,
+    "base_sentence_chrf": 15.143248272742804,
+    "auto_flags": [
+      "oov_source",
+      "oov_target",
+      "missing_or_wrong_words",
+      "extra_words",
+      "long_input"
+    ],
+    "figure": "error_case_05.png",
+    "error_type": "OOV names missing; wrong word; extra words",
+    "comment": "Mostly monotone alignment. The OOV names (amarnath upadhyaya, ada) are replaced by generic words ('श्री एक समिति के अनुसार'). The ending is good: 'sent' -> 'भेजा गया है' with weight about 0.45 and 'government' -> 'सरकार', but 'बैठक में' (meeting) is hallucinated while attending 'sent'.",
+    "heatmap_useful": "yes"
+  },
+  {
+    "case": 6,
+    "test_idx": 2388,
+    "source": "it is noteworthy that both nita and isha are professional , classical dancers .",
+    "reference": "गौरतलब है कि नीता और ईशा दोनों ही प्रोफेशनल क्लासिकल डांसर है ।",
+    "baseline": "यह एक बड़ी बात है कि यह एक बड़ी बात है कि एक दूसरे के लिए एक बड़ी समस्या है ।",
+    "attention": "यह जानकर प्रसन्नता है कि दोनों और दोनों ही शैली में हैं , और शास्त्रीय संगीत हैं ।",
+    "att_sentence_chrf": 23.659390267197054,
+    "base_sentence_chrf": 11.908589457367832,
+    "auto_flags": [
+      "oov_source",
+      "oov_target",
+      "missing_or_wrong_words",
+      "extra_words"
+    ],
+    "figure": "error_case_06.png",
+    "error_type": "OOV names missing; wrong word (semantic neighbour)",
+    "comment": "Near-perfect diagonal: 'both' -> 'दोनों' (weight about 0.85), 'classical' -> 'शास्त्रीय'. The names nita and isha are unknown and dropped. 'dancers' becomes 'संगीत' (music) and 'professional' becomes 'शैली' (style), so the alignment looks right while two words are wrong.",
+    "heatmap_useful": "misleading: the heatmap looks like a good translation"
+  },
+  {
+    "case": 7,
+    "test_idx": 800,
+    "source": "besides that , a special coin would be used for the coin toss that would be kept by the mca .",
+    "reference": "इसके अलावा टॉस के लिए एक विशेष सिक्के का इस्तेमाल किया जाएगा जिसे एमसीए संभालकर रखेगा ।",
+    "baseline": "यह एक बड़ी बात है कि यह एक बड़ी बात है जो एक दूसरे के साथ एक दूसरे से अधिक है ।",
+    "attention": "इसके अलावा , एक विशेष रूप से एक विशेष रूप से प्रयोग किया जाएगा , जो कि वह इस प्रकार के द्वारा किया जाएगा कि वह द्वारा स्वंय के द्वारा किया जाएगा .",
+    "att_sentence_chrf": 31.38548979803341,
+    "base_sentence_chrf": 10.026517809073741,
+    "auto_flags": [
+      "oov_source",
+      "oov_target",
+      "missing_or_wrong_words",
+      "extra_words",
+      "long_input"
+    ],
+    "figure": "error_case_07.png",
+    "error_type": "repetition; missing content words; long-distance dependency",
+    "comment": "The first half is a clean diagonal ('besides that, a special coin' -> 'इसके अलावा एक विशेष'). From 'would be used' on, attention spreads over several source words and the decoder repeats 'किया जाएगा / द्वारा' three times. 'coin toss' (टॉस) and 'mca' are never translated.",
+    "heatmap_useful": "yes: the diagonal breaks where the output goes wrong"
+  },
+  {
+    "case": 8,
+    "test_idx": 1568,
+    "source": "\" our ongoing inquiry into this matter continues and we are co-operating fully with the fca and our other regulators , \" the bank said two weeks ago .",
+    "reference": "दो सप्ताह पहले बैंक ने कहा था कि , \" इस मामले में हमारी जांच जारी है , तथा हम FCA और अन्य विनियामकों के साथ पूर्ण सहयोग कर रहे हैं । \"",
+    "baseline": "मैं इस अवसर पर आपके लिए बधाई देता हूं कि हमारे देश में हमारे देश के बीच द्विपक्षीय संबंधों में हमारे देश में हमारे देश में हमारे देश में सहयोग की है ।",
+    "attention": "हमारे इस क्षेत्र में हम इस तरह के साथ ही हम एक दूसरे और अन्य शब्दों के साथ बातचीत की हैं और हम दोनों के दो शब्दों में ‘ ‘ द ’ ’ ’ ’ के साथ ही हम दोनों को भी कहा जाता है ।",
+    "att_sentence_chrf": 23.347084382830378,
+    "base_sentence_chrf": 20.12287320155439,
+    "auto_flags": [
+      "oov_source",
+      "missing_or_wrong_words",
+      "extra_words",
+      "repetition",
+      "long_input"
+    ],
+    "figure": "error_case_08.png",
+    "error_type": "long-distance dependency; wrong attention focus (punctuation); repetition; word order",
+    "comment": "A 30-token sentence whose clause 'the bank said two weeks ago' belongs at the front of the Hindi. The model drifts: in the last ten steps attention is anchored on the closing quote mark and the output degenerates into punctuation ('‘ ‘ द ’ ’ ’ ’'). 'two weeks' becomes 'दो शब्दों' (two words).",
+    "heatmap_useful": "yes: attention on punctuation signals the collapse"
+  }
+]

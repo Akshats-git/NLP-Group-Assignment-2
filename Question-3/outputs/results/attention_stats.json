@@ -1,0 +1,32 @@
+{
+  "window": 60,
+  "examples": [
+    {
+      "title": "Example 1 (highest ROUGE-Lsum), last decoder layer, mean over 8 heads",
+      "figure": "attention_example_1",
+      "start": 91,
+      "width": 60,
+      "id": "23d1195f78742c6abe27bb5447ac993a78fcedd1"
+    },
+    {
+      "title": "Example 2 (repeated phrase), last decoder layer, mean over 8 heads",
+      "figure": "attention_example_2",
+      "start": 27,
+      "width": 60,
+      "id": "d0ee59002d2772aea6d1fef63ef2153f11cff02f"
+    }
+  ],
+  "n_articles": 256,
+  "position_bins": [
+    24.71756803430412,
+    21.344254993395968,
+    14.926245731241147,
+    11.142784335347262,
+    8.958289980461613,
+    6.521800551720463,
+    4.884636890248357,
+    7.504419483281073
+  ],
+  "first100_share_of_source": 28.529102124056116,
+  "copy_alignment": 94.66818511233046
+}

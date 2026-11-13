@@ -1,0 +1,10 @@
+# Q4 needs the shared package too: from the repo root run  pip install -e ".[dev]"
+torch
+numpy
+matplotlib>=3.11
+datasets        # TinyStories download
+pytest          # only for tests/test_q4.py
+
+# optional extension (llm_baseline.py), not needed for the required results
+transformers
+accelerate

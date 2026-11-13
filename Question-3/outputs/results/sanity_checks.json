@@ -1,0 +1,8 @@
+{
+  "no_banned_layers": true,
+  "causal_mask": true,
+  "source_padding_mask": true,
+  "target_padding_mask": true,
+  "loss_ignores_padding": true,
+  "memorise_8_real_pairs": true
+}

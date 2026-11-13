@@ -1,0 +1,79 @@
+[
+  {
+    "figure": "attention_heatmap_01.png",
+    "test_idx": 1804,
+    "src_text": "congress has become egoistical .",
+    "ref_text": "कांग्रेस को अहंकार हो गया है ।",
+    "hyp_text": "कांग्रेस ने अब भी अपना निशाना साधने की है ।"
+  },
+  {
+    "figure": "attention_heatmap_02.png",
+    "test_idx": 2231,
+    "src_text": "obama's health care walk back",
+    "ref_text": "ओबामा का स्वास्थ्य सेवा प्रस्ताव वापस लिया गया",
+    "hyp_text": "स्वास्थ्य स्वास्थ्य देखभाल"
+  },
+  {
+    "figure": "attention_heatmap_03.png",
+    "test_idx": 1127,
+    "src_text": "$325m rescue package for tassie health",
+    "ref_text": "टैजी के स्वास्थ्य के लिए 325 मिलियन डॉलर का बचाव पैकेज",
+    "hyp_text": "स्वास्थ्य के लिए माइक्रोसॉफ़्ट अनुरोध"
+  },
+  {
+    "figure": "attention_heatmap_04.png",
+    "test_idx": 845,
+    "src_text": "but she is fine now .",
+    "ref_text": "लेकिन अब वह अच्छी है ।",
+    "hyp_text": "लेकिन अब अब वह है ।"
+  },
+  {
+    "figure": "attention_heatmap_05.png",
+    "test_idx": 620,
+    "src_text": "moore said at a press conference thursday afternoon .",
+    "ref_text": "मुरे ने यह बातें गुरूवार को दोपहर में एक पत्रकार सम्मेलन में कही ।",
+    "hyp_text": "प्रधानमंत्री ने कहा कि एक सम्मेलन में एक सम्मेलन आयोजित हुआ ।"
+  },
+  {
+    "figure": "attention_heatmap_06.png",
+    "test_idx": 555,
+    "src_text": "he says he doesn't , we say \" oh yes , he did \" .",
+    "ref_text": "वह कहते हैं , नहीं , हमारा कहना है कि \" हां , वह बिलकुल जानते थे \" ।",
+    "hyp_text": "वह कहते हैं , \" हम कहते हैं , \" उसने कहा , \" उसने कहा , \" उसने कहा , \" उसने कहा , \" उसने कहा , \" वह सरकश थे । \""
+  },
+  {
+    "figure": "attention_heatmap_07.png",
+    "test_idx": 2190,
+    "src_text": "the program was led by the jmm central secretary , sachchidanand pandey .",
+    "ref_text": "यह कार्यक्रम झामुमो के केंद्रीय सचिव सच्चिादानंद पांडेय के नेतृत्व में किया गया ।",
+    "hyp_text": "यह केंद्रीय केंद्रीय केंद्रीय केंद्रीय विश्वविद्यालय , 1975 द्वारा किया गया था ।"
+  },
+  {
+    "figure": "attention_heatmap_08.png",
+    "test_idx": 263,
+    "src_text": "frontier has gone the furthest in this area , though .",
+    "ref_text": "Frontier हालांकि , इस क्षेत्र में आगे चला गया है .",
+    "hyp_text": "इस क्षेत्र में इस क्षेत्र में इस भूमिका को आकर्षित करने के लिए इस भूमिका निभाई हैं ।"
+  },
+  {
+    "figure": "attention_heatmap_09.png",
+    "test_idx": 2298,
+    "src_text": "in this meeting two state-level cabinet ministers were promoted to include them in the cabinet and a change in the responsibilities of some ministers is expected .",
+    "ref_text": "इस बैठक में दो राज्य स्तरीय मंत्रियों को अपग्रेड कर कैबिनेट में शामिल करने और कुछ मंत्रियों की जिम्मेदारियों में बदलाव की भी संभावना है ।",
+    "hyp_text": "इस बैठक में दो वर्ष में इस तरह के बीच में उन्हें एक छाता और प्रशिक्षण के रूप में उन्हें सौंपा गया और कुछ मामलों में किसी अन्य बातों में परिवर्तन की गई थी ।"
+  },
+  {
+    "figure": "attention_heatmap_10.png",
+    "test_idx": 1963,
+    "src_text": "the bjp leader and prime ministerial candidate for gujarat , chief minister narendra modi's most trusted aide , amit shah's brother arrived on thursday afternoon in gaya with his family .",
+    "ref_text": "भारतीय जनता पार्टी के कद्दावर नेता व प्रधानमंत्री पद के प्रत्याशी सह गुजरात के मुख्यमंत्री नरेन्द्र भाई मोदी के अति विश्वस्त सहयोगी अमित शाह गुरुवार दोपहर बाद गया सपरिवार पहुंचे ।",
+    "hyp_text": "इस अवसर पर प्रधानमंत्री ने उत्तर प्रदेश के लिए प्रधानमंत्री श्री नरेंद्र मोदी के नेतृत्व में , श्री राम नाथ कोविन्द ने अपने परिवार के साथ अपने पिता के साथ अपना पहला स्थान दिया ।"
+  },
+  {
+    "figure": "attention_heatmap_11.png",
+    "test_idx": 308,
+    "src_text": "we had decided to do a first flight and to do an update period and that's what we have done .",
+    "ref_text": "हमने एक पहली उड़ान करने के लिए और एक अद्यतन अवधि करने का फैसला किया था है और कहा कि हमने क्या किया है .",
+    "hyp_text": "हमने पहले एक और एक चुनौती को चुनौती करने का प्रयास किया और हम क्या कर दिया है कि हम क्या कर रहे हैं ।"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "run": "rnn_seed42",
+  "cell": "rnn",
+  "seed": 42,
+  "parameters": {
+    "total": 5418886,
+    "trainable": 5418886
+  },
+  "best_epoch": 25,
+  "epochs_run": 25,
+  "train_time_s": 1555.740232651995,
+  "train_time_per_epoch_s": 62.2296093060798,
+  "val_nll": 2.799798730292551,
+  "val_ppl": 16.441337294912152,
+  "test_nll": 2.7819454544866784,
+  "test_ppl": 16.150410293022595,
+  "val_tokens": 186224,
+  "test_tokens": 186087
+}

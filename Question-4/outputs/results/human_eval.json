@@ -1,0 +1,209 @@
+{
+  "raters": [
+    "Ayush",
+    "Keshav",
+    "Rishi Kharya",
+    "Shivam Singh"
+  ],
+  "excluded": [],
+  "n_ratings": 80,
+  "by_model": {
+    "lstm": {
+      "n_stories": 10,
+      "coherence": 3.0,
+      "coherence_sd": 0.565194165260439,
+      "grammar": 3.825,
+      "grammar_sd": 0.42573465914816006,
+      "relevance": 2.725,
+      "relevance_sd": 0.5197488709837559,
+      "creativity": 3.425,
+      "creativity_sd": 0.589844612306213,
+      "overall": 3.24375
+    },
+    "rnn": {
+      "n_stories": 10,
+      "coherence": 2.7,
+      "coherence_sd": 0.510990323891863,
+      "grammar": 4.075,
+      "grammar_sd": 0.3917553091181053,
+      "relevance": 2.45,
+      "relevance_sd": 0.5244044240850758,
+      "creativity": 3.55,
+      "creativity_sd": 0.5244044240850758,
+      "overall": 3.19375
+    }
+  },
+  "by_model_decoding": {
+    "lstm/greedy": {
+      "n_stories": 5,
+      "coherence": 3.1,
+      "coherence_sd": 0.7202430145443967,
+      "grammar": 3.95,
+      "grammar_sd": 0.37080992435478316,
+      "relevance": 2.7,
+      "relevance_sd": 0.758287544405155,
+      "creativity": 3.1,
+      "creativity_sd": 0.6754628043053148,
+      "overall": 3.2125000000000004
+    },
+    "lstm/top-k=40": {
+      "n_stories": 5,
+      "coherence": 2.9,
+      "coherence_sd": 0.4183300132670378,
+      "grammar": 3.7,
+      "grammar_sd": 0.48088460154178364,
+      "relevance": 2.75,
+      "relevance_sd": 0.1767766952966369,
+      "creativity": 3.75,
+      "creativity_sd": 0.25,
+      "overall": 3.275
+    },
+    "rnn/greedy": {
+      "n_stories": 5,
+      "coherence": 2.95,
+      "coherence_sd": 0.6224949798994366,
+      "grammar": 4.05,
+      "grammar_sd": 0.37080992435478316,
+      "relevance": 2.45,
+      "relevance_sd": 0.758287544405155,
+      "creativity": 3.25,
+      "creativity_sd": 0.5,
+      "overall": 3.175
+    },
+    "rnn/top-k=40": {
+      "n_stories": 5,
+      "coherence": 2.45,
+      "coherence_sd": 0.2091650066335189,
+      "grammar": 4.1,
+      "grammar_sd": 0.45414755311462374,
+      "relevance": 2.45,
+      "relevance_sd": 0.2091650066335189,
+      "creativity": 3.85,
+      "creativity_sd": 0.3791437722025775,
+      "overall": 3.2125
+    }
+  },
+  "paired_lstm_minus_rnn": {
+    "n_pairs": 10,
+    "coherence": {
+      "mean_diff": 0.3,
+      "ci95": [
+        -0.225,
+        0.775
+      ],
+      "wins": 6,
+      "ties": 1,
+      "losses": 3
+    },
+    "grammar": {
+      "mean_diff": -0.25,
+      "ci95": [
+        -0.575,
+        0.025
+      ],
+      "wins": 1,
+      "ties": 4,
+      "losses": 5
+    },
+    "relevance": {
+      "mean_diff": 0.275,
+      "ci95": [
+        -0.15,
+        0.8
+      ],
+      "wins": 5,
+      "ties": 4,
+      "losses": 1
+    },
+    "creativity": {
+      "mean_diff": -0.125,
+      "ci95": [
+        -0.375,
+        0.15
+      ],
+      "wins": 3,
+      "ties": 1,
+      "losses": 6
+    },
+    "overall": {
+      "mean_diff": 0.05,
+      "ci95": [
+        -0.21875,
+        0.35625
+      ],
+      "wins": 4,
+      "ties": 1,
+      "losses": 5
+    }
+  },
+  "agreement": {
+    "coherence": {
+      "krippendorff_alpha_ordinal": -0.13765088051164276,
+      "mean_pairwise_quadratic_kappa": 0.014821697984235271,
+      "exact_agreement": 0.25,
+      "within_one_agreement": 0.48333333333333334,
+      "mean_abs_difference": 1.7333333333333334
+    },
+    "grammar": {
+      "krippendorff_alpha_ordinal": -0.1383070112467093,
+      "mean_pairwise_quadratic_kappa": -0.056050617826224426,
+      "exact_agreement": 0.20833333333333334,
+      "within_one_agreement": 0.6166666666666667,
+      "mean_abs_difference": 1.3666666666666667
+    },
+    "relevance": {
+      "krippendorff_alpha_ordinal": -0.17064490128712628,
+      "mean_pairwise_quadratic_kappa": 0.05146234830780779,
+      "exact_agreement": 0.15,
+      "within_one_agreement": 0.4583333333333333,
+      "mean_abs_difference": 1.8583333333333334
+    },
+    "creativity": {
+      "krippendorff_alpha_ordinal": -0.14411381599747086,
+      "mean_pairwise_quadratic_kappa": 0.0228141144642706,
+      "exact_agreement": 0.25833333333333336,
+      "within_one_agreement": 0.5833333333333334,
+      "mean_abs_difference": 1.4416666666666667
+    }
+  },
+  "per_rater": {
+    "Ayush": {
+      "n": 20,
+      "coherence": 4.4,
+      "grammar": 4.7,
+      "relevance": 4.35,
+      "creativity": 4.6
+    },
+    "Keshav": {
+      "n": 20,
+      "coherence": 2.15,
+      "grammar": 3.65,
+      "relevance": 1.25,
+      "creativity": 2.5
+    },
+    "Rishi Kharya": {
+      "n": 20,
+      "coherence": 2.15,
+      "grammar": 4.65,
+      "relevance": 2.1,
+      "creativity": 3.7
+    },
+    "Shivam Singh": {
+      "n": 20,
+      "coherence": 2.7,
+      "grammar": 2.8,
+      "relevance": 2.65,
+      "creativity": 3.15
+    }
+  },
+  "perplexity": {
+    "rnn": {
+      "val_ppl": 16.441337294912152,
+      "test_ppl": 16.150410293022595
+    },
+    "lstm": {
+      "val_ppl": 12.119844331089876,
+      "test_ppl": 11.855323894500922
+    }
+  }
+}

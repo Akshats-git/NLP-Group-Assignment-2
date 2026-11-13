@@ -20,3 +20,13 @@ runs/
 
 # Q4 has to ship its trained checkpoints, so those stay tracked
 !Question-4/outputs/checkpoints/*.pt
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.xdv
+*.fls
+*.fdb_latexmk
+*.synctex.gz

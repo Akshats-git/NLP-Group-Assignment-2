@@ -1,0 +1,10 @@
+# Question 3. torch is left unpinned so the CUDA build already on Kaggle / Colab is kept.
+torch
+numpy
+matplotlib
+tqdm
+datasets>=2.19          # CNN/DailyMail 3.0.0 from the Hugging Face Hub
+transformers>=4.40      # only for the pre-trained bert-base-uncased tokenizer, no model classes
+rouge-score==0.1.2      # ROUGE-1/2/L/Lsum, use_stemmer=True
+nltk>=3.8               # sentence splitting for the Lead-3 baseline
+ipython                 # display() of figures in the notebook

@@ -1,0 +1,28 @@
+{
+  "checkpoint": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "system_prompt": "You are a children's story writer.",
+  "user_prompt_template": "Here is the beginning of a short story for young children. Continue the story in simple language and give it an ending. Write only the continuation, in plain text.\n\nBeginning: {opening}",
+  "decoding": {
+    "greedy": {
+      "do_sample": false
+    },
+    "temp=0.8": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_k": 0,
+      "top_p": 1.0
+    },
+    "top-k=40": {
+      "do_sample": true,
+      "temperature": 1.0,
+      "top_k": 40,
+      "top_p": 1.0
+    }
+  },
+  "max_new_tokens": 250,
+  "precision": "torch.float16",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce GTX 1650",
+  "fine_tuned": false,
+  "shots": 0
+}

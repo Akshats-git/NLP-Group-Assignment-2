@@ -1,0 +1,169 @@
+{
+  "seed": 2024,
+  "configs": [
+    "greedy",
+    "top-k=40"
+  ],
+  "key": {
+    "S01": {
+      "model": "lstm",
+      "decoding": "greedy",
+      "prompt_key": "twist_detective",
+      "source_id": "lstm|twist_detective|greedy|0",
+      "finished": false,
+      "n_tokens": 250
+    },
+    "S02": {
+      "model": "lstm",
+      "decoding": "greedy",
+      "prompt_key": "twist_exam_paper",
+      "source_id": "lstm|twist_exam_paper|greedy|0",
+      "finished": true,
+      "n_tokens": 179
+    },
+    "S03": {
+      "model": "rnn",
+      "decoding": "greedy",
+      "prompt_key": "twist_future_letter",
+      "source_id": "rnn|twist_future_letter|greedy|0",
+      "finished": true,
+      "n_tokens": 67
+    },
+    "S04": {
+      "model": "lstm",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_detective",
+      "source_id": "lstm|twist_detective|top-k=40|0",
+      "finished": true,
+      "n_tokens": 129
+    },
+    "S05": {
+      "model": "rnn",
+      "decoding": "greedy",
+      "prompt_key": "twist_detective",
+      "source_id": "rnn|twist_detective|greedy|0",
+      "finished": true,
+      "n_tokens": 35
+    },
+    "S06": {
+      "model": "rnn",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_future_robot",
+      "source_id": "rnn|twist_future_robot|top-k=40|0",
+      "finished": false,
+      "n_tokens": 250
+    },
+    "S07": {
+      "model": "rnn",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_future_letter",
+      "source_id": "rnn|twist_future_letter|top-k=40|0",
+      "finished": true,
+      "n_tokens": 107
+    },
+    "S08": {
+      "model": "rnn",
+      "decoding": "greedy",
+      "prompt_key": "twist_future_robot",
+      "source_id": "rnn|twist_future_robot|greedy|0",
+      "finished": false,
+      "n_tokens": 250
+    },
+    "S09": {
+      "model": "lstm",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_future_letter",
+      "source_id": "lstm|twist_future_letter|top-k=40|0",
+      "finished": true,
+      "n_tokens": 102
+    },
+    "S10": {
+      "model": "lstm",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_exam_paper",
+      "source_id": "lstm|twist_exam_paper|top-k=40|0",
+      "finished": true,
+      "n_tokens": 151
+    },
+    "S11": {
+      "model": "lstm",
+      "decoding": "greedy",
+      "prompt_key": "twist_future_robot",
+      "source_id": "lstm|twist_future_robot|greedy|0",
+      "finished": true,
+      "n_tokens": 198
+    },
+    "S12": {
+      "model": "lstm",
+      "decoding": "greedy",
+      "prompt_key": "twist_forgotten_day",
+      "source_id": "lstm|twist_forgotten_day|greedy|0",
+      "finished": true,
+      "n_tokens": 67
+    },
+    "S13": {
+      "model": "rnn",
+      "decoding": "greedy",
+      "prompt_key": "twist_forgotten_day",
+      "source_id": "rnn|twist_forgotten_day|greedy|0",
+      "finished": true,
+      "n_tokens": 97
+    },
+    "S14": {
+      "model": "rnn",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_detective",
+      "source_id": "rnn|twist_detective|top-k=40|0",
+      "finished": true,
+      "n_tokens": 82
+    },
+    "S15": {
+      "model": "rnn",
+      "decoding": "greedy",
+      "prompt_key": "twist_exam_paper",
+      "source_id": "rnn|twist_exam_paper|greedy|0",
+      "finished": true,
+      "n_tokens": 26
+    },
+    "S16": {
+      "model": "rnn",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_exam_paper",
+      "source_id": "rnn|twist_exam_paper|top-k=40|0",
+      "finished": true,
+      "n_tokens": 188
+    },
+    "S17": {
+      "model": "lstm",
+      "decoding": "greedy",
+      "prompt_key": "twist_future_letter",
+      "source_id": "lstm|twist_future_letter|greedy|0",
+      "finished": true,
+      "n_tokens": 58
+    },
+    "S18": {
+      "model": "lstm",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_future_robot",
+      "source_id": "lstm|twist_future_robot|top-k=40|0",
+      "finished": true,
+      "n_tokens": 38
+    },
+    "S19": {
+      "model": "lstm",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_forgotten_day",
+      "source_id": "lstm|twist_forgotten_day|top-k=40|0",
+      "finished": true,
+      "n_tokens": 115
+    },
+    "S20": {
+      "model": "rnn",
+      "decoding": "top-k=40",
+      "prompt_key": "twist_forgotten_day",
+      "source_id": "rnn|twist_forgotten_day|top-k=40|0",
+      "finished": true,
+      "n_tokens": 99
+    }
+  }
+}

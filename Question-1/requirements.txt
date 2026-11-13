@@ -1,0 +1,6 @@
+torch
+numpy
+matplotlib>=3.11
+sacrebleu>=2.3
+tqdm
+datasets>=2.14
