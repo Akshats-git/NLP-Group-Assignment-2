@@ -1,6 +1,6 @@
 % Question 2 report: RoBERTa vs BiGRU for 5-class Amazon review rating.
 % Build from this folder: tectonic report.tex   (or: latexmk -pdf report.tex)
-% Figures are read from ../outputs/figures/ (the files the notebooks write) or from ./figures/.
+% Figures are read from ../outputs/figures/ (the files the notebooks and demo/report_figures.py write) or from ./figures/.
 \documentclass[10pt,a4paper]{article}
 
 \usepackage[margin=1.9cm]{geometry}
@@ -15,6 +15,7 @@
 \usepackage{xcolor}
 \usepackage[font=small,labelfont=bf,skip=4pt]{caption}
 \usepackage{subcaption}
+\usepackage{float}
 \usepackage{enumitem}
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!50!black]{hyperref}
 
@@ -333,7 +334,7 @@ the first-person ``I'm'' (+0.65); ``don't'' ($-$0.62) and ``horrible'' ($-$0.41)
 \emph{against}. RoBERTa therefore registers the negative words as negative, but the resolution at the end outweighs
 them. The BiGRU's attention, by contrast, piles onto ``do'' and ``n't'' in the first sentence and it predicts \st{1}:
 the negation cue is found, but the pooled vector carries ``negative'' rather than ``negated negative''. A second
-example (\code{test\_token\_highlights\_1.png}, example C) shows both models focusing on ``Recommend'' (IG +1.90),
+example (example C, Fig.~\ref{fig:importance-c} in the appendix) shows both models focusing on ``Recommend'' (IG +1.90),
 yet only RoBERTa reaches \st{5}; the BiGRU also has to read ``Senseo'' as \code{<unk>}. Two caveats apply: attention
 weights show what was pooled, not what changed the decision, and integrated gradients depend on the chosen baseline.
 
@@ -359,6 +360,111 @@ it a fairer chance. (v) Truncation affects under 1\% of reviews and is not a fac
 
 \textbf{Reproducibility.} Code: \code{Question-2/} (notebooks \code{01}--\code{04} and package \code{q2/}); each run
 writes its configuration, seed, library versions and git commit to \code{run\_info.json}. Training ran on Kaggle (one
-T4 for the BiGRU, two T4s for RoBERTa) with PyTorch 2.11 and \code{transformers} 5.21.0.
+T4 for the BiGRU, two T4s for RoBERTa) with PyTorch 2.11 and \code{transformers} 5.21.0. A live demo of both models is
+in \code{Question-2/demo/}; Appendix~\ref{app:demo} shows its output for three reviews.
+
+%---------------------------------------------------------------------------------------------------------------
+\appendix
+\section{Live demo: three reviews}
+\label{app:demo}
+
+\emph{This appendix was added after the presentation, at the evaluator's request.} The models were presented in a live
+demo (\code{Question-2/demo/}, a Streamlit app) that loads the trained checkpoints and sends any typed review through
+the two pipelines of Section~2. For each review it shows what Figs.~\ref{fig:demo-a}--\ref{fig:demo-sarcasm} show: for
+both models the predicted rating, its confidence (the largest class probability), the expected rating $\sum_k k\,p_k$
+and all five probabilities; the BiGRU's attention weights $\alpha_t$ on its tokens; integrated gradients for RoBERTa's
+predicted logit, green for words that push towards that rating and red for words that push away; and the prediction of
+the first-token ablation model. The figures are drawn by \code{demo/report\_figures.py} from the same inference code as
+the app, with the seed-42 models; Table~\ref{tab:demo} adds seed 43. Two of the reviews are test examples from
+Table~\ref{tab:examples} and the third was typed in. Running a test review through the demo is a demonstration, not a
+second evaluation: it reproduces the saved predictions, and no number in Sections 5--8 comes from it. The demo's
+test-set tab shows Table~\ref{tab:results} and Figs.~\ref{fig:curves}--\ref{fig:confusion} from the same saved results.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{\textbf{Seed 42}: rating, confidence, expected rating} & \textbf{Seed 43}: rating (confidence) \\
+\cmidrule(lr){3-5}\cmidrule(l){6-6}
+Review & True & BiGRU & RoBERTa, mean & RoBERTa, first token & BiGRU / mean / first token \\
+\midrule
+A, negated negatives (test) & \st{5} & \st{1}, 43\%, 1.80 & \st{5}, 88\%, 4.88 & \st{5}, 89\%, 4.89 & \st{2} (40\%) / \st{5} (93\%) / \st{5} (91\%) \\
+H, concession (test)        & \st{1} & \st{1}, 91\%, 1.12 & \st{3}, 45\%, 3.03 & \st{3}, 33\%, 2.47 & \st{1} (87\%) / \st{2} (36\%) / \st{1} (52\%) \\
+Sarcasm (typed)             & none   & \st{5}, 92\%, 4.92 & \st{5}, 95\%, 4.94 & \st{5}, 95\%, 4.92 & \st{5} (96\%) / \st{5} (96\%) / \st{5} (95\%) \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption{The live demo's predictions. The typed review has no true rating (a reader would give it \st{1}).}
+\label{tab:demo}
+\end{table}
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=0.9\textwidth]{demo_example_1.png}
+\caption{Live demo, test review A (true \st{5}), seed 42. Cards: predicted rating, confidence, expected rating and the
+probability of each rating. Below: the BiGRU's attention weights on its lowercased tokens, RoBERTa's integrated
+gradients for the predicted logit (sub-word pieces summed into words), and the first-token ablation model.}
+\label{fig:demo-a}
+\end{figure}
+
+\textbf{Review A: RoBERTa right (Fig.~\ref{fig:demo-a}).} The distributions say more than the labels in
+Table~\ref{tab:examples}. The BiGRU is not torn between good and bad: 84\% of its probability is on \st{1} and \st{2}
+(43\% and 41\%), and 66\% of its attention is on ``do'' and ``n't'' in the first sentence. RoBERTa puts 88\% on \st{5}
+and 11\% on \st{4}. Its attributions are those of Fig.~\ref{fig:importance} with the sign now visible: ``don't''
+($-$0.62) and ``horrible'' ($-$0.41) count against \st{5}, and ``gone!!'' (+1.09) at the end outweighs them.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=0.9\textwidth]{demo_example_2.png}
+\caption{Live demo, test review H (true \st{1}), seed 42: a harsh verdict wrapped in concessions. The explanation is
+for RoBERTa's predicted \st{3} logit.}
+\label{fig:demo-h}
+\end{figure}
+
+\textbf{Review H: BiGRU right (Fig.~\ref{fig:demo-h}).} A \st{1} review that opens with ``Probably very good'' and
+says the product ``probably deserves 5''. The BiGRU is 91\% sure of \st{1}. Its largest attention weights are on
+``star'' (24\%, from ``one star'') and on ``probably'' and ``very'' (23\% and 12\%), which shows the caveat of
+Section~8 at work: attention on ``probably very good'' did not make the prediction positive. RoBERTa spreads its
+probability over the middle of the scale (45\% on \st{3}, 32\% on \st{4}, 15\% on \st{2} and only 7\% on the true
+\st{1}; expected rating 3.03). The words that push towards \st{3} are the hedges and connectives, ``probably''
+(+0.25), ``but'' (+0.21) and ``when'' (+0.20), while ``star'' ($-$0.24) and ``5.'' ($-$0.11) push away: RoBERTa
+averages the praise and the complaint, where the reviewer's verdict is the ``one star''. This is also the least
+stable of the three reviews. The four RoBERTa runs give \st{3}, \st{3}, \st{2} and \st{1}, none with more than 52\%
+confidence (Table~\ref{tab:demo}), so the low confidence is a fair warning here.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=0.9\textwidth]{demo_example_3.png}
+\caption{Live demo, a typed sarcastic review (title ``Great.''), seed 42. Both models take the praise literally.}
+\label{fig:demo-sarcasm}
+\end{figure}
+
+\textbf{Sarcasm, typed in: both wrong (Fig.~\ref{fig:demo-sarcasm}).} ``Great. Oh great, another charger that works
+for exactly one day. Truly fantastic quality, thanks a lot.'' is not from the dataset; a reader takes it as a \st{1}
+complaint. Both models answer \st{5} with 92\% and 95\% confidence, on both seeds and with both poolings. The BiGRU's
+attention is spread over the positive words (``quality'' 10\%, ``lot'' 9\%, ``thanks'' 9\%). RoBERTa does register
+the complaint: ``exactly'' ($-$0.49) and ``one'' ($-$0.48) in ``exactly one day'' are the only words that count
+clearly against \st{5}, but ``great,'' (+1.33), ``fantastic'' (+0.93) and the title ``Great.'' (+0.91) outweigh
+them. The composition that RoBERTa manages for negation in review A does not extend to irony, where no word marks the
+reversal. This is a limit of both models that Table~\ref{tab:tags} could not measure, because sarcasm has no word
+pattern, and unlike review H the confidence gives no warning.
+
+\textbf{A check on the explanations.} Integrated gradients should add up to the change in the logit. With the 256
+steps used elsewhere, reviews A and H do (gaps of 0.04 and 0.02), but the sarcasm probe does not: the scores overshoot
+the logit change of 4.38 by 1.01, almost all of it on ``lot.''. With 512 steps the gap is 0.14, and
+Fig.~\ref{fig:demo-sarcasm} uses those scores. The script doubles the steps until the gap is below 5\% of the logit
+change, so an explanation that does not add up is not shown.
+
+\section{Token importance for example C}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{test_token_highlights_1.png}
+\caption{Example C of Table~\ref{tab:examples}, shaded as in Fig.~\ref{fig:importance}. Both models put most weight on
+``Recommend''; the BiGRU reads ``Senseo'' as \code{<unk>} and predicts \st{4}, RoBERTa predicts \st{5}.}
+\label{fig:importance-c}
+\end{figure}
 
 \end{document}
