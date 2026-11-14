@@ -1,0 +1,200 @@
+% ---- Metrics
+\newcommand{\tabMetrics}{
+\begin{tabular}{lrr}\toprule
+Test metric (2,393 sentences) & A: baseline & B: attention \\ \midrule
+BLEU (corpus, sacreBLEU 13a) & 0.55 & \textbf{2.34} \\
+chrF & 12.27 & \textbf{17.91} \\
+chrF++ & 11.54 & \textbf{17.37} \\
+TER (lower is better) & 104.03 & \textbf{99.12} \\
+BLEU 1-gram precision & 15.89 & \textbf{23.98} \\
+BLEU 2-gram precision & 2.17 & \textbf{5.33} \\
+BLEU 3-gram precision & 0.19 & \textbf{1.13} \\
+BLEU 4-gram precision & 0.01 & \textbf{0.21} \\
+Brevity penalty & 1.000 & 1.000 \\
+Length ratio (hyp/ref) & 1.033 & 1.087 \\
+Hypothesis tokens / reference tokens & 58,459 / 56,583 & 61,516 / 56,583 \\
+\bottomrule\end{tabular}}
+% ---- Loss
+\newcommand{\tabLoss}{
+\begin{tabular}{lrr}\toprule
+Training / validation / test & A: baseline & B: attention \\ \midrule
+Best epoch (lowest val. loss) & 4 & 4 \\
+Train loss at best epoch & 4.542 & 3.633 \\
+Validation loss & 5.180 & 4.754 \\
+Test loss & 5.078 & 4.665 \\
+Test perplexity & 160.4 & 106.2 \\
+Train token accuracy at best epoch & 0.248 & 0.325 \\
+Validation token accuracy & 0.249 & 0.298 \\
+Test token accuracy & 0.243 & 0.290 \\
+Parameters & 38,334,930 & 71,896,274 \\
+Seconds per epoch & 48 & 222 \\
+\bottomrule\end{tabular}}
+% ---- History
+\newcommand{\tabHistory}{
+\begin{tabular}{r|rrrr|rrrr}\toprule
+Epoch & \multicolumn{4}{c}{A: baseline} & \multicolumn{4}{c}{B: attention} \\ & train loss & val loss & train acc & val acc & train loss & val loss & train acc & val acc \\ \midrule
+1 & 6.200 & 5.568 & 0.136 & 0.208 & 5.862 & 5.331 & 0.167 & 0.234 \\
+2 & 5.268 & 5.323 & 0.201 & 0.231 & 4.795 & 4.977 & 0.245 & 0.274 \\
+3 & 4.853 & 5.245 & 0.228 & 0.243 & 4.149 & 4.813 & 0.288 & 0.287 \\
+\textbf{4} & \textbf{4.542} & \textbf{5.180} & \textbf{0.248} & \textbf{0.249} & \textbf{3.633} & \textbf{4.754} & \textbf{0.325} & \textbf{0.298} \\
+5 & 4.291 & 5.184 & 0.264 & 0.252 & 3.216 & 4.760 & 0.364 & 0.298 \\
+6 & 4.076 & 5.200 & 0.278 & 0.255 & 2.895 & 4.780 & 0.400 & 0.303 \\
+7 & 3.887 & 5.212 & 0.292 & 0.255 & 2.647 & 4.814 & 0.432 & 0.307 \\
+8 & 3.721 & 5.242 & 0.305 & 0.261 & 2.458 & 4.850 & 0.459 & 0.309 \\
+\bottomrule\end{tabular}}
+% ---- BucketA
+\newcommand{\tabBucketA}{
+\begin{tabular}{lrrrrrrrrrr}\toprule
+EN length & n & BLEU & p1 & p2 & p3 & p4 & BP & ratio & chrF & TER \\ \midrule
+1-5 & 13 & 3.07 & 20.5 & 5.7 & 1.8 & 1.1 & 0.786 & 0.806 & 7.61 & 91.3 \\
+6-10 & 282 & 0.41 & 14.2 & 2.1 & 0.0 & 0.0 & 0.969 & 0.970 & 8.96 & 102.2 \\
+11-15 & 481 & 0.48 & 14.1 & 2.3 & 0.1 & 0.0 & 1.000 & 1.119 & 10.74 & 108.5 \\
+16+ & 1,617 & 0.57 & 16.3 & 2.2 & 0.2 & 0.0 & 1.000 & 1.024 & 12.73 & 103.5 \\
+\midrule all & 2,393 & 0.55 & 15.9 & 2.2 & 0.2 & 0.0 & 1.000 & 1.033 & 12.27 & 104.0 \\
+\bottomrule\end{tabular}}
+% ---- BucketB
+\newcommand{\tabBucketB}{
+\begin{tabular}{lrrrrrrrrrr}\toprule
+EN length & n & BLEU & p1 & p2 & p3 & p4 & BP & ratio & chrF & TER \\ \midrule
+1-5 & 13 & 2.13 & 26.7 & 4.8 & 1.0 & 0.7 & 0.688 & 0.728 & 12.77 & 84.5 \\
+6-10 & 282 & 2.73 & 27.7 & 6.9 & 1.5 & 0.3 & 0.931 & 0.933 & 16.03 & 88.9 \\
+11-15 & 481 & 2.74 & 25.9 & 6.3 & 1.3 & 0.3 & 1.000 & 1.034 & 17.13 & 94.0 \\
+16+ & 1,617 & 2.26 & 23.5 & 5.1 & 1.1 & 0.2 & 1.000 & 1.106 & 18.16 & 100.6 \\
+\midrule all & 2,393 & 2.34 & 24.0 & 5.3 & 1.1 & 0.2 & 1.000 & 1.087 & 17.91 & 99.1 \\
+\bottomrule\end{tabular}}
+% ---- Compare
+\newcommand{\tabCompare}{
+\begin{tabular}{lrrrrrrrr}\toprule
+EN length & n & BLEU A & BLEU B & B/A & chrF A & chrF B & repeats A & repeats B \\ \midrule
+1-5 & 13 & 3.07 & 2.13 & 0.7$\times$ & 7.61 & 12.77 & 0.0\% & 15.4\% \\
+6-10 & 282 & 0.41 & 2.73 & 6.8$\times$ & 8.96 & 16.03 & 0.4\% & 5.7\% \\
+11-15 & 481 & 0.48 & 2.74 & 5.7$\times$ & 10.74 & 17.13 & 0.2\% & 8.7\% \\
+16+ & 1,617 & 0.57 & 2.26 & 4.0$\times$ & 12.73 & 18.16 & 0.5\% & 17.6\% \\
+\bottomrule\end{tabular}}
+% ---- Recall
+\newcommand{\tabRecall}{
+\begin{tabular}{lrrrr}\toprule
+Unigram recall, 16+ tokens & Q1 (first) & Q2 & Q3 & Q4 (last) \\ \midrule
+A: baseline & 0.165 & 0.154 & 0.130 & 0.223 \\
+B: attention & 0.275 & 0.252 & 0.230 & 0.284 \\
+\bottomrule\end{tabular}}
+% ---- Attn
+\newcommand{\tabAttn}{
+\begin{tabular}{lr}\toprule
+Attention statistic & Value \\ \midrule
+Test sentences analysed & 2,393 \\
+Mean peak attention weight & 0.277 \\
+Mean attention entropy (nats) & 2.325 \\
+Steps whose peak stays or moves forward & 85.3\% \\
+Mean deviation from the diagonal (relative) & 0.218 \\
+Steps with multi-word attention & 20.6\% \\
+Attention mass on \textless{}sos\textgreater{}/\textless{}eos\textgreater{} & 1.03\% \\
+Generated tokens that occur in the reference & 39.2\% \\
+Mean peak weight, token in reference & 0.2769 \\
+Mean peak weight, token not in reference & 0.2768 \\
+Wrong tokens generated with peak weight $>0.7$ & 1.52\% \\
+\bottomrule\end{tabular}}
+% ---- Data
+\newcommand{\tabData}{
+\begin{tabular}{lr}\toprule
+Data statistic & Value \\ \midrule
+Raw training pairs in IITB corpus & 1,659,083 \\
+Training pairs used (random draw, seed 42) & 50,000 \\
+Development pairs / test pairs (official, cleaned) & 514 / 2,393 \\
+English vocabulary size & 21,433 \\
+Hindi vocabulary size & 24,274 \\
+Maximum English / Hindi sentence length (tokens) & 50 / 50 \\
+Mean length, training (English / Hindi) & 17.7 / 18.4 \\
+OOV rate, dev (English / Hindi) & 6.0\% / 8.6\% \\
+OOV rate, test (English / Hindi) & 8.4\% / 8.0\% \\
+\bottomrule\end{tabular}}
+\newcommand{\errorcase}[1]{%
+\ifcase#1\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 1} (test sentence \#2171; sentence chrF: baseline 10.7, attention 23.2; error type: \emph{long-distance dependency; wrong attention focus; OOV names; repetition})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & " i'm not sure when he sleeps , " said katie o'malley , a second-year medical student from drexel university in philadelphia and volunteer with bwelle's group . \\
+Ref & \hi{फिलाडेल्फिया में ड्रेक्सेल विश्वविद्यालय की द्वितीय वर्ष की चिकित्सा विद्यार्थी और वेल के समूह में स्वयंसेवी} , \hi{कैटी ओ}'\hi{मैली ने कहा} , " \hi{मुझे नहीं पता कि वे सोते कब हैं ।} " \\
+A & ( \hi{ऐ रसूल} ) \hi{तुम कह दो कि ख़ुदा ने अपने परवरदिगार की तरफ से इन्कार किया और} ( \hi{ऐ रसूल} ) \hi{तुम कह दो कि तुम लोग तो बस अपने परवरदिगार की राह से इन्कार करो} \\
+B & " \hi{जब उन्होंने कहा कि जब उन्होंने कहा कि} " \hi{आचार्य} , " \hi{आचार्य} , \hi{श्री राम नाथ कोविन्द से पूर्व मुख्यमंत्री विश्वविद्यालय के साथ} , \hi{एक और अन्य लेखकों के साथ एक अन्य लेखकों और अन्य महानुभावों के साथ} ‘ ‘ \hi{द रिट्रीट} ’ ’ \hi{नामक हैं ।} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} Attention starts sensibly (the quoted clause), then sits on one source column ('university') for about 12 consecutive steps while the decoder invents '\hi{आचार्य श्री राम नाथ कोविन्द}'. Later it loops '\hi{एक अन्य लेखकों के साथ}' while attending 'medical student'. The heatmap shows the stuck column, which explains the drift. \textit{Useful as explanation?} yes, it shows where the model got stuck.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 2} (test sentence \#799; sentence chrF: baseline 12.0, attention 23.8; error type: \emph{OOV (bcci, mca); extra/repeated words})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & afterwards , there would be a joint presentation by the bcci and the mca . \\
+Ref & \hi{इसके बाद बीसीसीआइ और एमसीए द्वारा संयुक्त प्रस्तुतिकरण होगा ।} \\
+A & \hi{एक बार फिर से एक दूसरे के लिए एक दूसरे से एक दूसरे के साथ एक दूसरे से बाहर हो गया है ।} \\
+B & \hi{इसके अतिरिक़्त} , \hi{और और इस द्वारा द्वारा एक ही एक ही एक ही होगा ।} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} The first words align diagonally (afterwards -\textgreater{} \hi{इसके अतिरिक्त}). Attention then lands on 'joint presentation' (correct focus) but the decoder emits '\hi{एक ही एक ही एक ही}' instead of '\hi{संयुक्त प्रस्तुतिकरण}'. The two acronyms are unknown source words, so '\hi{और इस द्वारा द्वारा}' is filler. \textit{Useful as explanation?} partly: focus is right, output is wrong.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 3} (test sentence \#1127; sentence chrF: baseline 8.1, attention 31.9; error type: \emph{OOV (tassie); missing word (\$325m); wrong word})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & \$325m rescue package for tassie health \\
+Ref & \hi{टैजी के स्वास्थ्य के लिए} 325 \hi{मिलियन डॉलर का बचाव पैकेज} \\
+A & \hi{एक नया स्रोत जिसमें एक नया} \\
+B & \hi{स्वास्थ्य के लिए माइक्रोसॉफ़्ट अनुरोध} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} 'tassie health' correctly drives '\hi{स्वास्थ्य के लिए}'. 'rescue package' is attended with weight about 0.45 but translated as '\hi{माइक्रोसॉफ़्ट अनुरोध}' (a hallucination for '\hi{बचाव पैकेज}'). The number is dropped and the output ends early. \textit{Useful as explanation?} partly: correct source words attended, wrong target words.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 4} (test sentence \#2031; sentence chrF: baseline 10.9, attention 38.5; error type: \emph{wrong word (\hi{विदेशों} missing); repetition; word order})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & his name became known not only in the country , but also abroad . \\
+Ref & \hi{उनका नाम देश ही नहीं बल्कि विदेशों में भी प्रसिद्ध हुआ ।} \\
+A & \hi{वह अपने पिता के साथ एक दूसरे से बाहर नहीं थे ।} \\
+B & \hi{उनका नाम केवल देश में ही नहीं बल्कि बल्कि भी भी भी थीं ।} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} Best diagonal alignment of the eight. 'abroad' receives the highest weight (about 0.65) for three steps in a row, yet the model emits '\hi{भी भी भी}' instead of '\hi{विदेशों में}'. A very high weight does not mean a correct word. '\hi{बल्कि}' is also generated twice. \textit{Useful as explanation?} yes for locating the failure, no as a guarantee of correctness.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 5} (test sentence \#2278; sentence chrF: baseline 15.1, attention 22.9; error type: \emph{OOV names missing; wrong word; extra words})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & according to amarnath upadhyaya , secretary of ada , a proposal concerning this matter has been sent to the government . \\
+Ref & \hi{एडीए के सचिव अमरनाथ उपाध्याय के मुताबिक इस बाबत शासन को प्रस्ताव भेजा जा चुका है ।} \\
+A & \hi{इस प्रकार के दौरान} , \hi{इस क्षेत्र में एक बड़ी संख्या में एक बड़ी भूमिका है ।} \\
+B & \hi{इस बात के अनुसार} , \hi{श्री एक समिति के अनुसार} , \hi{इस अध्याय को इस सरकार को इस बैठक में भेजा गया है ।} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} Mostly monotone alignment. The OOV names (amarnath upadhyaya, ada) are replaced by generic words ('\hi{श्री एक समिति के अनुसार}'). The ending is good: 'sent' -\textgreater{} '\hi{भेजा गया है}' with weight about 0.45 and 'government' -\textgreater{} '\hi{सरकार}', but '\hi{बैठक में}' (meeting) is hallucinated while attending 'sent'. \textit{Useful as explanation?} yes.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 6} (test sentence \#2388; sentence chrF: baseline 11.9, attention 23.7; error type: \emph{OOV names missing; wrong word (semantic neighbour)})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & it is noteworthy that both nita and isha are professional , classical dancers . \\
+Ref & \hi{गौरतलब है कि नीता और ईशा दोनों ही प्रोफेशनल क्लासिकल डांसर है ।} \\
+A & \hi{यह एक बड़ी बात है कि यह एक बड़ी बात है कि एक दूसरे के लिए एक बड़ी समस्या है ।} \\
+B & \hi{यह जानकर प्रसन्नता है कि दोनों और दोनों ही शैली में हैं} , \hi{और शास्त्रीय संगीत हैं ।} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} Near-perfect diagonal: 'both' -\textgreater{} '\hi{दोनों}' (weight about 0.85), 'classical' -\textgreater{} '\hi{शास्त्रीय}'. The names nita and isha are unknown and dropped. 'dancers' becomes '\hi{संगीत}' (music) and 'professional' becomes '\hi{शैली}' (style), so the alignment looks right while two words are wrong. \textit{Useful as explanation?} misleading: the heatmap looks like a good translation.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 7} (test sentence \#800; sentence chrF: baseline 10.0, attention 31.4; error type: \emph{repetition; missing content words; long-distance dependency})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & besides that , a special coin would be used for the coin toss that would be kept by the mca . \\
+Ref & \hi{इसके अलावा टॉस के लिए एक विशेष सिक्के का इस्तेमाल किया जाएगा जिसे एमसीए संभालकर रखेगा ।} \\
+A & \hi{यह एक बड़ी बात है कि यह एक बड़ी बात है जो एक दूसरे के साथ एक दूसरे से अधिक है ।} \\
+B & \hi{इसके अलावा} , \hi{एक विशेष रूप से एक विशेष रूप से प्रयोग किया जाएगा} , \hi{जो कि वह इस प्रकार के द्वारा किया जाएगा कि वह द्वारा स्वंय के द्वारा किया जाएगा} . \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} The first half is a clean diagonal ('besides that, a special coin' -\textgreater{} '\hi{इसके अलावा एक विशेष}'). From 'would be used' on, attention spreads over several source words and the decoder repeats '\hi{किया जाएगा} / \hi{द्वारा}' three times. 'coin toss' (\hi{टॉस}) and 'mca' are never translated. \textit{Useful as explanation?} yes: the diagonal breaks where the output goes wrong.
+\end{minipage}
+\or
+\begin{minipage}{\linewidth}\small
+\textbf{Case 8} (test sentence \#1568; sentence chrF: baseline 20.1, attention 23.3; error type: \emph{long-distance dependency; wrong attention focus (punctuation); repetition; word order})\\[2pt]
+\begin{tabular}{@{}l p{0.86\linewidth}@{}}
+EN & " our ongoing inquiry into this matter continues and we are co-operating fully with the fca and our other regulators , " the bank said two weeks ago . \\
+Ref & \hi{दो सप्ताह पहले बैंक ने कहा था कि} , " \hi{इस मामले में हमारी जांच जारी है} , \hi{तथा हम} FCA \hi{और अन्य विनियामकों के साथ पूर्ण सहयोग कर रहे हैं ।} " \\
+A & \hi{मैं इस अवसर पर आपके लिए बधाई देता हूं कि हमारे देश में हमारे देश के बीच द्विपक्षीय संबंधों में हमारे देश में हमारे देश में हमारे देश में सहयोग की है ।} \\
+B & \hi{हमारे इस क्षेत्र में हम इस तरह के साथ ही हम एक दूसरे और अन्य शब्दों के साथ बातचीत की हैं और हम दोनों के दो शब्दों में} ‘ ‘ \hi{द} ’ ’ ’ ’ \hi{के साथ ही हम दोनों को भी कहा जाता है ।} \\
+\end{tabular}\\[2pt]
+\textit{Reading the heatmap:} A 30-token sentence whose clause 'the bank said two weeks ago' belongs at the front of the Hindi. The model drifts: in the last ten steps attention is anchored on the closing quote mark and the output degenerates into punctuation ('‘ ‘ \hi{द} ’ ’ ’ ’'). 'two weeks' becomes '\hi{दो शब्दों}' (two words). \textit{Useful as explanation?} yes: attention on punctuation signals the collapse.
+\end{minipage}
+\fi}
